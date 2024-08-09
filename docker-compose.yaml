@@ -1,0 +1,13 @@
+
+version: '4'
+
+services:
+  db:
+    image: mongo:5
+    restart: always
+    ports:
+      - 53481:27017
+    environment:
+      MONGODB_DATABASE: card-creator
+    volumes:
+      - ./mongo:/data/db
