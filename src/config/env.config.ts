@@ -1,5 +1,6 @@
 export const EnvConfig = () => ({
     environment: process.env.NODE_ENV || 'dev',
     mongodb: process.env.MONGODB,
-    port: process.env.PORT
+    port: process.env.PORT,
+    jwt: process.env.SECRET
 })

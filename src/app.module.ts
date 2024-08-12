@@ -3,11 +3,11 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
-import mongoose from 'mongoose';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({load: [EnvConfig]}),
-    MongooseModule.forRoot("mongodb://localhost:53481/card-creator", {
+    MongooseModule.forRoot(process.env.MONGODB, {
       //aca estoy usando la opciones de mongooseModule
       connectionFactory: (connection) => {
         console.log('MongoDB connection established 🎉');
@@ -21,6 +21,7 @@ import mongoose from 'mongoose';
         console.log('MongoDB connection has been created 🎏');
       },
     }),
+    JwtModule.register({global: true, secret: process.env.SECRET}),
     AuthModule
   ],
   controllers: [],
