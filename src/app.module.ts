@@ -7,22 +7,24 @@ import mongoose from 'mongoose';
 @Module({
   imports: [
     ConfigModule.forRoot({load: [EnvConfig]}),
-    MongooseModule.forRoot("mongodb://localhost:53481/card-creator"),
+    MongooseModule.forRoot("mongodb://localhost:53481/card-creator", {
+      //aca estoy usando la opciones de mongooseModule
+      connectionFactory: (connection) => {
+        console.log('MongoDB connection established 🎉');
+        return connection;
+      },
+      connectionErrorFactory: (error) => {
+        console.error('MongoDB connection failed 😭:', error.message);
+        return error;
+      },
+      onConnectionCreate: (connection) => {
+        console.log('MongoDB connection has been created 🎏');
+      },
+    }),
     AuthModule
   ],
   controllers: [],
   providers: [],
 })
 
-//aca estoy usando el hook y viendo si se hizo o no la conexion
-export class AppModule implements OnModuleInit {
-  onModuleInit() {
-    const connection = mongoose.connection
-    //Estado de la conexion
-    if (connection.readyState === 1) {
-      console.log('MongoDB connection is already established');
-    } else {
-      console.warn('MongoDB connection is not established yet');
-    }
-  }
-}
+export class AppModule {}
