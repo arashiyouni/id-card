@@ -6,6 +6,12 @@ export class SignUpDto {
     @IsString()
     name: string
 
+    @IsString()
+    role: string
+
+    @IsString()
+    carnet: string
+
     @IsEmail()
     email: string
 

@@ -9,13 +9,16 @@ import mongoose, {Document} from "mongoose";
 export class RefreshToken extends Document{
 
     @Prop({required: true})
-    token: string
-
-    @Prop({required: true, type: mongoose.Types.ObjectId})
-    userId: mongoose.Types.ObjectId
+    refresh_token: string
 
     @Prop({required: true})
-    expireDate: Date
+    carnet: string
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId})
+    user: mongoose.Types.ObjectId; 
+
+    @Prop({required: true})
+    date_refresh_token: Date
 }
 
 export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshToken)

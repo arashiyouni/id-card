@@ -1,28 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup-auth.dto';
-import { LoginDTO } from './dto/login-auth.dto';
+import { SignUpDto } from '../users/dto/signup-auth.dto';
+import { LoginDTO } from '../users/dto/login-auth.dto';
 import { RefreshTokenDTO } from './dto/refresh-token.dto';
+import { UsersService } from 'src/users/users.service';
+import { JwtStrategy } from './jwt.strategy';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService
+  ) {}
 
   //Signup
   @Post('signup')
   async signUp(@Body() signUpAuthDTO: SignUpDto){
-    return this.authService.signup(signUpAuthDTO)
+    return this.userService.createUser(signUpAuthDTO)
   }
 
   //Login
   @Post('login')
-  async login(@Body()credenciales: LoginDTO){
-    return this.authService.login(credenciales)
+  async login(@Body() req: LoginDTO){
+    const user = await this.authService.validateUser(req.email, req.password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return this.authService.login(user)
   }
 
+
   //Refresh token
-  // @Post('refresh')
-  // async refreshToken(@Body() refreshTokensDTO: RefreshTokenDTO){
-  //   return this.authService.refreshToken(refreshTokensDTO.refreshToken)
-  // }
+  @Post('refresh')
+  async refreshToken(@Body() refreshToken: RefreshTokenDTO){
+    const { refresh_token } = refreshToken
+
+    const newToken = await this.authService.refreshToken(refreshToken)
+    return {
+      newToken
+    }
+
+  }
 }

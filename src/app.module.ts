@@ -1,9 +1,13 @@
-import { Module, OnModuleInit } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
 import { JwtModule } from '@nestjs/jwt';
+import { UsersModule } from './users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './auth/jwt.strategy';
+
 @Module({
   imports: [
     ConfigModule.forRoot({load: [EnvConfig]}),
@@ -21,11 +25,17 @@ import { JwtModule } from '@nestjs/jwt';
         console.log('MongoDB connection has been created 🎏');
       },
     }),
-    JwtModule.register({global: true, secret: process.env.SECRET}),
-    AuthModule
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      global: true, 
+      secret: process.env.SECRET,
+      signOptions: {expiresIn: process.env.EXPIRATE_ACCES}
+    }),
+    AuthModule,
+    UsersModule
   ],
-  controllers: [],
-  providers: [],
+  providers: [JwtStrategy],
+  exports: [JwtModule, PassportModule ]
 })
 
 export class AppModule {}

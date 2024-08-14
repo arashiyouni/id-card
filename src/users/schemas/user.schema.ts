@@ -5,6 +5,12 @@ import { Document } from "mongoose";
 export class User extends Document {
 
     @Prop({required: true})
+    role: string
+
+    @Prop({required: true})
+    carnet: string
+
+    @Prop({required: true})
     name: string
 
     @Prop({required: true, unique: true})
