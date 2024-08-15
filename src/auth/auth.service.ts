@@ -47,48 +47,76 @@ export class AuthService {
     }
   }
 
-
+  /**
+   * 1. Verificar que se envie el refresh
+   * 2. Verificar que venga con la firma
+   * 3. Verifico que este almacenado el refresh_token
+   * 4. Verifico que si no esta expirado, si no esta expirado, le mando un nuevo acces_token, si ya se expiro, debe iniciar una nueva sesion. 
+   * 
+   * Cuando se genera este nuevi acces_token, ya incluye el `exp` porque ya viene firmado y configurado ya que como tambien viene en el payload, hay que destructurado para que no de el problema: `Error: Bad "options.expiresIn" option the payload already has an "exp" property.`
+   * 
+   * @param refreshToken 
+   * @returns 
+   */
   async refreshToken(refreshToken: RefreshTokenDTO) {
+    //Obtengo el refresh token
     const { refresh_token } = refreshToken
 
     try {
-      //verifico si el refresh_token que viene pertenece a mi firma y verifico
-      const decoded = this.jwtService.verify(refresh_token, { secret: process.env.SECRET })
+     
+      //Verifico si el refresh_token que viene pertenece a mi firma y verifico
+      //aca obtengo el payload del token
+     const getTokenVerify = await this.verifyJWT(refreshToken)
+     if(!getTokenVerify) throw new UnauthorizedException('El token no es válido')
 
+     //Verifico que este almacenado el refresh_token
+      const tokenAllowed = await this.refreshTokenModel.findOne({
+        refresh_token: refreshToken.refresh_token
+      })
+      
+      if(!tokenAllowed) throw new UnauthorizedException('El token no se encuentra en mongo')  
+      
+      //saco el payload que trae el token
+      const payload = {...getTokenVerify}
+      
       //comprobacion si el acces token ha expirado:
       const actuallyTime = Math.floor(Date.now() / 1000) //hora actual en segundo
-      const exp = decoded['exp'] //saco la expiracion del token enviado
-      if(exp < actuallyTime) throw new UnauthorizedException('Acces token has expired')
-        
-      //si esta expirado generar uno nuevo, sino no uwu
-      //busco si el usuario (_id) tiene ese token
+      const exp = payload['exp'] //saco la expiracion del token enviado
 
-      const user = await this.refreshTokenModel.findOne({carnet: decoded.data.carnet})
+      if(actuallyTime >= exp) {
+        await this.refreshTokenModel.deleteOne({refresh_token: refresh_token})
+        throw new UnauthorizedException('El token ha sido expirado, inicia sesion nuevamente') 
 
-      if (!user) throw new UnauthorizedException(`This user doesn't have a saved token or token is invalid`)
-
-      //si lo tiene, se elimina el actual refresh_token de ese id
-      await this.refreshTokenModel.deleteOne({refresh_token: refresh_token})
-
-      const generateAccesToken = this.jwtService.sign(decoded.data)
-      const generateRefreshToken = this.jwtService.sign(decoded.data, { expiresIn: process.env.EXPIRATE_REFRESH })
-
-      const saveRefreshToken = await this.refreshTokenModel.create({
-        refresh_token: generateRefreshToken,
-        user: decoded.data._id,
-        carnet: decoded.data.carnet,
-        date_refresh_token: new Date()
-      })
-
+      }
+      
+      const newAccesToken = await this.generateAccesToken(payload)
+      
       return {
         msg: 'Updated sesion sucessfully! 🌹',
-        access_token: generateAccesToken,
-        refresh_token: generateRefreshToken
+        acces_token: newAccesToken,
+        ...refreshToken
       }
 
     } catch (err) {
       console.error(`Error: `, err)
       throw new UnauthorizedException()
     }
-  } 
+  }
+
+  //Verifico JWT
+  async verifyJWT(token: RefreshTokenDTO){
+    return await this.jwtService.verify( token.refresh_token , { secret: process.env.SECRET })
+  }
+
+  //Generar nuevo acces token
+  async generateAccesToken(payload: any){
+    const { exp, iat, ...data} = payload
+    return await this.jwtService.sign(data)
+  }
+}
+
+//Tipo de JWT
+export enum JwtType {
+  ACCESS = 'AccessToken',
+  REFRESH = 'RefreshToken',
 } 

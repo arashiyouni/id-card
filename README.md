@@ -31,16 +31,13 @@ the user/client is not logged in (is not authenticated)
 the user/client is logged in (is authenticated)
 
 ---
-TODO:
-https://dev.to/jeanvittory/jwt-refresh-tokens-2g3d
-https://github.com/nestjs/jwt
-https://mongoosejs.com/docs/api/document.html#Document.prototype.toObject()
-https://www.epochconvert.com/
-https://jwt.io/
-
-Ver como es la validacion y la accion de los dos tokens
+### Flujo de `acces_token` y `refresh_token`
+![token flow](image.png)
 
 
-https://github.com/vercel/ms
-https://fintech.theodo.com/blog-posts/implementing-authentication-in-nestjs-using-passport-and-jwt
-SALIOOOO
+
+---
+Resource:
+- [JWT Refresh Token](https://dev.to/jeanvittory/jwt-refresh-tokens-2g3d)
+- [JWT utilies Nest](https://github.com/nestjs/jwt)
+- [Passport auth and passpor](https://fintech.theodo.com/blog-posts/implementing-authentication-in-nestjs-using-passport-and-jwt)
