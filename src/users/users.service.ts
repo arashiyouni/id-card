@@ -1,16 +1,19 @@
-import { IsEmail } from 'class-validator';
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { SignUpDto } from './dto/signup-auth.dto';
 import { LoginDTO } from './dto/login-auth.dto';
+// import { Roles } from 'src/common/decorator/decorator.decorator';
+// import { Role } from 'src/common/interface/role.enum';
+// import { RolesGuard } from 'src/auth/roles.guard';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+   // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
 
@@ -73,7 +76,11 @@ export class UsersService {
     }
   }
 
-  async findById(id: string) {
-    return await this.userModel.findById(id)
+
+  async deleteUser(id: string){
+    //deletedCount es parte de la respuesta de deleteOne
+    const {deletedCount} = await this.userModel.deleteOne({_id: id})
+    if(deletedCount === 0)
+    throw new BadRequestException(`Pokemon with id ${id} not found`)
   }
 }

@@ -7,7 +7,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './auth/jwt.strategy';
-
 @Module({
   imports: [
     ConfigModule.forRoot({load: [EnvConfig]}),
