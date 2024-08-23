@@ -63,6 +63,7 @@ import { DataSource } from 'typeorm';
 
 export const AppDataSource = [{
     provide: 'DATA_SOURCE',
+    exports: ['DATA_SOURCE'],
     useFactory: async () => {
         const dataSource = new DataSource({
             type: 'mssql',
@@ -72,6 +73,7 @@ export const AppDataSource = [{
             password: process.env.PASSWORD_SQL,
             database: process.env.REGACADEMICO_DB,
             synchronize: false,
+            entities: [__dirname + '/../../support-module/Models/entities/*.entity{.ts,.js}'], // Ruta a tus entidades
             options: {
                 encrypt: true,
                 trustServerCertificate: true,

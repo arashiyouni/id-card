@@ -76,11 +76,25 @@ export class UsersService {
     }
   }
 
-
   async deleteUser(id: string){
     //deletedCount es parte de la respuesta de deleteOne
     const {deletedCount} = await this.userModel.deleteOne({_id: id})
     if(deletedCount === 0)
     throw new BadRequestException(`Pokemon with id ${id} not found`)
+  }
+
+  //realizara el envio de la foto
+  async sendPicture(){
+    /**
+     * imagen
+      sede
+      tipo carnet
+      nombre
+      carrera
+      facultad
+      idfacultad
+      ¿Cómo generar el token para seguir el proceso?
+      ¿En qué momento se generaria el QR?
+     */
   }
 }

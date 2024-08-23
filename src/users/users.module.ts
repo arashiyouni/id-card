@@ -13,6 +13,7 @@ import { AuthModule } from 'src/auth/auth.module';
         schema: UserSchema
       }
     ]),
+    //TODO: EL AUTH SE DEBE APLICAR DE ULTIMO
     //AuthModule
    // forwardRef(()=> AuthModule)
   ],

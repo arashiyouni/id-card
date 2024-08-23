@@ -1,14 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { GestionFechasSchema } from './schema/gestion-fecha.schema';
-import { Model } from 'mongoose';
+import {Injectable, NotFoundException } from '@nestjs/common';
 import { GestionFechas } from './schema/gestion-fecha.repository';
+//import { RepositoryDB } from './interface/declarations';
 
 @Injectable()
 export class SupportModuleService {
  
   constructor(
-    private readonly repoGestionFechasProcesos: GestionFechas
+    private readonly repoGestionFechasProcesos: GestionFechas,
+    //private readonly databaseRepository: RepositoryDB
   ) { }
 
   //retorna solo los procesos activos

@@ -38,6 +38,7 @@ the user/client is logged in (is authenticated)
 TODO:
 - HACER LOS DEMÁS ENDPOINT Y DEJAR POR ULTIMO LA AUTORIZACION
 Endpoint a trabajar:
+- Ver proceso de carnetizacion ✅
 - Ver carnet:
     - Titulo de universidad
     - ciclo
@@ -87,3 +88,48 @@ Resource:
 - [JWT utilies Nest](https://github.com/nestjs/jwt)
 - [Passport auth and passpor](https://fintech.theodo.com/blog-posts/implementing-authentication-in-nestjs-using-passport-and-jwt)
 
+---
+Esta es la forma para usar el TypeORM :
+```
+//conexion para sql server
+    TypeOrmModule.forRoot({
+      type: 'mssql',
+      host: process.env.HOST,
+      port: 1433,
+      username: process.env.USER_SQL,
+      password: process.env.PASSWORD_SQL,
+      database: process.env.REGACADEMICO_DB,
+      synchronize: false,
+      migrations: ['dist/migrations/*.js'],
+      migrationsTableName: 'migrations',
+      options: {
+        encrypt: true,
+        trustServerCertificate: true,
+      },
+      extra: {
+        pool: {
+          max: 10,
+          min: 0,
+          idleTimeoutMillis: 30000,
+        }
+      }
+    }),
+```
+
+---
+¿CÓMO SE SOLUCIONO EL PROBLEMA QUE NO ME RETORNABA LA INFORMACIÓN?
+1. DESPUÉS DE CREAR LO DE DOCKER COMPOSE SE CREA SEGUN EL PUERTO QUE SE LE DA
+2. COMO NO SE LE HA IMPORTADA INFORMACION, NO ME RETORNABA Y APUNTABA AHI
+
+¿POR QUÉ APUNTABA AHI?
+ES UNA PREGUNTA QUE NO ME SE RESPONDER TODAVIA 😭
+
+
+---
+
+### Para hacer database first
+```
+npx typeorm-model-generator -h "192.168.98.20" -d RegistroAcademicoDev -p 1433 -u sa -x "5dZ8psbVg7mp6M" -e "mssql"
+```
+
+ref: [typeorm-model-generator](https://github.com/Kononnable/typeorm-model-generator) 

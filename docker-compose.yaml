@@ -2,12 +2,37 @@
 version: '4'
 
 services:
-  db:
+  mongo-card-creator:
     image: mongo:5
     restart: always
     ports:
-      - 53481:27017
+      - 27017:27017
     environment:
       MONGODB_DATABASE: card-creator
     volumes:
-      - ./mongo:/data/db
+      - ./db/card-creator:/data/db
+
+  mongo-carnetizacion-dev:
+    image: mongo:5  
+    restart: always
+    ports:
+      - 27018:27017
+    environment:
+      MONGODB_DATABASE: carnetizacionOpera003
+    volumes:
+      - ./db/carnetizacionOpera003:/data/db
+  
+
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server_registro
+    ports:
+      - "1433:1433"
+    environment:
+      MSSQL_SA_PASSWORD: "5dZ8psbVg7mp6M"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      HOSTNAME: 192.168.98.20
+    volumes:
+       - ./db/registroacademico:/data/db
+  
