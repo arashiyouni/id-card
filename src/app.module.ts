@@ -9,9 +9,6 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { SqlServerModule } from './database/sql-server/sql-server.module';
 import { SupportModuleModule } from './support-module/support-module.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Alumno } from './support-module/Models/entities/Alumno';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [EnvConfig] }),

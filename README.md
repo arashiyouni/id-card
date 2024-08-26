@@ -115,6 +115,68 @@ Esta es la forma para usar el TypeORM :
       }
     }),
 ```
+Otra manera de conectarse a SQL Server sin necesidad de usar TypeORM
+
+```
+/ @Injectable()
+// export class SqlServerService {
+
+//     private sqlConfig: sql.config
+//     private sqlPool: sql.ConnectionPool
+
+//     constructor() {
+//         this.sqlConfig = {
+//             user: process.env.USER_SQL,
+//             password: process.env.PASSWORD_SQL,
+//             server: process.env.HOST,
+//             database: process.env.REGACADEMICO_DB,
+//             options: {
+//                 encrypt: true,
+//                 trustServerCertificate: true
+//             },
+//             sqlPool: {
+//                 max: 10,
+//                 min: 0,
+//                 idleTimeoutMillis: 30000,
+
+//             }
+//         }
+//         this.initialize()
+//     }
+
+//     private async initialize() {
+//         try {
+//             this.sqlPool = await sql.connect(this.sqlConfig)
+//             console.log('🙌 | Database SQL Server connected')
+//         } catch (err) {
+//             console.log('🚩 KHEK, ERROR IN INITIALIZE ')
+//             throw err
+//         }
+//     }
+
+//     private async runQuery(sqlQuery: string) {
+//         try {
+//             const result = await this.sqlPool.request().query(sqlQuery)
+//             return result.recordset
+//         } catch (err) {
+//             console.log('🚩 KHEK, ERROR IN QUERY ')
+//             throw err
+//         }
+//     }
+
+//     async onModuleDestroy() {
+//         try {
+//             if (this.sqlPool) {
+//                 await this.sqlPool.close()
+//                 console.log('🚪 | Database connection pool closed')
+//             }
+//         } catch (err) {
+//             console.log('🚩 | Someting ocurring in onModuleDestroy...')
+//             throw err
+//         }
+//     }
+// }
+```
 
 ---
 ¿CÓMO SE SOLUCIONO EL PROBLEMA QUE NO ME RETORNABA LA INFORMACIÓN?
@@ -131,5 +193,7 @@ ES UNA PREGUNTA QUE NO ME SE RESPONDER TODAVIA 😭
 ```
 npx typeorm-model-generator -h "192.168.98.20" -d RegistroAcademicoDev -p 1433 -u sa -x "5dZ8psbVg7mp6M" -e "mssql"
 ```
+
+Después de generar las migraciones, se debe registrar las entidades en TypeORM
 
 ref: [typeorm-model-generator](https://github.com/Kononnable/typeorm-model-generator) 

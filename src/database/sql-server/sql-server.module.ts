@@ -4,4 +4,4 @@ import { AppDataSource } from './sql-server.service';
     providers:[...AppDataSource],
     exports:[...AppDataSource]
 })
-export class SqlServerModule {}
+export class SqlServerModule { }

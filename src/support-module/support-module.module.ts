@@ -4,10 +4,7 @@ import { GestionFechasSchema } from './schema/gestion-fecha.schema';
 import { SupportModuleService } from './support-module.service';
 import { SupportModuleController } from './support-module.controller';
 import { GestionFechas } from './schema/gestion-fecha.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Alumno } from './Models/entities/Alumno';
-//import { SqlServerRepository } from './repositories/sql-server.repository';
-
+import { SqlServerModule } from 'src/database/sql-server/sql-server.module';
 @Module({
   imports:[MongooseModule.forFeature([
     {
@@ -16,7 +13,7 @@ import { Alumno } from './Models/entities/Alumno';
       collection: 'gestionfechas'
     }
   ]),
-  TypeOrmModule.forFeature([Alumno])
+  SqlServerModule,
   ],
   controllers: [SupportModuleController],
   providers: [SupportModuleService, GestionFechas],
