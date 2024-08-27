@@ -7,8 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './auth/jwt.strategy';
-import { SqlServerModule } from './database/sql-server/sql-server.module';
 import { SupportModuleModule } from './support-module/support-module.module';
+import { DatabaseModule } from './database/sql-server/database.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [EnvConfig] }),
@@ -35,7 +35,7 @@ import { SupportModuleModule } from './support-module/support-module.module';
     }),
     AuthModule,
     UsersModule,
-    SqlServerModule,
+    DatabaseModule,
     SupportModuleModule,
   ],
   providers: [JwtStrategy],
