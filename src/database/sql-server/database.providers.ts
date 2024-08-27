@@ -1,4 +1,4 @@
-import { Alumno } from 'src/support-module/models/entities/Alumno';
+import { join } from 'path';
 import { DataSource } from 'typeorm';
 
 /**
@@ -17,9 +17,10 @@ export const AppDataSource = [{
             username: process.env.USER_SQL,
             password: process.env.PASSWORD_SQL,
             database: process.env.REGACADEMICO_DB,
-            //__dirname + '/../**/*.entity.{js,ts}'
-            entities: [Alumno],
-            synchronize: true,
+            /**dirnmae contiene el nombre del dierecto del modulo actual:  */
+            //[join(__dirname, '../../**/*.entity.{js,ts}')],
+            entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+            synchronize: false,
             options: {
                 encrypt: true,
                 trustServerCertificate: true,
