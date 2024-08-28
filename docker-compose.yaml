@@ -26,6 +26,7 @@ services:
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server_registro
+    user: root
     expose:
       - 1433
     ports:
@@ -36,5 +37,4 @@ services:
       MSSQL_PID: "Developer"
       HOSTNAME: 192.168.98.20
     volumes:
-       - ./db/registroacademico:/data/db
-  
+       - ./db/mssql:/var/opt/mssql
