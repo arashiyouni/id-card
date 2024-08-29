@@ -1,46 +1,113 @@
 import { join } from 'path';
+import { Alumno } from 'src/models/RegAcademico-Entities/Alumno.entity';
 import { DataSource } from 'typeorm';
 
 /**
  * El `DataSource` representa la conexion de la base de datos, se utiliza para configurar y manejar la comunicacion con las base
  */
-export const AppDataSource = [{
-    name: 'SQL_SERVER',
-    //este es my async provider
-    provide: 'DATA_SOURCE',
-    useFactory: async () => {
-        //aca se establece los detalles de la conexion
-        const dataSource = new DataSource({
-            type: 'mssql',
-            host: process.env.HOST_SQL,
-            port: 1433,
-            username: process.env.USER_SQL,
-            password: process.env.PASSWORD_SQL,
-            database: process.env.REGACADEMICO_DB,
-            /**dirnmae contiene el nombre del dierecto del modulo actual:  */
-            //[join(__dirname, '../../**/*.entity.{js,ts}')],
-            entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
-            synchronize: false,
-            options: {
-                encrypt: true,
-                trustServerCertificate: true,
-            },
-            extra: {
-                autoLoadEntities: true,
-                pool: {
-                    max: 10,
-                    min: 0,
-                    idleTimeoutMillis: 3000,
-                }
-            }
-        });
-
-        try {
-            await dataSource.initialize();
-            console.log("🤝 | Data Source (SQL) has been initialized!");
-            return dataSource;
-        } catch (err) {
-            console.error("Error during Data Source initialization:", err);
+const defaultOptions = {
+    host: "192.168.98.20",
+    port: 1433,
+    username: "sa",
+    password: "5dZ8psbVg7mp6M",
+    synchronize: false,
+    options: {
+        encrypt: true,
+        trustServerCertificate: true,
+    },
+    extra: {
+        pool: {
+            max: 10,
+            min: 0,
+            idleTimeoutMillis: 3000,
         }
     }
-}]
+}
+
+export const AppDataSource = [
+    {
+        //etiqueta para referirse a un modulo
+        name: 'SQL_SERVER_ACADEMICO',
+        provide: 'DATA_SOURCE_ACADEMICO',
+        useFactory: async () => {
+            const dataSource = new DataSource({
+                type: 'mssql',
+                ...defaultOptions,
+                database: process.env.REGACADEMICO_DB,
+                entities: [Alumno],
+            });
+
+            try {
+                await dataSource.initialize();
+                console.log("🤝 | Data Source (SQL): <RegAcademico> has been initialized!");
+                return dataSource;
+            } catch (err) {
+                console.error("🚑 | Error during Data Source <RegAcademico> initialization:", err);
+            }
+        }
+    }
+    // ,{
+    //     //etiqueta para referirse a un modulo
+    //     name: 'SQL_SERVER_FINANCIERA',
+    //     provide: 'DATA_SOURCE_FINANCIERA',
+    //     useFactory: async () => {
+    //         const dataSource = new DataSource({
+    //             type: 'mssql',
+    //             ...defaultOptions,
+    //             database: process.env.FINANCIERA_DB,
+    //             // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+    //         });
+
+    //         try {
+    //             await dataSource.initialize();
+    //             console.log("🤝 | Data Source (SQL): <Financiera> has been initialized!");
+    //             return dataSource;
+    //         } catch (err) {
+    //             console.error("🚑 | Error during Data Source <Financiera> initialization:", err);
+    //         }
+    //     }
+    // },{
+    //     //etiqueta para referirse a un modulo
+    //     name: 'SQL_SERVER_REGISTRO',
+    //     provide: 'DATA_SOURCE_REGISTRO',
+    //     useFactory: async () => {
+    //         const dataSource = new DataSource({
+    //             type: 'mssql',
+    //             ...defaultOptions,
+    //             port: 1434,
+    //             database: process.env.REGISTRO_DB,
+    //             // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+    //         });
+
+    //         try {
+    //             await dataSource.initialize();
+    //             console.log("🤝 | Data Source (SQL): <REGISTRO> has been initialized!");
+    //             return dataSource;
+    //         } catch (err) {
+    //             console.error("🚑 | Error during Data Source <REGISTRO> initialization:", err);
+    //         }
+    //     }
+    // },{
+    //     //etiqueta para referirse a un modulo
+    //     name: 'SQL_SERVER_FOTOS',
+    //     provide: 'DATA_SOURCE_FOTOS',
+    //     useFactory: async () => {
+    //         const dataSource = new DataSource({
+    //             type: 'mssql',
+    //             ...defaultOptions,
+    //             port: 1434,
+    //             database: process.env.FOTOS_DB,
+    //             // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+    //         });
+
+    //         try {
+    //             await dataSource.initialize();
+    //             console.log("🤝 | Data Source (SQL): <FOTOS> has been initialized!");
+    //             return dataSource;
+    //         } catch (err) {
+    //             console.error("🚑 | Error during Data Source <FOTOS> initialization:", err);
+    //         }
+    //     }
+    // }
+
+]
