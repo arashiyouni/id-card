@@ -197,3 +197,7 @@ npx typeorm-model-generator -h "192.168.98.20" -d RegistroAcademicoDev -p 1433 -
 Después de generar las migraciones, se debe registrar las entidades en TypeORM
 
 ref: [typeorm-model-generator](https://github.com/Kononnable/typeorm-model-generator) 
+
+---
+TODO:
+- HACER UN SEED QUE ME GUARDE LA INFO EN MIS TABLAS Y NO ESTAR A CADA RATO COPIANDO Y PEGANDO

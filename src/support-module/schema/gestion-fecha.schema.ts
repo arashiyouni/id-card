@@ -1,8 +1,7 @@
-import { Int32 } from "mongodb";
-import { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { Modulos } from "./gestion-modulos.interface";
 
-export const GestionFechasSchema = new Schema<Modulos>({
+export const GestionFechasSchema = new mongoose.Schema<Modulos>({
 
     activo: {
         type: Boolean,

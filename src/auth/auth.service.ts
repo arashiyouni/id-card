@@ -8,8 +8,10 @@ import { Model } from 'mongoose';
 @Injectable()
 export class AuthService {
 
+  //definiciond de dependencia
   constructor(
-    @InjectModel(RefreshToken.name) private refreshTokenModel: Model<RefreshToken>,
+    //Indica que refeshToken debe de ser un modelo mongose para el esquema `RefreshToken` usando la conexion con nombre `User`
+    @InjectModel(RefreshToken.name, 'USER') private refreshTokenModel: Model<RefreshToken>,
     private userService: UsersService,
     private jwtService: JwtService
   ) { }

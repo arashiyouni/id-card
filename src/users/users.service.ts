@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { SignUpDto } from './dto/signup-auth.dto';
 import { LoginDTO } from './dto/login-auth.dto';
@@ -12,7 +12,8 @@ import { LoginDTO } from './dto/login-auth.dto';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    //private userModel: Model<User>
+    @InjectModel(User.name, 'USER') private userModel: Model<User>,
    // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 

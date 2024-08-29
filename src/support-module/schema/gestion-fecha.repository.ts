@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Modulos } from "./gestion-modulos.interface";
 
@@ -7,7 +6,7 @@ import { Modulos } from "./gestion-modulos.interface";
 @Injectable()
 export class GestionFechas{
     constructor(
-        @InjectModel('GestionFechas')
+        @Inject('PROCESOS_MODEL')
         private readonly gestionProcesoModulos: Model<Modulos>
     ){}
 

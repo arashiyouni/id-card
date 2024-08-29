@@ -7,12 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      {
-        name: User.name,
-        schema: UserSchema
-      }
-    ]),
+    MongooseModule.forFeature([{name: User.name, schema: UserSchema}], 'USER'),
     //TODO: EL AUTH SE DEBE APLICAR DE ULTIMO
     //AuthModule
    // forwardRef(()=> AuthModule)

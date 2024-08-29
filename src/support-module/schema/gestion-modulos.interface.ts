@@ -1,4 +1,4 @@
-export interface Modulos{
+export interface Modulos extends Document { 
     activo: boolean
     ciclo: string
     fechaFin: Date

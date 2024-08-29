@@ -1,8 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, HydratedDocument } from "mongoose";
+
+//Al usar HydratedDocument, ha sido transformado en una instancia de mongo con todos sus metodos y proiedades
+
+export type UserDocument = HydratedDocument<User>
 
 @Schema()
-export class User extends Document {
+export class User {
 
     @Prop({required: true})
     role: string
