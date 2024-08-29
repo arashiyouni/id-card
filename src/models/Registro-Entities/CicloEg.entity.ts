@@ -1,8 +1,9 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("CicloEG", { schema: "dbo" })
 export class CicloEg {
-  @Column("int", { name: "IdCicloEG", nullable: true })
+  @PrimaryColumn({name: "IdCicloEG",type:"int" })
+  // @Column("int", { name: "IdCicloEG", nullable: true })
   idCicloEg: number | null;
 
   @Column("char", { name: "Nombre", nullable: true, length: 7 })

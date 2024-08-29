@@ -43,7 +43,8 @@ import { MongooseModule } from "@nestjs/mongoose/dist/mongoose.module";
                 }
             })
         })
-    ]
+    ],
+    exports: [MongoDatabaseModule]
 })
 
 export class MongoDatabaseModule{}

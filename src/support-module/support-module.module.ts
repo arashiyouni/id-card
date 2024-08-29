@@ -6,11 +6,11 @@ import { SupportModuleController } from './support-module.controller';
 import { DatabaseModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { AlumnoProvider } from './repository/sql-server.repository';
-import { ProcesosProvider } from './repository/mongosee.provider';
 
 @Module({
     imports: [
-       // MongooseModule.forFeature([{ name: 'GestionFechas', schema: GestionFechasSchema }], 'OEPRA'),
+        //Conexion de el esquima gestion de fechas de la db: OEPRA
+       MongooseModule.forFeature([{ name: 'GestionFechas', schema: GestionFechasSchema }], 'USER'),
         DatabaseModule
     ],
     controllers: [SupportModuleController],

@@ -1,8 +1,10 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("PICTURES", { schema: "dbo" })
 export class Pictures {
-  @Column("varchar", { name: "id", nullable: true, length: 8 })
+
+  @PrimaryColumn({name: "id",type:"varchar" })
+  //@Column("varchar", { name: "id", nullable: true, length: 8 })
   id: string | null;
 
   @Column("int", { name: "length", nullable: true })

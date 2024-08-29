@@ -1,20 +1,7 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
 
-@Entity("vAlumno", { schema: "dbo" })
-export class VAlumno {
-  @PrimaryColumn({name: "idfacultadn",type:"nvarchar" })
-  // @Column("nvarchar", { name: "idfacultad", nullable: true, length: 2 })
-  idfacultad: string | null;
-
-  @Column("nvarchar", { name: "Facultad", nullable: true, length: 75 })
-  facultad: string | null;
-
-  @Column("nvarchar", { name: "idcarrera", nullable: true, length: 6 })
-  idcarrera: string | null;
-
-  @Column("nvarchar", { name: "Carrera", nullable: true, length: 150 })
-  carrera: string | null;
-
+@Entity("alumno", { schema: "dbo" })
+export class Alumno {
   @Column("nvarchar", { name: "idalumno", nullable: true, length: 8 })
   idalumno: string | null;
 
@@ -30,11 +17,17 @@ export class VAlumno {
   @Column("nvarchar", { name: "apellido3", nullable: true, length: 50 })
   apellido3: string | null;
 
+  @Column("nvarchar", { name: "idcategori", nullable: true, length: 1 })
+  idcategori: string | null;
+
   @Column("nvarchar", { name: "idtipoing", nullable: true, length: 1 })
   idtipoing: string | null;
 
   @Column("nvarchar", { name: "tipingtemp", nullable: true, length: 1 })
   tipingtemp: string | null;
+
+  @Column("nvarchar", { name: "idcarrera", nullable: true, length: 6 })
+  idcarrera: string | null;
 
   @Column("nvarchar", { name: "sexo", nullable: true, length: 1 })
   sexo: string | null;
@@ -45,14 +38,8 @@ export class VAlumno {
   @Column("nvarchar", { name: "iddeptonac", nullable: true, length: 2 })
   iddeptonac: string | null;
 
-  @Column("nvarchar", { name: "DeptoNac", nullable: true, length: 150 })
-  deptoNac: string | null;
-
   @Column("nvarchar", { name: "idmuninac", nullable: true, length: 4 })
   idmuninac: string | null;
-
-  @Column("nvarchar", { name: "MuniNac", nullable: true, length: 255 })
-  muniNac: string | null;
 
   @Column("nvarchar", { name: "cicloingre", nullable: true, length: 7 })
   cicloingre: string | null;
@@ -60,14 +47,8 @@ export class VAlumno {
   @Column("nvarchar", { name: "idestafam", nullable: true, length: 1 })
   idestafam: string | null;
 
-  @Column("nvarchar", { name: "EstadoFam", nullable: true, length: 50 })
-  estadoFam: string | null;
-
   @Column("nvarchar", { name: "idsituacionfam", nullable: true, length: 1 })
   idsituacionfam: string | null;
-
-  @Column("nvarchar", { name: "situacionfam", nullable: true, length: 50 })
-  situacionfam: string | null;
 
   @Column("nvarchar", { name: "email", nullable: true, length: 100 })
   email: string | null;
@@ -81,18 +62,8 @@ export class VAlumno {
   @Column("nvarchar", { name: "idpais", nullable: true, length: 3 })
   idpais: string | null;
 
-  @Column("nvarchar", { name: "pais", nullable: true, length: 50 })
-  pais: string | null;
-
   @Column("nvarchar", { name: "IdTipoFinan", nullable: true, length: 2 })
   idTipoFinan: string | null;
-
-  @Column("nvarchar", {
-    name: "TipoFinanciamiento",
-    nullable: true,
-    length: 50,
-  })
-  tipoFinanciamiento: string | null;
 
   @Column("nvarchar", { name: "becainstitucion", nullable: true, length: 150 })
   becainstitucion: string | null;
@@ -100,15 +71,15 @@ export class VAlumno {
   @Column("smallint", { name: "idplan", nullable: true })
   idplan: number | null;
 
-  @Column("nvarchar", { name: "nombrep", nullable: true, length: 120 })
-  nombrep: string | null;
+  @Column("nvarchar", { name: "idusuario", nullable: true, length: 10 })
+  idusuario: string | null;
+
+  @Column("datetime", { name: "fech_act", nullable: true })
+  fechAct: Date | null;
 
   @Column("nvarchar", { name: "idexpe", nullable: true, length: 17 })
   idexpe: string | null;
 
-  @Column("varchar", { name: "Modalidad", nullable: true, length: 50 })
-  modalidad: string | null;
-
-  @Column("datetime", { name: "fech_act", nullable: true })
-  fechAct: Date | null;
+  @Column("datetime", { name: "fecha_conta", nullable: true })
+  fechaConta: Date | null;
 }

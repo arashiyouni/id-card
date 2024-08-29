@@ -1,11 +1,7 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
 
-@Entity("PicturesHistorial", { schema: "dbo" })
-export class PicturesHistorial {
-  @PrimaryColumn({name: "IdPicture",type:"bigint" })
-  // @Column("bigint", { name: "IdPicture", nullable: true })
-  idPicture: string | null;
-
+@Entity("PICTURES", { schema: "dbo" })
+export class Pictures {
   @Column("varchar", { name: "id", nullable: true, length: 8 })
   id: string | null;
 

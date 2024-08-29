@@ -1,9 +1,8 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity("matins", { schema: "dbo" })
 export class Matins {
-  @PrimaryColumn({name: "idalumno",type:"nvarchar" })
-  //@Column("nvarchar", { name: "idalumno", nullable: true, length: 8 })
+  @Column("nvarchar", { name: "idalumno", nullable: true, length: 8 })
   idalumno: string | null;
 
   @Column("nvarchar", { name: "cic_actual", nullable: true, length: 7 })

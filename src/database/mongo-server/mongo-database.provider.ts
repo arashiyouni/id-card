@@ -1,6 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import { getConnectionToken } from "@nestjs/mongoose";
-import { Connection, Model } from "mongoose";
+import mongoose, { Connection, Model } from "mongoose";
 import { AuthService } from "src/auth/auth.service";
 import { RefreshToken } from "src/auth/schemas/refresh-token.schemas";
 import { User } from "src/users/schemas/user.schema";
@@ -25,5 +25,12 @@ export const UserProvider = [
             return new AuthService(RefreshToken, userService, jwtService)
         },
         inject: [getConnectionToken(RefreshToken.name), UsersService, JwtService]
+    }
+]
+
+export const mongoseProvider = [
+    {
+        provide: 'MONGO_OPERA',
+        useFactory: (): Promise<typeof mongoose> => mongoose.connect("mongodb://localhost:27018/carnetizacionOpera003")
     }
 ]
