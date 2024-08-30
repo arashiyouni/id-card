@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("movimientoa", { schema: "dbo" })
 export class Movimientoa {
-
-  @PrimaryColumn({name: "IdMovimientoa",type:"int" })
+  
+  @PrimaryGeneratedColumn({name: "IdMovimientoa",type:"int" })
   //@Column("int", { name: "IdMovimientoa", nullable: true })
   idMovimientoa: number | null;
 

@@ -7,13 +7,13 @@ export class SupportModuleController {
     private readonly supportService: SupportModuleService
   ) {}
 
-  @Get(':ciclo')
-  findAll(@Param('ciclo') request: string) {
-    return this.supportService.modulosActivosCarnetizacion(request)
-  }
+  // @Get(':ciclo')
+  // findAll(@Param('ciclo') request: string) {
+  //   return this.supportService.modulosActivosCarnetizacion(request)
+  // }
 
-  @Get()
-  findStudent() {
-    return this.supportService.findStudent()
+  @Get(':ciclo')
+  findStudent(@Param('ciclo') request: string) {
+   return this.supportService.findStudent(request)
   }
 }

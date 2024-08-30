@@ -7,4 +7,4 @@ import { AppDataSource } from './database.providers';
     exports:[...AppDataSource],
 })
 
-export class DatabaseModule  {}
+export class DatabaseSQLModule  {}

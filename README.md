@@ -23,6 +23,20 @@ Y crear mi carpeta config para hacer la configuracion en el modulo principal
 
 https://www.youtube.com/watch?v=h-68sqxycJY
 
+
+--- 
+
+## Consulta
+
+```
+
+SELECT  IdMovimientoa, cicloa, idalumno, idusuario, resolucion
+from movimientoa
+INNER JOIN tacciones
+ON movimientoa.idaccion = tacciones.idaccion
+
+```
+
 ---
 Built-in Passport Guards#
 The Guards chapter describes the primary function of Guards: to determine whether a request will be handled by the route handler or not. That remains true, and we'll use that standard capability soon. However, in the context of using the @nestjs/passport module, we will also introduce a slight new wrinkle that may at first be confusing, so let's discuss that now. Consider that your app can exist in two states, from an authentication perspective:

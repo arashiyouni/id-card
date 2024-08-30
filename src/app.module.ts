@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { SupportModuleModule } from './support-module/support-module.module';
-import { DatabaseModule } from './database/sql-server/database.module';
+import { DatabaseSQLModule } from './database/sql-server/database.module';
 import { MongoDatabaseModule } from './database/mongo-server/mongo-database.module';
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { MongoDatabaseModule } from './database/mongo-server/mongo-database.modu
     }),
     AuthModule,
     UsersModule,
-    DatabaseModule,
+    DatabaseSQLModule,
     SupportModuleModule,
   ],
   providers: [JwtStrategy],
