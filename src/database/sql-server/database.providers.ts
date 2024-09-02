@@ -32,6 +32,7 @@ export const AppDataSource = [
             const dataSource = new DataSource({
                 type: 'mssql',
                 ...defaultOptions,
+                logging: ['query'],
                 database: process.env.REGACADEMICO_DB,
                 entities: [join(__dirname, '../../**/*.entity.{js,ts}')]
             });
