@@ -45,8 +45,28 @@ export const AppDataSource = [
                 console.error("🚑 | Error during Data Source <RegAcademico> initialization:", err);
             }
         }
-    }
-    ,{
+    },{
+        //etiqueta para referirse a un modulo
+        name: 'SQL_SERVER_UFGREGISTROACADEMICO',
+        provide: 'DATA_SOURCE_UFGREGISTRO',
+        useFactory: async () => {
+            const dataSource = new DataSource({
+                type: 'mssql',
+                ...defaultOptions,
+                logging: ['query'],
+                database: process.env.FINANCIERA_DB,
+                entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+            });
+
+            try {
+                await dataSource.initialize();
+                console.log("🤝 | Data Source (SQL): <UFGRegistroAcademico> has been initialized!");
+                return dataSource;
+            } catch (err) {
+                console.error("🚑 | Error during Data Source <UFGRegistroAcademico> initialization:", err);
+            }
+        }
+    }, {
         //etiqueta para referirse a un modulo
         name: 'SQL_SERVER_FINANCIERA',
         provide: 'DATA_SOURCE_FINANCIERA',
@@ -66,7 +86,7 @@ export const AppDataSource = [
                 console.error("🚑 | Error during Data Source <Financiera> initialization:", err);
             }
         }
-    },{
+    }, {
         //etiqueta para referirse a un modulo
         name: 'SQL_SERVER_REGISTRO',
         provide: 'DATA_SOURCE_REGISTRO',
@@ -86,7 +106,7 @@ export const AppDataSource = [
                 console.error("🚑 | Error during Data Source <REGISTRO> initialization:", err);
             }
         }
-    },{
+    }, {
         //etiqueta para referirse a un modulo
         name: 'SQL_SERVER_FOTOS',
         provide: 'DATA_SOURCE_FOTOS',
