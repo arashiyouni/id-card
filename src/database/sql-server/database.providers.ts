@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { VPerfilEstudiante } from 'src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante';
 import { DataSource } from 'typeorm';
 
 /**
@@ -54,8 +55,8 @@ export const AppDataSource = [
                 type: 'mssql',
                 ...defaultOptions,
                 logging: ['query'],
-                database: process.env.FINANCIERA_DB,
-                entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+                database: process.env.UFGREGAC_DB,
+                entities: [VPerfilEstudiante],
             });
 
             try {
