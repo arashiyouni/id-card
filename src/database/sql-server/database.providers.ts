@@ -96,7 +96,7 @@ export const AppDataSource = [
                 type: 'mssql',
                 ...defaultOptions,
                 database: process.env.REGISTRO_DB,
-                // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+                entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
             });
 
             try {
@@ -116,7 +116,7 @@ export const AppDataSource = [
                 type: 'mssql',
                 ...defaultOptions,
                 database: process.env.FOTOS_DB,
-                // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+                entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
             });
 
             try {
