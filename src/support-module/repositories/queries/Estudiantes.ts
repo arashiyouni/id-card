@@ -5,6 +5,7 @@ import { Facultad } from "src/models/RegAcademico-Entities/Facultad.entity"
 import { Matins } from "src/models/RegAcademico-Entities/Matins.entity"
 import { Movimientoa } from "src/models/RegAcademico-Entities/Movimientoa.entity"
 import { Tacciones } from "src/models/RegAcademico-Entities/Tacciones.entity"
+import { VAlumno } from "src/models/RegAcademico-Entities/VAlumno.entity"
 import { VPerfilEstudiante } from "src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante"
 import { Repository } from "typeorm"
 
@@ -78,7 +79,7 @@ export class Estudiante {
         .select(['perfil.carnet', 'perfil.activo', 'perfil.fechaPerfilEstudiante'])
         .where('perfil.carnet = :carnet', {carnet: carnet})
         .getMany()
-        
+
         return {
             estudiante: estudiante,
             perfil: isActive
