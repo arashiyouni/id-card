@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common"
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common"
 import { Alumno } from "src/models/RegAcademico-Entities/Alumno.entity"
 import { Carrera } from "src/models/RegAcademico-Entities/Carrera.entity"
 import { Facultad } from "src/models/RegAcademico-Entities/Facultad.entity"
@@ -28,27 +28,31 @@ export class BuscarEstudiante {
      *  @returns 
     */
     async buscarReingreso(carnet: string, ciclo: string): Promise<Movimientoa[]> {
+        try {
+            if (carnet.length != 8) {
+                throw new NotFoundException('El carnet no ha sido encontrado')
+            }
 
-        if (carnet.length != 8) {
-            throw new NotFoundException('El carnet no ha sido encontrado')
+            //TODO: VER COMO VALIDAR EL CICLO ACTUAL s
+
+            const movimientos = await this.movimientoAcademicoRepository
+                .createQueryBuilder('mov')
+                //seleccionando múltiples columnas de manera explícita y clara.
+                .select(['mov.IdMovimientoa', 'mov.cicloa', 'mov.idalumno', 'mov.fechamov', 'mov.idaccion'])
+                .innerJoin(
+                    Tacciones, 'ta',
+                    'ta.idaccion = mov.idaccion'
+                )
+                .where('ta.idaccion = :idaccion', { idaccion: 7 })
+                .andWhere('mov.idalumno = :idalumno', { idalumno: carnet })
+                .andWhere('mov.cicloa = :cicloa', { cicloa: ciclo })
+                .getMany()
+
+            return movimientos
+        } catch (err) {
+            console.error(err)
+            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
         }
-
-        //TODO: VER COMO VALIDAR EL CICLO ACTUAL s
-
-        const movimientos = await this.movimientoAcademicoRepository
-            .createQueryBuilder('mov')
-            //seleccionando múltiples columnas de manera explícita y clara.
-            .select(['mov.IdMovimientoa', 'mov.cicloa', 'mov.idalumno', 'mov.fechamov', 'mov.idaccion'])
-            .innerJoin(
-                Tacciones, 'ta',
-                'ta.idaccion = mov.idaccion'
-            )
-            .where('ta.idaccion = :idaccion', { idaccion: 7 })
-            .andWhere('mov.idalumno = :idalumno', { idalumno: carnet })
-            .andWhere('mov.cicloa = :cicloa', { cicloa: ciclo })
-            .getMany()
-
-        return movimientos
     }
 
     /**
@@ -81,7 +85,7 @@ export class BuscarEstudiante {
                 .where('perfil.carnet = :carnet', { carnet: carnet })
                 .getOne()
 
-            return {estudiante, isActive}
+            return { estudiante, isActive }
         } catch (err) {
             console.error(err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
@@ -96,24 +100,35 @@ export class BuscarEstudiante {
     * @returns estudiante de postgrado
     */
     async buscarPostgradoPorCarnet(carnet: string) {
-        const estudiante = await this.alumnnoRepository
-            .createQueryBuilder('alumno')
-            .distinct(true)
-            .select(['alumno.idalumno', 'alumno.nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre'])
-            .innerJoin(Carrera, 'carrera',
-                'alumno.idcarrera = carrera.idcarrera'
-            )
-            .innerJoin(Facultad, 'facultad',
-                'carrera.idfacultad = facultad.idfacultad'
-            )
-            .where('alumno.idalumno = :idalumno', { idalumno: carnet })
-            .andWhere('carrera.idfacultad = :idfacultad', { idfacultad: '05' })
-            .getRawMany()
+        try {
+            const estudiante = await this.alumnnoRepository
+                .createQueryBuilder('alumno')
+                .distinct(true)
+                .select(['alumno.idalumno', 'alumno.nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre'])
+                .innerJoin(Carrera, 'carrera',
+                    'alumno.idcarrera = carrera.idcarrera'
+                )
+                .innerJoin(Facultad, 'facultad',
+                    'carrera.idfacultad = facultad.idfacultad'
+                )
+                .where('alumno.idalumno = :idalumno', { idalumno: carnet })
+                .andWhere('carrera.idfacultad = :idfacultad', { idfacultad: '05' })
+                .getRawMany()
 
-        return  estudiante
+            return estudiante
+        } catch (err) {
+            console.error(err)
+            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
+        }
     }
 
     async buscarEgresadoPorCarnet(carnet: string) {
-        return this.procedure.buscarEgresado(carnet)
+        try {
+            return this.procedure.buscarEgresado(carnet)
+
+        } catch (err) {
+            console.error(err)
+            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
+        }
     }
 }
