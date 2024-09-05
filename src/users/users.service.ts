@@ -5,6 +5,8 @@ import { Connection, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { SignUpDto } from './dto/signup-auth.dto';
 import { LoginDTO } from './dto/login-auth.dto';
+import { CarnetDTO } from './dto/carnet.dto';
+import { SupportModuleService } from 'src/support-module/support-module.service';
 // import { Roles } from 'src/common/decorator/decorator.decorator';
 // import { Role } from 'src/common/interface/role.enum';
 // import { RolesGuard } from 'src/auth/roles.guard';
@@ -14,9 +16,9 @@ export class UsersService {
   constructor(
     //private userModel: Model<User>
     @InjectModel(User.name, 'USER') private userModel: Model<User>,
+    private estudiante: SupportModuleService
    // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
-
 
   async createUser(signupData: SignUpDto) {
     //About body
@@ -77,25 +79,8 @@ export class UsersService {
     }
   }
 
-  async deleteUser(id: string){
-    //deletedCount es parte de la respuesta de deleteOne
-    const {deletedCount} = await this.userModel.deleteOne({_id: id})
-    if(deletedCount === 0)
-    throw new BadRequestException(`Pokemon with id ${id} not found`)
+  async obtenerEstudiante(carnet: CarnetDTO){
+    return this.estudiante.informacionEstudiante(carnet.carnet, carnet.tipo)
   }
-
-  //realizara el envio de la foto
-  async sendPicture(){
-    /**
-     * imagen
-      sede
-      tipo carnet
-      nombre
-      carrera
-      facultad
-      idfacultad
-      ¿Cómo generar el token para seguir el proceso?
-      ¿En qué momento se generaria el QR?
-     */
-  }
+  
 }

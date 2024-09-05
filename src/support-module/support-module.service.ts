@@ -8,68 +8,40 @@ import { Model } from 'mongoose';
 import { Carrera } from 'src/models/RegAcademico-Entities/Carrera.entity';
 import { Movimientoa } from 'src/models/RegAcademico-Entities/Movimientoa.entity';
 import { Tacciones } from 'src/models/RegAcademico-Entities/Tacciones.entity';
+import { BuscarEstudiante } from './repositories/queries/Estudiante/buscar-estudiante.query';
+import { ValidacionInscripcion } from './repositories/queries/Estudiante/verificar-inscripcion.query';
+import { carnetizacion } from './repositories/queries/obtener-estudiante';
+
 
 @Injectable()
 export class SupportModuleService {
   constructor(
     //@InjectModel('GestionFechas', 'USER') private readonly repoGestionFechasProcesos: Model<GestionFechas>,
-    @Inject('ALUMNO_REPOSITORY')
-    private alumnoRepository: Repository<Alumno>,
-    @Inject('CARRERA_REPOSITORY')
-    private carreraRepository: Repository<Carrera>,
-    @Inject('MOVIMIENTO_ACADENMICO_REPOSITORY')
-    private movimientoAcademicoRepository: Repository<Movimientoa>,
-    @Inject('TACCIONES_REPOSITORY')
-    private taccionesRepository: Repository<Tacciones>
+    // @Inject('ALUMNO_REPOSITORY')
+    // private alumnoRepository: Repository<Alumno>,
+    // @Inject('CARRERA_REPOSITORY')
+    // private carreraRepository: Repository<Carrera>,
+    private queries: carnetizacion
   ) { }
 
   //TODO:VER LO DE MONGO DEPUE retorna solo los procesos activos
-  // async modulosActivosCarnetizacion(ciclo: string) {
-  //   try {
-  //     const getProcesos = await this.repoGestionFechasProcesos.find()
-  //     if(!getProcesos) {
-  //       console.error('Hay errores para obtener el repoGestion: ', getProcesos)
-  //       throw new NotFoundException()
-  //     }
-  //     return getProcesos
+  async modulosActivosCarnetizacion(ciclo: string) {
+    // try {
+    //   const getProcesos = await this.repoGestionFechasProcesos.find()
+    //   if(!getProcesos) {
+    //     console.error('Hay errores para obtener el repoGestion: ', getProcesos)
+    //     throw new NotFoundException()
+    //   }
+    //   return getProcesos
 
-  //   } catch (err) {
-  //     console.error('😭 | Something happend...', err)
-  //     throw new NotFoundException()
-  //   }
-
-  // }
-
-
-  //Busca 
-
-  //se va a ingresar: carnet y tipo de carnet carnet: string, sede: string, tipoCarnet
-
-  async findStudent(carnet: string): Promise<Movimientoa[]> {
-     const movimientos = await this.movimientoAcademicoRepository
-           .createQueryBuilder('mov')
-           .innerJoin(
-            Tacciones, 'ta',
-            'ta.idaccion = mov.idaccion'
-           )
-           .where('mov.idusuario = :idusuario', {idusuario: carnet})
-           .andWhere('ta.idaccion = :idaccion', { idaccion: 7 })
-           //.andWhere('ta.idaccion = :idaccion', { idaccion: 7 })
-           .getMany()
-
-    return movimientos
+    // } catch (err) {
+    //   console.error('😭 | Something happend...', err)
+    //   throw new NotFoundException()
+    // }
   }
 
-  // async consultarTransaccionesEstudiant(carnet: string): Promise<Movimientoa[]> {
-    
-  // }
-}
+  async informacionEstudiante(carnet: string, tipo: string){
+    return this.queries.obtenerCarnet(carnet, tipo)
+  }
 
-export interface MovimientoEstudiante {
-  movimiento: string,
-  ciclo_reingreso: string,
-  carnet: string,
-  sede: string,
-  fecha_movimiento: string,
-  idaccion: string
 }

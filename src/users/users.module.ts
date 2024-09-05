@@ -4,6 +4,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersController } from './users.controller';
 import { AuthModule } from 'src/auth/auth.module';
+import { SupportModuleModule } from 'src/support-module/support-module.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
     //TODO: EL AUTH SE DEBE APLICAR DE ULTIMO
     //AuthModule
    // forwardRef(()=> AuthModule)
+   SupportModuleModule
   ],
   providers: [UsersService],
   exports: [UsersService],
