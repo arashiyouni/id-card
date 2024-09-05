@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Query, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CarnetDTO } from './dto/carnet.dto';
 //import { RolesGuard } from 'src/auth/roles.guard';
@@ -10,9 +10,26 @@ import { CarnetDTO } from './dto/carnet.dto';
 export class UsersController {
 
     constructor(private readonly userService: UsersService) { }
+    
+    @Post()
+    @HttpCode(200)
+    async informacionCarnet(@Body() carnet: CarnetDTO) {
+        try {
+            const estudiante = await this.userService.obtenerEstudiante(carnet)
+            if (!estudiante) {
+                throw new NotFoundException('El estudiante no esta activo')
+                
+            }
 
-    @Get()
-    finEstudent(@Query(new ValidationPipe({transform: true})) query: CarnetDTO) {
-        return this.userService.obtenerEstudiante(query)
+            return {
+                msg: 'Información del estudiante',
+                estudiante
+            }
+
+        } catch (err) {
+            console.error('Error al consultar estudiante:', err);
+            throw new InternalServerErrorException('Ocurrió un error al consultar el estudiante');
+        }
     }
+
 }
