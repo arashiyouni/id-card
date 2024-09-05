@@ -81,11 +81,11 @@ export class BuscarEstudiante {
             const isActive = await this.perfilEstudianteRepository
                 .createQueryBuilder('perfil')
                 .distinct(true)
-                .select(['perfil.carnet', 'perfil.activo', 'perfil.fechaPerfilEstudiante'])
-                .where('perfil.carnet = :carnet', { carnet: carnet })
+                .select(['perfil.Carnet', 'perfil.activo', 'perfil.fechaPerfilEstudiante'])
+                .where('perfil.Carnet = :Carnet', { Carnet: carnet })
                 .getOne()
 
-            return { estudiante, isActive }
+            return {estudiante, isActive} 
         } catch (err) {
             console.error(err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);

@@ -16,10 +16,8 @@ export class ValidacionEstudianteCarnet {
                 throw new BadRequestException('El estudiante no esta activo')
             }
 
-            return {
-                msg: 'Estudiante Pregrado 🌞',
-                estudianteValidado
-            }
+            return estudianteValidado
+
 
         } catch (err) {
             console.error('🔴 | Error al validar a estudiante de Pregrado ', err)
@@ -35,10 +33,7 @@ export class ValidacionEstudianteCarnet {
                 throw new BadRequestException('El estudiante no se encuentra en postgrado')
             }
 
-            return {
-                msg: 'Estudiante de Postgrado 🍕',
-                estudiante
-            }
+            return estudiante
         } catch (err) {
             console.error('🔴 | Error al validar a estudiante de Postgrado ', err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
@@ -53,10 +48,8 @@ export class ValidacionEstudianteCarnet {
                 throw new BadRequestException('El estudiante no se encuentra en egresado')
             }
 
-            return {
-                msg: 'Estudiante Egresado 🐔',
-                egresado
-            }
+            return egresado
+
         } catch (err) {
             console.error('🔴 | Error al validar a estudiante de Egresado ', err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
