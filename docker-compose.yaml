@@ -12,17 +12,6 @@ services:
     volumes:
       - ./db/card-creator:/data/db
 
-  mongo-carnetizacion-dev:
-    image: mongo:5  
-    restart: always
-    ports:
-      - 27018:27017
-    environment:
-      MONGODB_DATABASE: carnetizacionOpera003
-    volumes:
-      - ./db/carnetizacionOpera003:/data/db
-  
-
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server_registro
