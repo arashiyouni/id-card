@@ -15,22 +15,32 @@ export const UserProvider = [
     //     },
     //     inject: [getConnectionToken(User.name)]
     // },
-    {
-        provide: AuthService,
-        useFactory: (
-            RefreshToken: Model<RefreshToken>,
-            userService: UsersService,
-            jwtService: JwtService
-        ) => {
-            return new AuthService(RefreshToken, userService, jwtService)
-        },
-        inject: [getConnectionToken(RefreshToken.name), UsersService, JwtService]
-    }
+    // {
+    //     provide: AuthService,
+    //     useFactory: (
+    //         RefreshToken: Model<RefreshToken>,
+    //         userService: UsersService,
+    //         jwtService: JwtService
+    //     ) => {
+    //         return new AuthService(RefreshToken, userService, jwtService)
+    //     },
+    //     inject: [getConnectionToken(RefreshToken.name), UsersService, JwtService]
+    // }
 ]
 
-export const mongoseProvider = [
+export const MongoProvider = [
     {
-        provide: 'MONGO_OPERA',
-        useFactory: (): Promise<typeof mongoose> => mongoose.connect("mongodb://localhost:27018/carnetizacionOpera003")
-    }
-]
+      provide: 'MONGO_OPERA',
+      useFactory: async (): Promise<typeof mongoose> => {
+        try {
+          const connection = await mongoose.connect('mongodb://localhost:27018/carnetizacionOpera003');
+          console.log('🍏 | MongoDB <carnetizacionOpera003> connection established 🎉');
+          return connection;
+        } catch (error) {
+          // Mensaje para indicar que ocurrió un error al conectar
+          console.error('🚩🍏 | MongoDB <carnetizacionOpera003> connection failed 😭:', error.message);
+          throw error; // Opcional: Puedes lanzar el error para que el flujo de la aplicación se detenga
+        }
+      },
+    },
+  ];
