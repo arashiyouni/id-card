@@ -1,5 +1,5 @@
 import { Connection } from "mongoose";
-import { GestionFechasSchema } from "../schema/gestion-fecha.schema";
+import { GestionFechasSchema } from "src/models/Collections/gestion-fecha.schema";
 
 export const ProcesosProvider = [
     {

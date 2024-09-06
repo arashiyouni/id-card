@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Modulos } from "src/support-module/schema/gestion-modulos.interface";
 
@@ -10,9 +10,15 @@ export class GestionFechas{
         private readonly gestionProcesoModulos: Model<Modulos>
     ){}
 
-    async findAll(ciclo: string){
+    async procesosActivosCarnetizacion(ciclo: string){
+        //TODO: VALIDAR QUE SE INGRESE UN CICLO
+
         try{
             const modulos = await this.gestionProcesoModulos.find({ciclo: ciclo})
+
+            if (!modulos || modulos.length === 0) {
+                throw new NotFoundException('No se encontraron procesos para el ciclo especificado');
+            }
 
             //devolver los que solo son de carnetizacion
             const active = modulos.filter((isActive) => !!isActive.activo)

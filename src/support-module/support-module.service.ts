@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 
@@ -6,23 +6,20 @@ import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 @Injectable()
 export class SupportModuleService {
   constructor(
-    //@InjectModel('GestionFechas', 'USER') private readonly repoGestionFechasProcesos: Model<GestionFechas>,
-    // @Inject('ALUMNO_REPOSITORY')
-    // private alumnoRepository: Repository<Alumno>,
-    // @Inject('CARRERA_REPOSITORY')
-    // private carreraRepository: Repository<Carrera>,
     private repoGestionFechasProcesos: GestionFechas,
     private queries: carnetizacion
   ) { }
 
-  //TODO:VER LO DE MONGO DEPUE retorna solo los procesos activos
-  async modulosActivosCarnetizacion(ciclo: string) {
+  async modulosActivosCarnetizacion(request: string) {
     try {
-      const getProcesos = await this.repoGestionFechasProcesos.findAll(ciclo)
-      if(!getProcesos) {
-        console.error('Hay errores para obtener el repoGestion: ', getProcesos)
-        throw new NotFoundException()
+      const getProcesos = await this.repoGestionFechasProcesos.procesosActivosCarnetizacion(request)
+      
+      
+      if(!getProcesos || !getProcesos.moduloCarnetizacion.length) {
+        console.error('No hay procesos activos', getProcesos);
+        throw new NotFoundException('No se encontraron procesos activos para el ciclo especificado');
       }
+      
       return getProcesos
 
     } catch (err) {

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { Modulos } from "./gestion-modulos.interface";
+import { Modulos } from "src/support-module/schema/gestion-modulos.interface";
+
 
 export const GestionFechasSchema = new mongoose.Schema<Modulos>({
 
