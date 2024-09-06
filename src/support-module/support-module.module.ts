@@ -10,27 +10,29 @@ import { FinancieraProvider } from './repositories/MSSQL/financiera.provider';
 import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { Procedure } from './repositories/queries/Procedure/buscar-egresado.query';
 import { ValidacionEstudianteCarnet } from './repositories/validaciones/validacion-estudiante';
+import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
+import { ProcesosProvider } from './repositories/mongosee.provider';
+import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 
 @Module({
     imports: [
-        //Conexion de el esquima gestion de fechas de la db: OEPRA
-       //MongooseModule.forFeature([{ name: 'GestionFechas', schema: GestionFechasSchema }], 'USER'),
-       DatabaseSQLModule
+        DatabaseSQLModule,
+        MongoDatabaseModule
     ],
     controllers: [SupportModuleController],
     providers: [
         SupportModuleService,
-       // GestionFechas,
         ...RegistroProvider,
         ...UFGRegistroProvider,
         ...RegistroProvider,
         ...FinancieraProvider,
+        ...ProcesosProvider,
         BuscarEstudiante,
         ValidacionInscripcion,
         carnetizacion,
         ValidacionEstudianteCarnet,
-        Procedure
-       // ...ProcesosProvider
+        Procedure,
+        GestionFechas
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })

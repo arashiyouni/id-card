@@ -40,3 +40,6 @@ export const GestionFechasSchema = new mongoose.Schema<Modulos>({
 },
     { timestamps: false, versionKey: false }
 )
+
+//esto sera la referencia con el nombre del modelo
+export const GestionFechasModelName = 'GestionFechas';
