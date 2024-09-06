@@ -1,12 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
+import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 
 
 @Injectable()
 export class SupportModuleService {
   constructor(
     private repoGestionFechasProcesos: GestionFechas,
+    private repoGuardarFoto: FotoCarnet,
     private queries: carnetizacion
   ) { }
 
@@ -32,6 +34,9 @@ export class SupportModuleService {
     return await this.queries.obtenerCarnet(carnet, tipo)
   }
 
-  async enviarFoto(){}
+  async enviarFoto(nombres: string, apellidos: string, email: string, carnet: string, tipoCarnet: string,  fotoCarnet: string, idFacultad: string, facultad: string, carrera: string, ciclo: string
+  ){
+    return await this.repoGuardarFoto.guardarFoto(nombres, apellidos, email, carnet, tipoCarnet, fotoCarnet, idFacultad, facultad, carrera, ciclo)
+  }
 
 }

@@ -124,7 +124,7 @@ export class BuscarEstudiante {
 
     async buscarEgresadoPorCarnet(carnet: string) {
         try {
-            return this.procedure.buscarEgresado(carnet)
+            return await this.procedure.buscarEgresado(carnet)
 
         } catch (err) {
             console.error(err)

@@ -13,6 +13,7 @@ import { ValidacionEstudianteCarnet } from './repositories/validaciones/validaci
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { ProcesosProvider } from './repositories/mongosee.provider';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
+import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 
 @Module({
     imports: [
@@ -32,7 +33,8 @@ import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
         carnetizacion,
         ValidacionEstudianteCarnet,
         Procedure,
-        GestionFechas
+        GestionFechas,
+        FotoCarnet
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })

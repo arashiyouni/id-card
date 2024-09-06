@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CarnetDTO } from './dto/carnet.dto';
+import { FotoDTO } from './dto/foto-carnet.dto';
 //import { RolesGuard } from 'src/auth/roles.guard';
 // import { Role } from 'src/common/interface/role.enum';
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -32,4 +33,9 @@ export class UsersController {
         }
     }
 
+    @Post('foto')
+    @HttpCode(200)
+    async enviarFotoCarnet(@Body() foto: FotoDTO){
+        return await this.userService.enviarFotoCarnet(foto)
+    }
 }
