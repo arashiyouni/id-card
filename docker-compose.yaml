@@ -8,7 +8,7 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGODB_DATABASE: card-creator
+      MONGODB_DATABASE: carnetizacionOpera003
     volumes:
       - ./db/card-creator:/data/db
 
