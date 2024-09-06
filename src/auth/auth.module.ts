@@ -9,7 +9,7 @@ import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{name: RefreshToken.name,schema: RefreshTokenSchema}], 'USER'),
+    //MongooseModule.forFeature([{name: RefreshToken.name,schema: RefreshTokenSchema}], 'USER'),
     UsersModule
     //forwardRef(()=> UsersModule)
   ],
