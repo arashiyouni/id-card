@@ -215,3 +215,12 @@ ref: [typeorm-model-generator](https://github.com/Kononnable/typeorm-model-gener
 ---
 TODO:
 - HACER UN SEED QUE ME GUARDE LA INFO EN MIS TABLAS Y NO ESTAR A CADA RATO COPIANDO Y PEGANDO
+
+---
+
+### Aspectos a mejorar después de la Review
+- Agregar el id del estudiante
+- colocar los tipos
+- mejorar respuesta
+
+la imagen se pasa a base 64 en mongo y en mssl en bit
