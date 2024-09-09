@@ -1,36 +1,39 @@
-import { IsNumber, IsString } from "class-validator"
+import { IsBase64, IsDate, IsEmail, IsNumber, IsOptional, IsString } from "class-validator"
 
 //LA IMAGEN SE GUARDA EN BINARIO SI ES SQL Y MONGO EN BASE64
-export class FotoDTO {
+export class StudentDTO {
 
-
-    @IsString()
-    nombre: string
-
-    @IsString()
-    apellido: string
+    @IsNumber()
+    activo: number
 
     @IsString()
-    email: string
+    apellidos: string
 
     @IsString()
     carnet: string
 
+    @IsEmail()
+    email: string
+
+    // @IsBase64()
     @IsString()
-    tipo: string
+    Foto: string
 
     @IsString()
-    fotoCarnet: string
+    TipoCarnet: string
 
     @IsString()
-    idfacultad: string
+    Nombres: string
+
+    // @IsString()
+    // idfacultad: string
 
     @IsString()
-    facultad: string
+    NombreFacultad: string
 
     @IsString()
-    carrera: string
+    NombreCarrera: string
 
     @IsString()
-    ciclo: string
+    CicloCarnetizacion: string
 }

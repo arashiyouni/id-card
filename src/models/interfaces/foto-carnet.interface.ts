@@ -1,5 +1,6 @@
 
 export interface Foto extends Document {
+    Token: string,
     IdSede?: number,
     CicloCarnetizacion: string
     TipoCarnet: string

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Foto, Seguimiento } from "../interfaces/foto-carnet.interface";
+import { Prop, SchemaFactory } from "@nestjs/mongoose";
 
 export const SeguimientoSchema = new mongoose.Schema<Seguimiento>({
     Paso: {
@@ -21,8 +22,89 @@ export const SeguimientoSchema = new mongoose.Schema<Seguimiento>({
 }, { _id: false })
 
 export const FotoCarnetSchema = new mongoose.Schema<Foto>({
+    Token: {
+        type: String
+    },
+    Activo: {
+        type: Number,
+        required: true
+    },
+    Apellidos: {
+        type: String,
+        uppercase: true,
+        required: true
+    },
+    CarnetEquivalente: {
+        type: String,
+        required: false
+    },
+    Carnet: {
+        type: String,
+        uppercase: true,
+        required: true
+    },
+    Email: {
+        type: String,
+        required: true,
+        lowercase: true
+    },
+    //este valor va a tener la fecha actualizada
+    FechaModificacion: {
+        type: Date,
+        required: false
+    },
+    FechaRegistro: {
+        type: Date,
+        required: true
+    },
+    Foto: {
+        type: String,
+        required: true
+    },
     IdSede: {
-        type: Number
+        type: Number,
+        required: false
+    },
+    Qr: {
+        type: String,
+        required: false
+    },
+    TipoCarnet: {
+        type: String,
+        uppercase: true,
+        required: true
+    },
+    CalificacionesFile: {
+        type: String,
+        required: false
+        
+    },
+    IdFacultad: {
+        type: String,
+        required: false
+    },
+    InscripcionFile: {
+        type: String,
+        required: false    
+    },
+    CalificacionesFileName: {
+        type: String,
+        required: false    
+        
+    },
+    //Seguimiento: [SeguimientoSchema],
+    NombreCarrera: {
+        type: String,
+        required: true
+    },
+    NombreFacultad: {
+        type: String,
+        required: true
+    },
+    Nombres: {
+        type: String,
+        uppercase: true,
+        required: true
     },
     CicloCarnetizacion: {
         type: String,
@@ -32,94 +114,9 @@ export const FotoCarnetSchema = new mongoose.Schema<Foto>({
         trim: true,
         uppercase: true
     },
-    TipoCarnet: {
-        type: String,
-        uppercase: true,
-        required: true
-    },
-    Carnet: {
-        type: String,
-        uppercase: true,
-        required: true
-    },
-    CarnetEquivalente: {
-        type: String
-    },
-    Nombres: {
-        type: String,
-        uppercase: true
-    },
-    Apellidos: {
-        type: String,
-        uppercase: true
-    },
-    Email: {
-        type: String,
-        required: true,
-        lowercase: true
-    },
-    Dui: {
-        type: String
-    },
-    Direccion: {
-        type: String
-    },
-    Cargo: {
-        type: String
-    },
-    IdFacultad: {
-        type: String
-    },
-    NombreFacultad: {
-        type: String
-    },
-    NombreCarrera: {
-        type: String
-    },
-    FechaVencimientoCarnet: {
-        type: String
-    },
-    NombreMaestria: {
-        type: String
-    },
-    TipoContrato: {
-        type: String
-    },
-    // Qr: {
-    //     type: String,
-    //     required: true
-    // },
-    Foto: {
-        type: String,
-        required: true
-    },
-    // Activo: {
-    //     type: Number,
-    //     required: true
-    // },
-    FechaRegistro: {
-        type: Date,
-        required: true
-    },
-    FechaModificacion: {
-        type: Date,
-        required: true
-    },
-    Seguimiento: [SeguimientoSchema],
-    InscripcionFile: {
-        type: String
-    },
-    InscripcionFileName: {
-        type: String
-    },
-    CalificacionesFileName: {
-        type: String
-    },
-    CalificacionesFile: {
-        type: String
-    }
-}, { timestamps: false, versionKey: false })
+}, { timestamps: true, versionKey: false })
 
 
-export const SeguimientoModel = 'SeguimientoCarnet'
 export const FotoCarnetModel = 'FotoCarnet'
+// export const FotoCarnetModel = SchemaFactory.createForClass(FotoCarnet)
+export const SeguimientoModel = 'SeguimientoCarnet'
