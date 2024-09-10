@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
-import { Modulos } from "src/support-module/schema/gestion-modulos.interface";
+import { Modulos } from "src/common/interface/mongo/documents/modulos";
 
 
 @Injectable()

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { Foto, Seguimiento } from "../interfaces/foto-carnet.interface";
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Foto, Seguimiento } from "src/common/interface/mongo/documents/Foto";
 
 export const SeguimientoSchema = new mongoose.Schema<Seguimiento>({
     Paso: {
