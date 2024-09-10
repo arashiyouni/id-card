@@ -1,10 +1,9 @@
-import { Pictures } from "src/models/Fotos-Entities/Pictures";
 import { Alumno } from "src/models/RegAcademico-Entities/Alumno.entity";
 import { Alumnores } from "src/models/RegAcademico-Entities/Alumnores.entity";
 import { Carrera } from "src/models/RegAcademico-Entities/Carrera.entity";
-import { Facultad } from "src/models/RegAcademico-Entities/Facultad.entity";
 import { Matins } from "src/models/RegAcademico-Entities/Matins.entity";
 import { Movimientoa } from "src/models/RegAcademico-Entities/Movimientoa.entity";
+import { Pictures } from "src/models/RegAcademico-Entities/Pictures.entity";
 import { Tacciones } from "src/models/RegAcademico-Entities/Tacciones.entity";
 import { VAlumno } from "src/models/RegAcademico-Entities/VAlumno.entity";
 import { DataSource } from "typeorm";
