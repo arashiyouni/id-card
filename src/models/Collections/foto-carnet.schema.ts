@@ -62,11 +62,11 @@ export const FotoCarnetSchema = new mongoose.Schema<Foto>({
     },
     IdSede: {
         type: Number,
-        required: false
+        required: true
     },
     Qr: {
         type: String,
-        required: false
+        required: true
     },
     TipoCarnet: {
         type: String,
@@ -80,7 +80,7 @@ export const FotoCarnetSchema = new mongoose.Schema<Foto>({
     },
     IdFacultad: {
         type: String,
-        required: false
+        required: true
     },
     InscripcionFile: {
         type: String,
