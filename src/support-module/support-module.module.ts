@@ -14,11 +14,14 @@ import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.mo
 import { ProcesosProvider } from './repositories/mongosee.provider';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
+import { QrModule } from './qr/qr-code.module';
+import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
 
 @Module({
     imports: [
         DatabaseSQLModule,
-        MongoDatabaseModule
+        MongoDatabaseModule,
+        QrModule
     ],
     controllers: [SupportModuleController],
     providers: [
@@ -34,7 +37,8 @@ import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
         ValidacionEstudianteCarnet,
         Procedure,
         GestionFechas,
-        FotoCarnet
+        FotoCarnet,
+        CarnetEstudiante
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })
