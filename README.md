@@ -215,7 +215,20 @@ ref: [typeorm-model-generator](https://github.com/Kononnable/typeorm-model-gener
 ---
 TODO:
 - HACER UN SEED QUE ME GUARDE LA INFO EN MIS TABLAS Y NO ESTAR A CADA RATO COPIANDO Y PEGANDO
+- la imagen se pasa a base 64 en mongo ✅ y en mssl en bit
+- Mejorar nomenclatura del codigo
+- Generar Codigo QR ✅
+- Ver codigo QR ✅
+- Preguntar sobre los files que se ingresan
+- Mejorar expeciones de codigo
+- Ver como se valida el egresado y postgrado, ya que pregrado es con matins (postgrado = 1 y egresado pagos realizados)
 
+TODO PARA MAÑANA 09/10/2024
+
+- Ver como mejorar el codigo de guardar para mongo y sql 
+- Mejorar como se muestra el codigo del token
+- Hacer las validacion de egresado y pregrado
+- Iniciar el endpoint de updateFoto (creo que es de admin) o insertNewPhoto
 ---
 
 ### Aspectos a mejorar después de la Review
@@ -223,4 +236,5 @@ TODO:
 - colocar los tipos
 - mejorar respuesta
 
-la imagen se pasa a base 64 en mongo y en mssl en bit
+Convertidor de imagen=
+https://base64.guru/converter/encode/image
