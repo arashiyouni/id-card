@@ -16,6 +16,8 @@ import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { QrModule } from './qr/qr-code.module';
 import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
+import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
+import { ImageService } from 'src/common/service/image.service';
 
 @Module({
     imports: [
@@ -38,7 +40,9 @@ import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estud
         Procedure,
         GestionFechas,
         FotoCarnet,
-        CarnetEstudiante
+        CarnetEstudiante,
+        FotoEstudiante,
+        ImageService
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })

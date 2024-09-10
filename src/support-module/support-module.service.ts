@@ -2,11 +2,14 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
-import { ImageService } from 'src/common/service/image.service';
 import { getToken } from 'src/utils/generate-random.token';
 import { QrService } from './qr/qr-code.service';
 import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
-import { getstudentParametersImage } from 'src/common/interface/mongo/parameters/guardar-foto.interface';
+import { getstudentParametersImage, sendImageParams } from 'src/common/interface/mongo/parameters/guardar-foto.interface';
+import { QRParameters } from 'src/common/interface/mongo/parameters/foto-qr.interface';
+import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
+import { ImageService } from 'src/common/service/image.service';
+import { FotoHexa } from 'src/common/interface/sql/parameters/insertar-foto';
 
 
 @Injectable()
@@ -16,7 +19,9 @@ export class SupportModuleService {
     private carnetRepository: FotoCarnet,
     private queries: carnetizacion,
     private qr: QrService,
-    private equivalente: CarnetEstudiante
+    private equivalente: CarnetEstudiante,
+    private sqlFoto: FotoEstudiante,
+    private fotoHex: ImageService
   ) { }
 
   async modulosActivosCarnetizacion(request: string) {
@@ -41,7 +46,7 @@ export class SupportModuleService {
     return await this.queries.obtenerCarnet(carnet, tipo)
   }
 
-  async sendPhoto(student: getstudentParametersImage) {
+  async enviarFoto(student: getstudentParametersImage) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
 
     if (!student) throw new BadRequestException('Los datos de la imagen o del estudiante son inválidos');
@@ -53,47 +58,69 @@ export class SupportModuleService {
 
       if (!isValidStudent) throw new NotFoundException('No se ha encontrado el estudiante')
 
-      const { idSede, idfacultad, activo, apellidos, NombreCarrera, NombreFacultad, Nombres } = isValidStudent
-
       //consulta de carnet equivalente
-      const equivalente = await this.equivalente.buscarCarnetEquivalente(carnet)
+      const carnetEquivalente = await this.equivalente.buscarCarnetEquivalente(carnet)
 
       //token para seguimiento
       const token = getToken()
 
        //generador de qr
-       const studentQr = this.qr.generateQrCode(carnet, token)
-
-
-      //objeto pa guardar
-      //TODO: ESTOY PASANDO LO QUE VIENE EN EL BODY JUNTO CON LA INFORMACION A GUARDAR
-      const data = {
+       const studentQr = await this.qr.generateQrCode(carnet, token)
+      const dataPhoto: sendImageParams  = {
         Token: token,
-        Activo: activo,
-        Apellidos: apellidos,
-        CarnetEquivalente: equivalente ?? '',
+        Activo: isValidStudent.isActive.activo,
+        Apellidos: isValidStudent.estudiante.alumno_apellido1,
+        CarnetEquivalente: carnetEquivalente ,
         Carnet: carnet,
         Email: email,
         FechaModificacion: new Date(),
         FechaRegistro: new Date(),
         Foto: Foto,
-        IdSede: idSede,
+        IdSede: isValidStudent.estudiante.carrera_sede,
         Qr: studentQr,
         TipoCarnet: TipoCarnet,
-        //CalificacionesFile
-        IdFacultad: idfacultad,
-        //InscripcionFile
-        //CalificacionesFileName
-        NombreCarrera: NombreCarrera,
-        NombreFacultad: NombreFacultad,
-        Nombres: Nombres,
-        CicloCarnetizacion: CicloCarnetizacion
+        NombreFacultad: isValidStudent.estudiante.facultad_nombre,
+        NombreCarrera: isValidStudent.estudiante.carrera_nombre,
+        Nombres: isValidStudent.estudiante.nombres,
+        CicloCarnetizacion: CicloCarnetizacion,
+        IdFacultad: isValidStudent.estudiante.facultad_idfacultad
+      };
+
+      const dataQr: QRParameters = {
+        TokenQr: token,
+        IdSede: isValidStudent.estudiante.carrera_sede,
+        CicloCarnetizacion: CicloCarnetizacion,
+        TipoCarnet: TipoCarnet,
+        Carnet: carnet,
+        Qr: studentQr,
+        Activo: 1,
+        FechaRegistro: new Date(),
+        FechaModificacion: new Date()
+        
+      }
+      //convertir imagen
+      const converHex = this.fotoHex.convertImageToHex(Foto)
+
+      const FotoSql: FotoHexa = {
+        carnet: carnet,
+        length: converHex.length,
+        idSede: isValidStudent.estudiante.carrera_sede,
+        foto: converHex,
+        date: new Date()
       }
 
-      //TODO: HACER INTERFAZ PARA LA BD
-      //      const result = await this.repoGuardarFoto.guardarFoto(data)
+       //guardar foto en sql 
+      const guardarFotoSql = this.sqlFoto.insertarFotoSql(FotoSql)
 
-      // if(!result) throw new InternalServerErrorException('Error al guardar la foto en la base de datos')
+      if(!guardarFotoSql) throw new BadRequestException('Error al guardar la foto en la base de datos SQL')
+      
+      const result = await this.carnetRepository.guardarFoto(dataPhoto)
+
+      if(!result) throw new BadRequestException('Error al guardar la foto en la base de datos')
+
+      const saveQR = this.carnetRepository.guardarQR(dataQr)
+
+      if(!saveQR) throw new BadRequestException('Error al guardar el QR en la base de datos')
 
       return {
         msg: 'Foto guardada exitosamente',
