@@ -9,7 +9,8 @@ export class QrService {
 
     async generateQrCode(carnet: string, token: string) {
         try{
-            const qrCodeDataUrl = await qrcode.toDataURL(carnet, token)
+            const qrContenido = `Universidad Francisco Gavidia, Carnet del estudiante : ${carnet} - Token: ${token}`
+            const qrCodeDataUrl = await qrcode.toDataURL(qrContenido)
             return qrCodeDataUrl
 
         }catch(err){
@@ -17,4 +18,5 @@ export class QrService {
             throw new InternalServerErrorException(`Ocurrió un error al generar el QR`);
         }
     }
+
 }
