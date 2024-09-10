@@ -7,14 +7,21 @@ export interface getstudentParametersImage {
 }
 
 export interface sendImageParams{
+    Token: string
     Activo: number
     Apellidos: string
+    CarnetEquivalente: string
     Carnet: string
     Email: string
+    FechaModificacion: Date
+    FechaRegistro: Date
     Foto: string
+    IdSede: number
+    Qr: string
     TipoCarnet: string
     NombreFacultad: string
     NombreCarrera: string
     Nombres: string
     CicloCarnetizacion: string
+    IdFacultad: string
 }

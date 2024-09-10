@@ -5,5 +5,7 @@ export interface QRParameters {
     TipoCarnet: string,
     Carnet: string,
     Qr: string,
-    Activo: number
+    Activo: number,
+    FechaRegistro: Date,
+    FechaModificacion: Date,
 }
