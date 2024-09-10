@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Foto } from "src/common/interface/mongo/documents/Foto";
 import { QRSchema } from "src/common/interface/mongo/documents/qr-code";
+import { QRParameters } from "src/common/interface/mongo/parameters/foto-qr.interface";
 import { sendImageParams } from "src/common/interface/mongo/parameters/guardar-foto.interface";
 @Injectable()
 export class FotoCarnet {
@@ -12,14 +13,15 @@ export class FotoCarnet {
         private readonly qrCodeRepository: Model<QRSchema>
     ) { }
 
-    //TODO: MEJORAR LOS PARAMETROS A ENVIAR
-    async guardarFoto(student: sendImageParams) {
+    async guardarFoto(studentData: sendImageParams) {
         const {
-            Activo, Apellidos, Carnet,  Email,  Foto, TipoCarnet, NombreCarrera, NombreFacultad, Nombres, CicloCarnetizacion
-        } = student;
+            Token, Activo, Apellidos, CarnetEquivalente, Carnet, Email, FechaModificacion, FechaRegistro, Foto, IdSede, Qr, TipoCarnet,
+            NombreFacultad, NombreCarrera, Nombres, CicloCarnetizacion, IdFacultad
+        } = studentData;
 
         try {
             const guardarCarnetMongo = await this.fotoCarnetRepository.create({
+                Token,
                 Activo,
                 Apellidos,
                 Carnet,
@@ -29,41 +31,47 @@ export class FotoCarnet {
                 NombreFacultad,
                 NombreCarrera,
                 Nombres,
-                CicloCarnetizacion
+                CicloCarnetizacion,
+                CarnetEquivalente,
+                FechaModificacion,
+                FechaRegistro,
+                IdSede,
+                Qr,
+                IdFacultad
 
             });
 
             return !!guardarCarnetMongo; // Retorna true si se creó un documento, false en caso contrario
         } catch (err) {
-            console.log('Error al guardar la foto en mongo:', err.message);
+            console.log('🔴 | Error al guardar la foto en mongo:', err.message);
             return false;
         }
     }
 
-    // async guardarQR(dataQR: QRParameters) {
-    //     const { TokenQr, IdSede, CicloCarnetizacion, TipoCarnet, Carnet, Qr, Activo } = dataQR
+    async guardarQR(dataQR: QRParameters) {
+        const { TokenQr, IdSede, CicloCarnetizacion, TipoCarnet, Carnet, Qr, Activo } = dataQR
 
-    //     try {
+        try {
 
-    //         const saveQR = this.qrCodeRepository.create({
-    //             TokenQr: TokenQr,
-    //             IdSede: IdSede,
-    //             CicloCarnetizacion: CicloCarnetizacion,
-    //             TipoCarnet: TipoCarnet,
-    //             Carnet: Carnet,
-    //             Qr: Qr,
-    //             Activo: Activo,
-    //             FechaRegistro: new Date(),
-    //             FechaModificacion: new Date(),
-    //         })
+            const saveQR = this.qrCodeRepository.create({
+                TokenQr: TokenQr,
+                IdSede: IdSede,
+                CicloCarnetizacion: CicloCarnetizacion,
+                TipoCarnet: TipoCarnet,
+                Carnet: Carnet,
+                Qr: Qr,
+                Activo: Activo,
+                FechaRegistro: new Date(),
+                FechaModificacion: new Date(),
+            })
 
-    //         return !!saveQR
+            return !!saveQR
 
-    //     } catch (err) {
-    //         console.log('Error al guardar QR en mongo:', err.message);
-    //         return false;
-    //     }
-    // }
+        } catch (err) {
+            console.log('Error al guardar QR en mongo:', err.message);
+            return false;
+        }
+    }
 
     async obtenerQr(carnet: string) {
         const qrCode = await this.qrCodeRepository.findOne({ Carnet: carnet })
