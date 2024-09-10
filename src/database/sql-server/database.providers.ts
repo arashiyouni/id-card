@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { CarneEquivalente } from 'src/models/UFGRegistroAcademico-Entities/CarneEquivalente';
 import { VPerfilEstudiante } from 'src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante';
 import { DataSource } from 'typeorm';
 
@@ -56,7 +57,7 @@ export const AppDataSource = [
                 ...defaultOptions,
                 logging: ['query'],
                 database: process.env.UFGREGAC_DB,
-                entities: [VPerfilEstudiante],
+                entities: [VPerfilEstudiante,CarneEquivalente ],
             });
 
             try {
