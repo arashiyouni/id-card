@@ -29,10 +29,6 @@ export class BuscarEstudiante {
     */
     async buscarReingreso(carnet: string, ciclo: string): Promise<Movimientoa[]> {
         try {
-            if (carnet.length != 8) {
-                throw new NotFoundException('El carnet no ha sido encontrado')
-            }
-
             //TODO: VER COMO VALIDAR EL CICLO ACTUAL s
 
             const movimientos = await this.movimientoAcademicoRepository
@@ -65,7 +61,7 @@ export class BuscarEstudiante {
             const estudiante = await this.alumnnoRepository
                 .createQueryBuilder('alumno')
                 .distinct(true)
-                .select(['nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre'])
+                .select(['alumno.idalumno', 'nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre', 'facultad.nombre', 'facultad.idfacultad', 'carrera.sede'])
                 .innerJoin(Matins, 'matins',
                     'alumno.idalumno = matins.idalumno'
                 )
@@ -104,7 +100,7 @@ export class BuscarEstudiante {
             const estudiante = await this.alumnnoRepository
                 .createQueryBuilder('alumno')
                 .distinct(true)
-                .select(['alumno.idalumno', 'alumno.nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre'])
+                .select(['alumno.idalumno', 'alumno.nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'alumno.sexo', 'carrera.nombre', 'facultad.nombre', 'facultad.idfacultad', 'carrera.sede'])
                 .innerJoin(Carrera, 'carrera',
                     'alumno.idcarrera = carrera.idcarrera'
                 )

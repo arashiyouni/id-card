@@ -27,12 +27,13 @@ export class ValidacionEstudianteCarnet {
 
     async Postgrado(carnet: string) {
         try {
+
             const estudiante = await this.estudiante.buscarPostgradoPorCarnet(carnet)
 
             if (!Object.keys(estudiante).length) {
                 throw new BadRequestException('El estudiante no se encuentra en postgrado')
             }
-
+      
             return estudiante
         } catch (err) {
             console.error('🔴 | Error al validar a estudiante de Postgrado ', err)
