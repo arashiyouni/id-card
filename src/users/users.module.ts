@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersController } from './users.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { SupportModuleModule } from 'src/support-module/support-module.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -12,7 +13,10 @@ import { SupportModuleModule } from 'src/support-module/support-module.module';
     //TODO: EL AUTH SE DEBE APLICAR DE ULTIMO
     //AuthModule
    // forwardRef(()=> AuthModule)
-   SupportModuleModule
+   SupportModuleModule,
+   MulterModule.register({
+    dest: '.uploads'
+   })
   ],
   providers: [UsersService],
   exports: [UsersService],

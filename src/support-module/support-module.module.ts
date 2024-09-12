@@ -7,7 +7,7 @@ import { BuscarEstudiante } from './repositories/queries/Estudiante/buscar-estud
 import { UFGRegistroProvider } from './repositories/MSSQL/ufgregistro.provider';
 import { ValidacionInscripcion } from './repositories/queries/Estudiante/verificar-inscripcion.query';
 import { FinancieraProvider } from './repositories/MSSQL/financiera.provider';
-import { carnetizacion } from './repositories/queries/obtener-estudiante';
+//import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { Procedure } from './repositories/queries/Procedure/buscar-egresado.query';
 import { ValidacionEstudianteCarnet } from './repositories/validaciones/validacion-estudiante';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
@@ -17,7 +17,13 @@ import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { QrModule } from './qr/qr-code.module';
 import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
 import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
+import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { ImageService } from 'src/common/service/image.service';
+import { FotoModule } from './foto/foto.module';
+import { ProcesarEstudiante } from './foto/foto.service';
+import { PregradoService } from './foto/estrategia/pregrado/pregrado.service';
+import { FotosProvider } from './repositories/MSSQL/foto.provider';
+import { PostgradoService } from './foto/estrategia/postgrado/postgrado.service';
 
 @Module({
     imports: [
@@ -33,6 +39,7 @@ import { ImageService } from 'src/common/service/image.service';
         ...RegistroProvider,
         ...FinancieraProvider,
         ...ProcesosProvider,
+        ...FotosProvider,
         BuscarEstudiante,
         ValidacionInscripcion,
         carnetizacion,
@@ -41,8 +48,13 @@ import { ImageService } from 'src/common/service/image.service';
         GestionFechas,
         FotoCarnet,
         CarnetEstudiante,
+        //TODO: QUITAR FotoEstudiante
         FotoEstudiante,
-        ImageService
+        ImageService,
+        FotoModule,
+        PregradoService,
+        PostgradoService,
+        ProcesarEstudiante
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })
