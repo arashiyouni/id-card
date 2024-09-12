@@ -2,8 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Foto } from "src/common/interface/mongo/documents/Foto";
 import { QRSchema } from "src/common/interface/mongo/documents/qr-code";
-import { QRParameters } from "src/common/interface/mongo/parameters/foto-qr.interface";
-import { sendImageParams } from "src/common/interface/mongo/parameters/guardar-foto.interface";
+import { IQrParametros } from "src/common/interface/mongo/parameters/foto-qr.interface";
+import { IEnviarFotoCarnet } from "src/common/interface/mongo/parameters/guardar-foto.interface";
 @Injectable()
 export class FotoCarnet {
     constructor(
@@ -13,7 +13,7 @@ export class FotoCarnet {
         private readonly qrCodeRepository: Model<QRSchema>
     ) { }
 
-    async guardarFoto(studentData: sendImageParams) {
+    async guardarFoto(studentData: IEnviarFotoCarnet) {
         const {
             Token, Activo, Apellidos, CarnetEquivalente, Carnet, Email, FechaModificacion, FechaRegistro, Foto, IdSede, Qr, TipoCarnet,
             NombreFacultad, NombreCarrera, Nombres, CicloCarnetizacion, IdFacultad
@@ -48,7 +48,7 @@ export class FotoCarnet {
         }
     }
 
-    async guardarQR(dataQR: QRParameters) {
+    async guardarQR(dataQR: IQrParametros) {
         const { TokenQr, IdSede, CicloCarnetizacion, TipoCarnet, Carnet, Qr, Activo } = dataQR
 
         try {
@@ -77,5 +77,13 @@ export class FotoCarnet {
         const qrCode = await this.qrCodeRepository.findOne({ Carnet: carnet })
 
         return qrCode.Qr
+    }
+
+    async eliminarFotoCarnetMongo(carnet: string) {
+        return await this.fotoCarnetRepository.findOneAndDelete({Carnet: carnet})
+    }    
+    
+    async eliminarQrMongo(carnet: string){
+        return await this.qrCodeRepository.findOneAndDelete({Carnet: carnet})
     }
 }
