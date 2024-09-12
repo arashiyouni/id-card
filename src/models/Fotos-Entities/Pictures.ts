@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("PICTURES", { schema: "dbo" })
-export class Pictures {
+export class PicturesEgresado {
   @PrimaryColumn({name: "id",type:"varchar" })
   //@Column("varchar", { name: "id", nullable: true, length: 8 })
   id: string | null;
