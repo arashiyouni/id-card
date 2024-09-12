@@ -6,9 +6,9 @@ export interface getstudentParametersImage {
    CicloCarnetizacion: string;
 }
 
-export interface sendImageParams{
+export interface IEnviarFotoCarnet {
     Token: string
-    Activo: number
+    Activo: number | boolean
     Apellidos: string
     CarnetEquivalente: string
     Carnet: string
@@ -16,7 +16,7 @@ export interface sendImageParams{
     FechaModificacion: Date
     FechaRegistro: Date
     Foto: string
-    IdSede: number
+    IdSede: number | string
     Qr: string
     TipoCarnet: string
     NombreFacultad: string

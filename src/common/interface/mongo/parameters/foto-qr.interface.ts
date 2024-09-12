@@ -1,6 +1,6 @@
-export interface QRParameters {
+export interface IQrParametros {
     TokenQr: string,
-    IdSede: number,
+    IdSede: number | string,
     CicloCarnetizacion: string,
     TipoCarnet: string,
     Carnet: string,
