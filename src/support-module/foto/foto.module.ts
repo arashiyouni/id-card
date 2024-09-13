@@ -5,10 +5,10 @@ import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider'
 import { ProcesosProvider } from '../repositories/mongosee.provider';
 import { PregradoService } from './estrategia/pregrado/pregrado.service';
 import { PostgradoService } from './estrategia/postgrado/postgrado.service';
-import { EgresadoService } from './estrategia/egresado/egresado.service';
 import { ProcesarEstudiante } from './foto.service';
 import { FotoEstudiante } from '../repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
+import { ImageService } from 'src/common/service/image.service';
 
 
 @Module({
@@ -21,10 +21,10 @@ import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
     ...ProcesosProvider,
     PregradoService,
     PostgradoService,
-    EgresadoService,
     ProcesarEstudiante,
     FotoEstudiante,
-    FotoCarnet
+    FotoCarnet,
+    ImageService,
   ],
   exports: [ProcesarEstudiante]
 })

@@ -4,7 +4,3 @@ import { IEstudianteInformacion, IEgresadoInformacion } from "./sql/parameters/i
 export interface ProcesarEstudianteStrategy {
     procesar(estudiante?: IEstudianteInformacion, egeresado?: IEgresadoInformacion)
 }
-
-export interface BuscarEstudianteStrategy {
-    buscar(carnet: string, tipoCarnet: string)
-}

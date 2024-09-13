@@ -25,9 +25,18 @@ export class FotoEstudiante {
             ])
             .execute()
 
-        return fotoSql
+        return !!fotoSql
     }
+    async eliminarFotoSql(carnet: string ){
+        const eliminar = this.fotoEstudianteRepository
+        .createQueryBuilder()
+        .delete()
+        .from(Pictures)
+        .where('id = :id', {id: carnet})
+        .execute()
 
+        return !!eliminar
+    }
     /**Busca la foto de pregrado y postgrado */
     async buscarFotoCarnetSql(carnet: string) {
         const fotoSql = await this.fotoEstudianteRepository

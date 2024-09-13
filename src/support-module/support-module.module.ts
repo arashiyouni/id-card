@@ -2,43 +2,42 @@ import { Module } from '@nestjs/common';
 import { SupportModuleService } from './support-module.service';
 import { SupportModuleController } from './support-module.controller';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
-import { RegistroProvider } from './repositories/MSSQL/regacademico.provider';
 import { BuscarEstudiante } from './repositories/queries/Estudiante/buscar-estudiante.query';
 import { UFGRegistroProvider } from './repositories/MSSQL/ufgregistro.provider';
 import { ValidacionInscripcion } from './repositories/queries/Estudiante/verificar-inscripcion.query';
 import { FinancieraProvider } from './repositories/MSSQL/financiera.provider';
-//import { carnetizacion } from './repositories/queries/obtener-estudiante';
 import { Procedure } from './repositories/queries/Procedure/buscar-egresado.query';
 import { ValidacionEstudianteCarnet } from './repositories/validaciones/validacion-estudiante';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { ProcesosProvider } from './repositories/mongosee.provider';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
-import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { QrModule } from './qr/qr-code.module';
 import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
-import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
 import { carnetizacion } from './repositories/queries/obtener-estudiante';
-import { ImageService } from 'src/common/service/image.service';
-import { FotoModule } from './foto/foto.module';
-import { ProcesarEstudiante } from './foto/foto.service';
-import { PregradoService } from './foto/estrategia/pregrado/pregrado.service';
 import { FotosProvider } from './repositories/MSSQL/foto.provider';
+import { RegistroProvider } from './repositories/MSSQL/registro.provider';
+import { RegistrAcademicoProvider } from './repositories/MSSQL/regacademico.provider';
+import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
+import { ProcesarEstudiante } from './foto/foto.service';
 import { PostgradoService } from './foto/estrategia/postgrado/postgrado.service';
+import { PregradoService } from './foto/estrategia/pregrado/pregrado.service';
+import { ImageService } from 'src/common/service/image.service';
+import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
 
 @Module({
     imports: [
         DatabaseSQLModule,
         MongoDatabaseModule,
-        QrModule
+        QrModule,
     ],
     controllers: [SupportModuleController],
     providers: [
         SupportModuleService,
         ...RegistroProvider,
         ...UFGRegistroProvider,
-        ...RegistroProvider,
         ...FinancieraProvider,
         ...ProcesosProvider,
+        ...RegistrAcademicoProvider,
         ...FotosProvider,
         BuscarEstudiante,
         ValidacionInscripcion,
@@ -46,15 +45,13 @@ import { PostgradoService } from './foto/estrategia/postgrado/postgrado.service'
         ValidacionEstudianteCarnet,
         Procedure,
         GestionFechas,
-        FotoCarnet,
         CarnetEstudiante,
-        //TODO: QUITAR FotoEstudiante
-        FotoEstudiante,
-        ImageService,
-        FotoModule,
+        FotoCarnet,
+        ProcesarEstudiante,
         PregradoService,
         PostgradoService,
-        ProcesarEstudiante
+        ImageService,
+        FotoEstudiante
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })

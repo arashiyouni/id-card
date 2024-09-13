@@ -5,10 +5,9 @@ import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { getToken } from 'src/utils/generate-random.token';
 import { CarnetEstudiante } from './repositories/queries/Estudiante/carnet-estudiante.query';
 import { getstudentParametersImage} from 'src/common/interface/mongo/parameters/guardar-foto.interface';
-import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
-import { ImageService } from 'src/common/service/image.service';
-import { FotoHexa, IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
+import {IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
 import { ProcesarEstudiante } from './foto/foto.service';
+import { FormatData } from 'src/utils/utils-format';
 
 
 @Injectable()
@@ -18,9 +17,7 @@ export class SupportModuleService {
     private carnetRepository: FotoCarnet,
     private queries: carnetizacion,
     private equivalente: CarnetEstudiante,
-    private sqlFoto: FotoEstudiante,
-    private fotoHex: ImageService,
-    private readonly estategia: ProcesarEstudiante
+  private readonly estategia: ProcesarEstudiante,
   ) { }
 
   async modulosActivosCarnetizacion(request: string) {
@@ -57,7 +54,7 @@ export class SupportModuleService {
 
       if (!isValidStudent) throw new NotFoundException('No se ha encontrado el estudiante')
       
-      const {alumno_idalumno, alumno_nombres, alumno_apellido1, alumno_apellido2, alumno_apellido3, alumno_email, carrera_sede, carrera_nombre, facultad_idfacultad, facultad_nombre, nombres, activo} = isValidStudent
+      const data = FormatData(isValidStudent, TipoCarnet)
 
       //consulta de carnet equivalente
       const carnetEquivalente = await this.equivalente.buscarCarnetEquivalente(carnet)
@@ -70,42 +67,26 @@ export class SupportModuleService {
       //aca ejecuta la estrategia segun carnet
       const estudiante: IEstudianteInformacion = {
         token: token,
-        activo: TipoCarnet === 'PREGRADO' ? activo : 1,
-        alumno_apellido1: alumno_apellido1,
-        alumno_apellido2: alumno_apellido2,
-        alumno_apellido3: alumno_apellido3,
+        activo: data.activo,
+        alumno_apellidos: data.apellidos, 
         carnetEquivalente: carnetEquivalente,
-        alumno_idalumno: alumno_idalumno,
-        alumno_email: alumno_email || email,
+        alumno_idalumno: data.idalumno,
+        alumno_email: data.email || email,
         foto: Foto,
-        idsede: carrera_sede,
+        idsede: data.sede,
         tipoCarnet: TipoCarnet,
-        facultad_nombre: facultad_nombre,
-        carrera_nombre: carrera_nombre,
-        nombres: nombres || alumno_nombres,
+        facultad_nombre: data.nombre_facultad,
+        carrera_nombre: data.nombre_carrera,
+        nombres: data.nombres,
         CicloCarnetizacion: CicloCarnetizacion,
-        facultad_idfacultad:facultad_idfacultad
+        facultad_idfacultad: data.idfacultad
       }
 
-      const dataPhoto  = estrategiaAUtilizar.procesar(estudiante)
+      const dataPhoto  = await estrategiaAUtilizar.procesar(estudiante)
      
-      if(!dataPhoto) throw new BadRequestException('Error al guardar foto o Qr en mongo')
+      if(!dataPhoto) throw new BadRequestException('Error al guardar foto')
 
-      //convertir imagen para SQL
-      const converHex = this.fotoHex.convertImageToHex(Foto)
-
-      const FotoSql: FotoHexa = {
-        carnet: carnet,
-        length: converHex.length,
-        idSede: isValidStudent.estudiante.carrera_sede,
-        foto: converHex,
-        date: new Date()
-      }
-
-       //guardar foto en sql 
-      const guardarFotoSql = this.sqlFoto.insertarFotoSql(FotoSql)
-
-      if(!guardarFotoSql) throw new BadRequestException('Error al guardar la foto en la base de datos SQL')
+        
 
       return {
         msg: 'Foto guardada exitosamente',

@@ -8,7 +8,7 @@ import { Tacciones } from "src/models/RegAcademico-Entities/Tacciones.entity";
 import { VAlumno } from "src/models/RegAcademico-Entities/VAlumno.entity";
 import { DataSource } from "typeorm";
 
-export const RegistroProvider = [
+export const RegistrAcademicoProvider = [
     {
         provide: 'ALUMNO_REPOSITORY',
         useFactory: (dataSource: DataSource) => dataSource.getRepository(Alumno),

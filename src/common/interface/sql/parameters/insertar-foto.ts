@@ -1,7 +1,7 @@
 export interface FotoHexa {
     carnet: string
     length: number
-    idSede: number
+    idSede: number | string
     foto: any
     date: Date
 }
@@ -9,9 +9,7 @@ export interface FotoHexa {
 export interface IEstudianteInformacion {
 	token: string,
 	activo?: boolean | number,
-	alumno_apellido1: string,
-	alumno_apellido2: string,
-	alumno_apellido3: string,
+	alumno_apellidos: string,
 	carnetEquivalente: string,
 	alumno_idalumno: string,
 	alumno_email: string,

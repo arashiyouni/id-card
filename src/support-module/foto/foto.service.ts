@@ -9,8 +9,8 @@ import { ProcesarEstudianteStrategy } from 'src/common/interface/guardar.foto';
 export class ProcesarEstudiante {
     constructor(
        // private readonly estrategia: ProcesarEstudianteStrategy,
-        private readonly pregradoEstrategia: PregradoService,
-        private readonly prostgradoEstrategia: PostgradoService
+        private pregradoEstrategia: PregradoService,
+        private  prostgradoEstrategia: PostgradoService
     ) { }
 
 
@@ -21,12 +21,10 @@ export class ProcesarEstudiante {
             case "PREGRADO": {
                 return await this.pregradoEstrategia
             }
+            case "EGRESADO":
             case "POSTGRADO": {
                 return await this.prostgradoEstrategia
             }
-            // case "EGRESADO": {
-            //     return await this.pregradoEstrategia
-            // }
             default:
                 throw new Error('Tipo de carnet no soportado')
         }

@@ -11,15 +11,15 @@ import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudian
 export class PregradoService implements ProcesarEstudianteStrategy {
 
     constructor(
-        private readonly guardarFotoCarnetRepository: FotoCarnet,
-        private readonly qr: QrService,
-        private readonly carnetQrRepository: FotoCarnet,
+        private guardarFotoCarnetRepository: FotoCarnet,
+        private qr: QrService,
+        private carnetQrRepository: FotoCarnet,
     ) { }
 
 
     async procesar(estudiante: IEstudianteInformacion) {
 
-        const { token, CicloCarnetizacion, foto, carnetEquivalente, tipoCarnet, activo, alumno_apellido1, alumno_apellido2, alumno_idalumno, alumno_email, idsede, facultad_nombre, carrera_nombre, facultad_idfacultad, nombres } = estudiante
+        const { token, CicloCarnetizacion, foto, carnetEquivalente, tipoCarnet, activo, alumno_apellidos, alumno_idalumno, alumno_email, idsede, facultad_nombre, carrera_nombre, facultad_idfacultad, nombres } = estudiante
 
 
         //generador de qr
@@ -28,7 +28,7 @@ export class PregradoService implements ProcesarEstudianteStrategy {
         const dataPhoto: IEnviarFotoCarnet = {
             Token: token,
             Activo: activo,
-            Apellidos: `${alumno_apellido1 + alumno_apellido2}`,
+            Apellidos: alumno_apellidos,
             CarnetEquivalente: carnetEquivalente,
             Carnet: alumno_idalumno,
             Email: alumno_email,
