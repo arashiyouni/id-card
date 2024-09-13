@@ -6,6 +6,8 @@ import { UsersController } from './users.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { SupportModuleModule } from 'src/support-module/support-module.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { BuscarEstudianteModule } from 'src/support-module/buscar-estudiante/buscar-estudiante.module';
+import { BuscarEstudianteService } from 'src/support-module/buscar-estudiante/buscar-estudiante.service';
 
 @Module({
   imports: [
@@ -16,9 +18,10 @@ import { MulterModule } from '@nestjs/platform-express';
    SupportModuleModule,
    MulterModule.register({
     dest: '.uploads'
-   })
+   }),
+   BuscarEstudianteModule,
   ],
-  providers: [UsersService],
+  providers: [UsersService, BuscarEstudianteService],
   exports: [UsersService],
   controllers: [UsersController]
 })

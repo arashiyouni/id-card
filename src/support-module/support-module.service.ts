@@ -8,6 +8,7 @@ import { getstudentParametersImage} from 'src/common/interface/mongo/parameters/
 import {IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
 import { ProcesarEstudiante } from './foto/foto.service';
 import { FormatData } from 'src/utils/utils-format';
+import { BuscarEstudianteService } from './buscar-estudiante/buscar-estudiante.service';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class SupportModuleService {
     private carnetRepository: FotoCarnet,
     private queries: carnetizacion,
     private equivalente: CarnetEstudiante,
-  private readonly estategia: ProcesarEstudiante,
+    private readonly estategia: ProcesarEstudiante,
+    private readonly estratgiaDeBusqueda: BuscarEstudianteService 
   ) { }
 
   async modulosActivosCarnetizacion(request: string) {
@@ -38,10 +40,12 @@ export class SupportModuleService {
     }
   }
 
-  async informacionEstudiante(carnet: string, tipo: string) {
-    return await this.queries.obtenerCarnet(carnet, tipo)
+  //TODO: QUITAR ESTO DE AQUI Y PASARLO AL USER.SERVICE
+  async informacionEstudiante(carnet: string, tipoCarnet: string) {
+
   }
 
+  //TODO: PASARLO A USER.SERVICE
   async enviarFoto(student: getstudentParametersImage) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
 

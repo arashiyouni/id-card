@@ -81,7 +81,7 @@ export class BuscarEstudiante {
                 .where('perfil.Carnet = :Carnet', { Carnet: carnet })
                 .getOne()
 
-            return {estudiante, isActive} 
+            return {estudiante, isActive}
         } catch (err) {
             console.error(err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);

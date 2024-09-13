@@ -17,11 +17,6 @@ export class UsersController {
     async informacionCarnet(@Body() carnet: CarnetDTO) {
         try {
             const estudiante = await this.userService.obtenerEstudiante(carnet)
-            if (!estudiante) {
-                throw new NotFoundException('El estudiante no esta activo')
-                
-            }
-
             return {
                 msg: 'Información del estudiante',
                 estudiante

@@ -23,12 +23,15 @@ import { PostgradoService } from './foto/estrategia/postgrado/postgrado.service'
 import { PregradoService } from './foto/estrategia/pregrado/pregrado.service';
 import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiante.query';
+import { BuscarEstudianteModule } from './buscar-estudiante/buscar-estudiante.module';
+import { BuscarEstudianteService } from './buscar-estudiante/buscar-estudiante.service';
 
 @Module({
     imports: [
         DatabaseSQLModule,
         MongoDatabaseModule,
         QrModule,
+        BuscarEstudianteModule
     ],
     controllers: [SupportModuleController],
     providers: [
@@ -51,7 +54,8 @@ import { FotoEstudiante } from './repositories/queries/Estudiante/foto-estudiant
         PregradoService,
         PostgradoService,
         ImageService,
-        FotoEstudiante
+        FotoEstudiante,
+        BuscarEstudianteService
     ],
     exports: [SupportModuleModule, SupportModuleService],
 })
