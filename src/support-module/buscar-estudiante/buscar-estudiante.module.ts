@@ -5,9 +5,6 @@ import { RegistrAcademicoProvider } from '../repositories/MSSQL/regacademico.pro
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
-import { PregradoStrategy } from './pregrado.strategy';
-import { PostgradoStrategy } from './postgrado.strategy';
-import { EgresadoStrategy } from './egresado.strategy';
 import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.query';
 
 
@@ -21,11 +18,8 @@ import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.que
     BuscarEstudiante,
     ...RegistrAcademicoProvider,
     ...UFGRegistroProvider,
-    PregradoStrategy,
-    PostgradoStrategy,
-    EgresadoStrategy,
     Procedure
   ],
-  exports: [BuscarEstudianteService, BuscarEstudiante, Procedure,PregradoStrategy, PostgradoStrategy, EgresadoStrategy]
+  exports: [BuscarEstudianteService, BuscarEstudiante, Procedure]
 })
 export class BuscarEstudianteModule { }

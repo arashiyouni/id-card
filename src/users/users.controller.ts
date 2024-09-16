@@ -15,17 +15,25 @@ export class UsersController {
     @Post()
     @HttpCode(200)
     async informacionCarnet(@Body() carnet: CarnetDTO) {
-        try {
+      
             const estudiante = await this.userService.obtenerEstudiante(carnet)
-            return {
-                msg: 'Información del estudiante',
-                estudiante
+            
+            if(!estudiante && carnet.tipo === "PREGRADO"){
+                throw new NotFoundException(`No se ha encontrado estudiante pregrado o el estudiante esta inactivo`);
             }
 
-        } catch (err) {
-            console.error('Error al consultar estudiante:', err);
-            throw new InternalServerErrorException('Ocurrió un error al consultar el estudiante');
-        }
+            if(!estudiante && carnet.tipo === "POSTGRADO"){
+                throw new NotFoundException(`El carnet ingresado no es correcto o no es postgrado`);
+            }
+
+            if(!estudiante && carnet.tipo === "EGRESADO"){
+                throw new NotFoundException(`El carnet ingresado no es correcto o no es egresado`);
+            }
+
+            return {
+                msg: "Se ha encontrado Pregrado",
+                estudiante
+            }
     }
 
     @Post('foto')

@@ -3,7 +3,6 @@ import { CarnetDTO } from './dto/carnet.dto';
 import { SupportModuleService } from 'src/support-module/support-module.service';
 import { StudentDTO } from './dto/foto-carnet.dto';
 import { BuscarEstudianteService } from 'src/support-module/buscar-estudiante/buscar-estudiante.service';
-import { PregradoStrategy } from 'src/support-module/buscar-estudiante/pregrado.strategy';
 // import { Roles } from 'src/common/decorator/decorator.decorator';
 // import { Role } from 'src/common/interface/role.enum';
 // import { RolesGuard } from 'src/auth/roles.guard';
@@ -13,13 +12,13 @@ export class UsersService {
 
   constructor(
     private estudiante: SupportModuleService,
-    private readonly buscarEstudianteService: BuscarEstudianteService
+    private readonly buscarEstudianteService: BuscarEstudianteService,
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
   
   async obtenerEstudiante(request: CarnetDTO) {
-
+    // return await this.buscarEstudianteService.Pregrado(request.carnet)
     switch (request.tipo) {
       case "PREGRADO":
         return await this.buscarEstudianteService.Pregrado(request.carnet)
@@ -34,6 +33,6 @@ export class UsersService {
   }
 
   async fotoCarnet(request: StudentDTO) {
-    return this.estudiante.enviarFoto(request)
+    //return this.estudiante.enviarFoto(request)
   }
 }

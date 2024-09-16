@@ -1,56 +1,101 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { BuscarEstudianteStrategy } from 'src/common/interface/buscar-estudiante.interface';
-import { PregradoStrategy } from './pregrado.strategy';
-import { PostgradoStrategy } from './postgrado.strategy';
-import { EgresadoStrategy } from './egresado.strategy';
-//El Context no implementa directamente el algoritmo, sino que delega su ejecución a una estrategia que es inyectada en el contexto (BuscarEstudianteService)
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BuscarEstudiante } from '../repositories/queries/Estudiante/buscar-estudiante.query';
+import { ResponseDataStudent } from 'src/common/interface/buscar-estudiante.interface';
+import { formatDate } from 'src/utils/utils-format';
 @Injectable()
-export class BuscarEstudianteService  {
+export class BuscarEstudianteService {
     constructor(
-        private pregrado: PregradoStrategy,
-        private postgrado: PostgradoStrategy,
-        private egresado: EgresadoStrategy
-    ){}
+        private readonly estudianteRepository: BuscarEstudiante
+    ) { }
 
     async Pregrado(carnet: string) {
         try {
-            const estudianteValidado = await this.pregrado.buscarEstudiante(carnet)
+            const estudiantePregrado = await this.estudianteRepository.buscarPregradoPorCarnet(carnet)
 
-            if(!estudianteValidado) throw new BadRequestException('No se ha podido retornar la informacion del estudiante de pregrado')
+            if (!estudiantePregrado) {
+                return false
+            }
 
-            return estudianteValidado
+            const activo = await this.estudianteRepository.buscarPregradoPerfilActivo(carnet)
+
+            if (!activo) {
+                return false
+            }
+
+
+            const pregrado: ResponseDataStudent = {
+                carnet: estudiantePregrado.alumno_idalumno,
+                nombres: estudiantePregrado.nombres,
+                apellidos: estudiantePregrado.apellido3 ? `${estudiantePregrado.alumno_apellido1} ${estudiantePregrado.alumno_apellido2} ${estudiantePregrado.alumno_apellido3}` : `${estudiantePregrado.alumno_apellido1} ${estudiantePregrado.alumno_apellido2}`,
+                ciclo_ingreso: estudiantePregrado.alumno_cicloingre,
+                email: estudiantePregrado.alumno_email ?? '',
+                sede: estudiantePregrado.carrera_sede,
+                carrera: estudiantePregrado.carrera_nombre,
+                facultad: estudiantePregrado.facultad_nombre,
+                idFacultad: estudiantePregrado.facultad_idfacultad,
+                activo: activo.activo,
+                fecha_activo: formatDate(activo.fechaPerfilEstudiante)
+            }
+
+            return pregrado
+
 
         } catch (err) {
             console.error('🔴 | Error al validar a estudiante de Pregrado ', err)
-            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
+            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante de Pregrado con carnet ${carnet}`);
         }
     }
 
     async Postgrado(carnet: string) {
         try {
-            const estudianteValidado = await this.postgrado.buscarEstudiante(carnet)
+            const estudiantePostgrado = await this.estudianteRepository.buscarPostgradoPorCarnet(carnet)
 
-            if(!estudianteValidado) throw new BadRequestException('No se ha podido retornar la informacion del estudiante de postgrado')
+            if (!estudiantePostgrado) return false
 
-            return estudianteValidado
+            const postgrado: ResponseDataStudent = {
+                carnet: estudiantePostgrado.alumno_idalumno,
+                nombres: estudiantePostgrado.nombres,
+                apellidos: estudiantePostgrado.apellido3 ? `${estudiantePostgrado.alumno_apellido1} ${estudiantePostgrado.alumno_apellido2} ${estudiantePostgrado.alumno_apellido3}` : `${estudiantePostgrado.alumno_apellido1} ${estudiantePostgrado.alumno_apellido2}`,
+                ciclo_ingreso: estudiantePostgrado.alumno_cicloingre,
+                email: estudiantePostgrado.alumno_email ?? '',
+                sede: estudiantePostgrado.carrera_sede,
+                maestria: estudiantePostgrado.carrera_nombre,
+                facultad: estudiantePostgrado.facultad_nombre,
+                idFacultad: estudiantePostgrado.facultad_idfacultad,
+            }
+
+            return postgrado
 
         } catch (err) {
-            console.error('🔴 | Error al validar a estudiante de Pregrado ', err)
+            console.error('🔴 | Error al validar a estudiante de Postgrado ', err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
         }
     }
 
     async Egresado(carnet: string) {
         try {
-            const estudianteValidado = await this.egresado.buscarEstudiante(carnet)
+            const estudianteEgresado = await this.estudianteRepository.buscarEgresadoPorCarnet(carnet)
 
-            if(!estudianteValidado) throw new BadRequestException('No se ha podido retornar la informacion del estudiante de egresado')
+            if (!estudianteEgresado.length) return false
 
-            return estudianteValidado
+            const egresado: ResponseDataStudent ={
+                carnet: estudianteEgresado[0].IdAlumno,
+                nombres: estudianteEgresado[0].Nombres,
+                apellidos: estudianteEgresado[0].Apellido3 ? `${estudianteEgresado[0].Apellido1} ${estudianteEgresado[0].Apellido2} ${estudianteEgresado[0].Apellido3}` : `${estudianteEgresado[0].Apellido1} ${estudianteEgresado[0].Apellido2}`,
+                ciclo_ingreso: estudianteEgresado[0].CicloIngre,
+                carrera: estudianteEgresado[0].Carrera,
+                modalidad: estudianteEgresado[0].Modalidad,
+                proceso: estudianteEgresado[0].proceso,
+                ciclo_egreso: estudianteEgresado[0].CicloEgreso,
+                facultad: estudianteEgresado[0].Facultad,
+                idFacultad: estudianteEgresado[0].idFacultad,
+            }
+
+            return egresado
 
         } catch (err) {
-            console.error('🔴 | Error al validar a estudiante de Pregrado ', err)
-            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante con carnet ${carnet}`);
+            console.error('🔴 | Error al validar a estudiante de Egresado ', err)
+            throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante de egresado con carnet ${carnet}`);
         }
     }
 }
