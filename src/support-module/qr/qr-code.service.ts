@@ -11,7 +11,7 @@ export class QrService {
     async generateQrCode(carnet: string, token: string, facultad: string) {
         try {
             const colorQrEstudiante = coloresQr[facultad] || '#000000'
-            const qrContenido = `Universidad Francisco Gavidia, Carnet del estudiante : ${carnet} - Token: ${token}`
+            const qrContenido = `${carnet}, ${token}`
             const qrCodeDataUrl = await qrcode.toDataURL(qrContenido, {
                 color: {
                     dark: '#FFFFFF',
