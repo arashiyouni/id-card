@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BuscarEstudiante } from '../repositories/queries/Estudiante/buscar-estudiante.query';
-import { ResponseDataStudent } from 'src/common/interface/buscar-estudiante.interface';
+import { ResponseDataStudent, ResponseReingreso } from 'src/common/interface/buscar-estudiante.interface';
 import { formatDate } from 'src/utils/utils-format';
 @Injectable()
 export class BuscarEstudianteService {
@@ -100,6 +100,19 @@ export class BuscarEstudianteService {
     }
 
     async Reingreso(carnet: string, ciclo: string){
-       return await this.estudianteRepository.buscarReingreso(carnet, ciclo)
+       const estudiante = await this.estudianteRepository.buscarReingreso(carnet, ciclo)
+
+        if(!estudiante) return false
+
+       const reingreso: ResponseReingreso = {
+        carnet: estudiante.mov_idalumno,
+        ciclo_actual: estudiante.mov_cicloa,
+        ciclo_reingreso: estudiante.mov_ciclor,
+        accion: estudiante.idaccion === 7 ? 'REINGRESO': estudiante.idaccion,
+        fecha_movimiento: formatDate(estudiante.mov_fechamov),
+        id_movimiento: estudiante.IdMovimientoa
+       }
+
+       return reingreso
     }
 }

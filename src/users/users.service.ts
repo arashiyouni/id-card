@@ -63,8 +63,8 @@ export class UsersService {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
     const maxSizeImage = 10 * 1024 * 1024
 
-    if(CicloCarnetizacion != '02-2024') throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
-    
+    if (CicloCarnetizacion != '02-2024') throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
+
     //busca carnet
     const carnetValido = await this.buscarCarnetEstudiante(carnet, TipoCarnet)
 
@@ -77,10 +77,10 @@ export class UsersService {
     const isImageSaveMongo = await this.carnetQrRepository.buscarFotoMongo(carnet)
 
     if (!isImageSaveSql && !isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
-    
+
 
     const fotoValida = this.imagen.CalcularImagenBase64(Foto)
-   // const formatoDeImagen = this.imagen.VerificaFormatoDeImagen(Foto)
+    // const formatoDeImagen = this.imagen.VerificaFormatoDeImagen(Foto)
 
     if (!Foto || fotoValida > maxSizeImage) {
       throw new BadRequestException('La fotografía está vacía o ha superado los 10MB o tiene un formato no válido');
@@ -124,8 +124,12 @@ export class UsersService {
 
   }
 
-  //TODO: VALIDAR REINGRESO
-  async estudianteReingreso(student: string, ciclo: string){
-    return this.buscarEstudianteService.Reingreso(student, ciclo)
+  
+  async estudianteReingreso(student: string, ciclo: string) {
+    const estudiante = await this.buscarEstudianteService.Reingreso(student, ciclo)
+
+    if (!estudiante) throw new NotFoundException('El estudiante no es reingreso o no aplica para este ciclo')
+
+    return estudiante
   }
 }

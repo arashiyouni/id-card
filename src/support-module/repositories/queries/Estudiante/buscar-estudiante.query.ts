@@ -28,14 +28,15 @@ export class BuscarEstudiante {
      *  @param {string} Ciclo - busca el `cicloa` para el reingreso de ese estudiante
      *  @returns 
     */
-    async buscarReingreso(carnet: string, ciclo: string): Promise<Movimientoa[]> {
+    async buscarReingreso(carnet: string, ciclo: string)
+     {
 
         //TODO: VER COMO VALIDAR EL CICLO ACTUAL s
 
         const movimientos = await this.movimientoAcademicoRepository
             .createQueryBuilder('mov')
             //seleccionando múltiples columnas de manera explícita y clara.
-            .select(['mov.IdMovimientoa', 'mov.cicloa', 'mov.idalumno', 'mov.fechamov', 'mov.idaccion'])
+            .select(['mov.IdMovimientoa', 'mov.cicloa', 'mov.ciclor', 'mov.idalumno', 'mov.fechamov', ' ta.idaccion'])
             .innerJoin(
                 Tacciones, 'ta',
                 'ta.idaccion = mov.idaccion'

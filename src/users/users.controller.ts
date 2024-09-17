@@ -50,7 +50,12 @@ export class UsersController {
     @Post('reingreso')
     @HttpCode(200)
     async reingreso(@Body() reingreso: StudentReingresoDTO){
-      const student = await this.userService.estudianteReingreso(reingreso.carnet, reingreso.ciclo)
+      const estudiante = await this.userService.estudianteReingreso(reingreso.carnet, reingreso.ciclo)
+
+      return {
+        msg: 'Estudiante Reingreso',
+        estudiante
+      }
     
     }
 }
