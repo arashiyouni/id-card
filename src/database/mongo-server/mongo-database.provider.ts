@@ -1,11 +1,4 @@
-import { JwtService } from "@nestjs/jwt";
-import { getConnectionToken } from "@nestjs/mongoose";
 import mongoose, { Connection  } from "mongoose";
-import { AuthService } from "src/auth/auth.service";
-import { RefreshToken } from "src/auth/schemas/refresh-token.schemas";
-import { User } from "src/users/schemas/user.schema";
-import { UsersService } from "src/users/users.service";
-
 
 export const UserProvider = [
     // {
