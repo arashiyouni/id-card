@@ -3,15 +3,20 @@ export interface BuscarEstudianteStrategy {
     buscarEstudiante(carnet: string)
 }
 
-export interface DataTransform {
-    idalumno: string
-    email: string
+export interface ResponseDataStudent {
+    carnet: string
     nombres: string
-    apellido1: string
-    apellido2: string
-    nombre_carrera: string
-    idfacultad: string
-    nombre_facultad: string
-    sede: string
-    activo?: boolean | number
+    apellidos: string
+    ciclo_ingreso: string
+    email?: string
+    sede?: string
+    carrera?: string
+    facultad: string
+    idFacultad: string
+    modalidad?: string
+    proceso?: string
+    ciclo_egreso?: string
+    maestria?: string
+    activo?: boolean
+    fecha_activo?: string
 }

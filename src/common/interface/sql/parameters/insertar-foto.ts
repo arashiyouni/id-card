@@ -9,18 +9,18 @@ export interface FotoHexa {
 export interface IEstudianteInformacion {
 	token: string,
 	activo?: boolean | number,
-	alumno_apellidos: string,
-	carnetEquivalente: string,
-	alumno_idalumno: string,
-	alumno_email: string,
+	nombres:string,
+	apellidos: string,
+	carnet_equivalente: string,
+	carnet: string,
+	email: string,
 	foto: string,
 	idsede: string,
-	tipoCarnet: string,
-	facultad_nombre: string,
-	carrera_nombre: string,
-	nombres:string,
-	CicloCarnetizacion: string,
-	facultad_idfacultad: string
+	tipo_carnet: string,
+	facultad: string,
+	carrera: string,
+	ciclo_carnetizacion: string,
+	idfacultad: string
 }
 //
 export interface IEgresadoInformacion {
