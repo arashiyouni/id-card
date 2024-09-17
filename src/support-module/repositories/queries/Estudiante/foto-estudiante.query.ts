@@ -50,7 +50,7 @@ export class FotoEstudiante {
                 }
             })
 
-        return fotoSql
+        return !fotoSql
     }
 
     async buscarFotoEgresadoSql(carnet: string) {

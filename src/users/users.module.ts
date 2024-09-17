@@ -21,6 +21,7 @@ import { FotosProvider } from 'src/support-module/repositories/MSSQL/foto.provid
 import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro.provider';
 import { FinancieraProvider } from 'src/support-module/repositories/MSSQL/financiera.provider';
 import { ProcesosProvider } from 'src/support-module/repositories/mongosee.provider';
+import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudiante/carnet-estudiante.query';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { ProcesosProvider } from 'src/support-module/repositories/mongosee.provi
     PostgradoService,
     FotoEstudiante,
     FotoCarnet,
-    ImageService
+    ImageService,
+    CarnetEstudiante
   ],
   exports: [UsersService],
   controllers: [UsersController]

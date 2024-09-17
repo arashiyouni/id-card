@@ -62,7 +62,7 @@ Endpoint a trabajar:
     - QR
     - Imagen
 A partir de eso, que necesitaria para ingresar el carnet?
-- Insertar Informacion de carnet:
+- Insertar Informacion de carnet: ✅
     - imagen
     - sede
     - tipo carnet
@@ -72,8 +72,8 @@ A partir de eso, que necesitaria para ingresar el carnet?
     - idfacultad
 
 Puntos que creo que hay que investigar sobre la marcha
-    - ¿Cómo guardar las imagenes en nest?
-    - ¿Cómo generar el token?
+    - ¿Cómo guardar las imagenes en nest?  ✅
+    - ¿Cómo generar el token? ✅
     - Si los carnet son templates, como llamarlos?
 ¿Qué podrá ser un admin?
     - Ver la fotografia
@@ -85,8 +85,8 @@ Puntos que creo que hay que investigar sobre la marcha
     - Se le mostraria el comentario del admin
     - Se insertaria solo la fotografia
     - Se enviaría
-¿Si hay necesidad de hacer un endpoint para el QR, que se mostraría?
-    - carnet
+¿Si hay necesidad de hacer un endpoint para el QR, que se mostraría? ✅
+    - carnet 
     - carrera
     - facultad
     - idfacultad
@@ -225,9 +225,9 @@ TODO:
 
 TODO PARA MAÑANA 09/10/2024
 
-- Ver como mejorar el codigo de guardar para mongo y sql 
-- Mejorar como se muestra el codigo del token
-- Hacer las validacion de egresado y pregrado
+- Ver como mejorar el codigo de guardar para mongo y sql   ✅
+- Mejorar como se muestra el codigo del token 
+- Hacer las validacion de egresado y pregrado ✅
 - Iniciar el endpoint de updateFoto (creo que es de admin) o insertNewPhoto
 ---
 
@@ -235,6 +235,13 @@ TODO PARA MAÑANA 09/10/2024
 - Agregar el id del estudiante
 - colocar los tipos
 - mejorar respuesta
+
+TODO:
+- MEJORAR EL CODIGO EN USER SERVICE
+- MEJORAR LAS EXPECIONES
+
+TODO:
+- MATRICULA Y CUOTA 1 CANCELADO CON QUE ESTE ESTADO DIFERENTE DE A (EN FRONT, EL DE consultarPagosRealizados)
 
 Convertidor de imagen=
 https://base64.guru/converter/encode/image
