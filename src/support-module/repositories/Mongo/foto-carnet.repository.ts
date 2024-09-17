@@ -53,7 +53,7 @@ export class FotoCarnet {
 
         try {
 
-            const saveQR = this.qrCodeRepository.create({
+            const saveQR = await this.qrCodeRepository.create({
                 TokenQr: TokenQr,
                 IdSede: IdSede,
                 CicloCarnetizacion: CicloCarnetizacion,
@@ -85,5 +85,10 @@ export class FotoCarnet {
     
     async eliminarQrMongo(carnet: string){
         return await this.qrCodeRepository.findOneAndDelete({Carnet: carnet})
+    }
+
+    async buscarFotoMongo(carnet: string){
+        const imagen = await this.fotoCarnetRepository.findOne({Carnet: carnet})
+        return !imagen
     }
 }

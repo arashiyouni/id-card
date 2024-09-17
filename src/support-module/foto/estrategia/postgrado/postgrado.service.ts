@@ -19,38 +19,43 @@ export class PostgradoService implements ProcesarEstudianteStrategy{
     ){}
     
     async procesar(estudiante: IEstudianteInformacion) {
-        const { token, CicloCarnetizacion, foto, carnetEquivalente, tipoCarnet, activo, alumno_apellidos, alumno_idalumno, alumno_email, idsede, facultad_nombre, carrera_nombre, facultad_idfacultad, nombres } = estudiante
+        const { token, ciclo_carnetizacion, foto, carnet_equivalente, tipo_carnet, activo, apellidos, carnet, email, idsede, facultad, carrera, idfacultad, nombres } = estudiante
 
+        let studentQr = ''
 
         //generador de qr
-        const studentQr = await this.qr.generateQrCode(alumno_idalumno, token, facultad_idfacultad)
+        if(tipo_carnet === 'EGRESADO'){
+            studentQr = await this.qr.generateQrCode(carnet, token, 'EGRESADO')
+        }else{
+            studentQr = await this.qr.generateQrCode(carnet, token, idfacultad)
+        }
 
         const dataPhoto: IEnviarFotoCarnet = {
             Token: token,
             Activo: activo,
-            Apellidos: alumno_apellidos,
-            CarnetEquivalente: carnetEquivalente,
-            Carnet: alumno_idalumno,
-            Email: alumno_email,
+            Apellidos: apellidos,
+            CarnetEquivalente: carnet_equivalente,
+            Carnet: carnet,
+            Email: email,
             FechaModificacion: new Date(),
             FechaRegistro: new Date(),
             Foto: foto,
             IdSede: idsede,
             Qr: studentQr,
-            TipoCarnet: tipoCarnet,
-            NombreFacultad: facultad_nombre,
-            NombreCarrera: carrera_nombre,
+            TipoCarnet: tipo_carnet,
+            NombreFacultad: facultad,
+            NombreCarrera: carrera,
             Nombres: nombres,
-            CicloCarnetizacion: CicloCarnetizacion,
-            IdFacultad: facultad_idfacultad
+            CicloCarnetizacion: ciclo_carnetizacion,
+            IdFacultad: idfacultad
         }
 
         const dataQr: IQrParametros = {
             TokenQr: token,
             IdSede: idsede,
-            CicloCarnetizacion: CicloCarnetizacion,
-            TipoCarnet: tipoCarnet,
-            Carnet: alumno_idalumno,
+            CicloCarnetizacion: ciclo_carnetizacion,
+            TipoCarnet: tipo_carnet,
+            Carnet: carnet,
             Qr: studentQr,
             Activo: 1,
             FechaRegistro: new Date(),
@@ -58,10 +63,10 @@ export class PostgradoService implements ProcesarEstudianteStrategy{
 
         }
         //conversion de foto a buffer
-        const converHex = this.fotoHex.convertImageToHex(foto)
+        const converHex = this.fotoHex.convertirImagenHex(foto)
 
         const FotoSql: FotoHexa = {
-            carnet: alumno_idalumno,
+            carnet: carnet,
             length: converHex.length,
             idSede: idsede,
             foto: converHex,
@@ -76,9 +81,9 @@ export class PostgradoService implements ProcesarEstudianteStrategy{
 
 
         if(!fotoMongo && !saveQR && !guardarFotoSql) {
-            await this.carnetQrRepository.eliminarFotoCarnetMongo(alumno_idalumno) 
-            await this.carnetQrRepository.eliminarQrMongo(alumno_idalumno)
-            await this.sqlFoto.eliminarFotoSql(alumno_idalumno)
+            await this.carnetQrRepository.eliminarFotoCarnetMongo(carnet) 
+            await this.carnetQrRepository.eliminarQrMongo(carnet)
+            await this.sqlFoto.eliminarFotoSql(carnet)
             return false 
         }
 

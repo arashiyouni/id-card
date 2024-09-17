@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ProcesarEstudianteStrategy } from 'src/common/interface/guardar.foto';
 import { IQrParametros } from 'src/common/interface/mongo/parameters/foto-qr.interface';
 import { IEnviarFotoCarnet } from 'src/common/interface/mongo/parameters/guardar-foto.interface';
-import { IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
+import { FotoHexa, IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
+import { ImageService } from 'src/common/service/image.service';
 import { QrService } from 'src/support-module/qr/qr-code.service';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
-
 @Injectable()
 export class PregradoService implements ProcesarEstudianteStrategy {
 
@@ -14,43 +14,44 @@ export class PregradoService implements ProcesarEstudianteStrategy {
         private guardarFotoCarnetRepository: FotoCarnet,
         private qr: QrService,
         private carnetQrRepository: FotoCarnet,
+        private readonly fotoHex: ImageService,
+        private readonly sqlFoto: FotoEstudiante,
     ) { }
 
 
     async procesar(estudiante: IEstudianteInformacion) {
 
-        const { token, CicloCarnetizacion, foto, carnetEquivalente, tipoCarnet, activo, alumno_apellidos, alumno_idalumno, alumno_email, idsede, facultad_nombre, carrera_nombre, facultad_idfacultad, nombres } = estudiante
-
+        const { token, ciclo_carnetizacion, foto, carnet_equivalente, tipo_carnet, activo, apellidos, carnet, email, idsede, facultad, carrera, idfacultad, nombres } = estudiante
 
         //generador de qr
-        const studentQr = await this.qr.generateQrCode(alumno_idalumno, token, facultad_idfacultad)
+        const studentQr = await this.qr.generateQrCode(carnet, token, idfacultad)
 
         const dataPhoto: IEnviarFotoCarnet = {
             Token: token,
             Activo: activo,
-            Apellidos: alumno_apellidos,
-            CarnetEquivalente: carnetEquivalente,
-            Carnet: alumno_idalumno,
-            Email: alumno_email,
+            Apellidos: apellidos,
+            CarnetEquivalente: carnet_equivalente,
+            Carnet: carnet,
+            Email: email,
             FechaModificacion: new Date(),
             FechaRegistro: new Date(),
             Foto: foto,
             IdSede: idsede,
             Qr: studentQr,
-            TipoCarnet: tipoCarnet,
-            NombreFacultad: facultad_nombre,
-            NombreCarrera: carrera_nombre,
+            TipoCarnet: tipo_carnet,
+            NombreFacultad: facultad,
+            NombreCarrera: carrera,
             Nombres: nombres,
-            CicloCarnetizacion: CicloCarnetizacion,
-            IdFacultad: facultad_idfacultad
+            CicloCarnetizacion: ciclo_carnetizacion,
+            IdFacultad: idfacultad
         }
 
         const dataQr: IQrParametros = {
             TokenQr: token,
             IdSede: idsede,
-            CicloCarnetizacion: CicloCarnetizacion,
-            TipoCarnet: tipoCarnet,
-            Carnet: alumno_idalumno,
+            CicloCarnetizacion: ciclo_carnetizacion,
+            TipoCarnet: tipo_carnet,
+            Carnet: carnet,
             Qr: studentQr,
             Activo: 1,
             FechaRegistro: new Date(),
@@ -58,16 +59,31 @@ export class PregradoService implements ProcesarEstudianteStrategy {
 
         }
 
-        //guarda la informacion de foto y qr
-        const fotoMongo = await this.guardarFotoCarnetRepository.guardarFoto(dataPhoto)
-        const saveQR = await this.carnetQrRepository.guardarQR(dataQr)
+          //conversion de foto a buffer
+          const converHex = this.fotoHex.convertirImagenHex(foto)
 
-        if(!fotoMongo && !saveQR) {
-            await this.carnetQrRepository.eliminarFotoCarnetMongo(alumno_idalumno) 
-            await this.carnetQrRepository.eliminarQrMongo(alumno_idalumno)
-            return false 
-        }
-
-        return true
+          const FotoSql: FotoHexa = {
+              carnet: carnet,
+              length: converHex.length,
+              idSede: idsede,
+              foto: converHex,
+              date: new Date()
+            }
+  
+          //guarda la informacion de foto y qr
+          const fotoMongo = await this.guardarFotoCarnetRepository.guardarFoto(dataPhoto)
+          const saveQR = await this.carnetQrRepository.guardarQR(dataQr)
+          //guardar foto en sql 
+          const guardarFotoSql = await this.sqlFoto.insertarFotoSql(FotoSql)
+  
+  
+          if(!fotoMongo && !saveQR && !guardarFotoSql) {
+              await this.carnetQrRepository.eliminarFotoCarnetMongo(carnet) 
+              await this.carnetQrRepository.eliminarQrMongo(carnet)
+              await this.sqlFoto.eliminarFotoSql(carnet)
+              return false 
+          }
+  
+          return true
     }
 }

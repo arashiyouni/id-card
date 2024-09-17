@@ -8,7 +8,6 @@ import { ProcesarEstudianteStrategy } from 'src/common/interface/guardar.foto';
 @Injectable()
 export class ProcesarEstudiante {
     constructor(
-       // private readonly estrategia: ProcesarEstudianteStrategy,
         private pregradoEstrategia: PregradoService,
         private  prostgradoEstrategia: PostgradoService
     ) { }

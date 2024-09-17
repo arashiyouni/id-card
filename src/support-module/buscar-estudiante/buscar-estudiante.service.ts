@@ -54,7 +54,7 @@ export class BuscarEstudianteService {
 
             const postgrado: ResponseDataStudent = {
                 carnet: estudiantePostgrado.alumno_idalumno,
-                nombres: estudiantePostgrado.nombres,
+                nombres: estudiantePostgrado.alumno_nombres,
                 apellidos: estudiantePostgrado.apellido3 ? `${estudiantePostgrado.alumno_apellido1} ${estudiantePostgrado.alumno_apellido2} ${estudiantePostgrado.alumno_apellido3}` : `${estudiantePostgrado.alumno_apellido1} ${estudiantePostgrado.alumno_apellido2}`,
                 ciclo_ingreso: estudiantePostgrado.alumno_cicloingre,
                 email: estudiantePostgrado.alumno_email ?? '',
@@ -97,5 +97,9 @@ export class BuscarEstudianteService {
             console.error('🔴 | Error al validar a estudiante de Egresado ', err)
             throw new InternalServerErrorException(`Ocurrió un error al obtener el estudiante de egresado con carnet ${carnet}`);
         }
+    }
+
+    async Reingreso(carnet: string, ciclo: string){
+       return await this.estudianteRepository.buscarReingreso(carnet, ciclo)
     }
 }
