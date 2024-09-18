@@ -24,6 +24,7 @@ import { ProcesosProvider } from 'src/support-module/repositories/mongosee.provi
 import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudiante/carnet-estudiante.query';
 import { HttpModule } from '@nestjs/axios';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
+import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 
 
 @Module({
@@ -59,7 +60,8 @@ import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.servi
     FotoCarnet,
     ImageService,
     CarnetEstudiante,
-    FetchHttpService
+    FetchHttpService,
+    CicloUFG
   ],
   exports: [UsersService],
   controllers: [UsersController]

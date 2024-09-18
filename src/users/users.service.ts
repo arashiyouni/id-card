@@ -11,6 +11,7 @@ import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
+import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
 // import { Role } from 'src/common/interface/role.enum';
@@ -26,7 +27,8 @@ export class UsersService {
     private readonly imagen: ImageService,
     private readonly sqlFoto: FotoEstudiante,
     private carnetMongoRepository: FotoCarnet,
-    private readonly http: FetchHttpService
+    private readonly http: FetchHttpService,
+    private readonly cicloUFG: CicloUFG
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
@@ -128,7 +130,11 @@ export class UsersService {
   async estudianteReingreso(student: string, ciclo: string) {
     const estudiante = await this.buscarEstudiante.Reingreso(student, ciclo)
 
-    if (!estudiante) throw new NotFoundException('El estudiante no es reingreso o no aplica para este ciclo')
+    const consultarCicloActual = this.cicloUFG.CicloActual()
+    //01-2024   02-2024
+    if(ciclo != consultarCicloActual) throw new BadRequestException(`El ciclo ingresado no aplica para el ciclo actual ${consultarCicloActual}`)
+
+    if (!estudiante) throw new NotFoundException('El estudiante no es reingreso ')
 
     return estudiante
   }
@@ -187,5 +193,14 @@ export class UsersService {
         estudiante: `${estudiante.Nombres} ${estudiante.Apellidos}`,
         token
       }
+  }
+
+  async consultarProcesoCarnet(token: string){
+    const consultarToken = await this.carnetMongoRepository.buscarToken(token)
+
+    if(!consultarToken) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
+
+    //if(consultarToken.Activo != 0)
+    //TODO: AQUI VA CONSULTAR PAGOS
   }
 }
