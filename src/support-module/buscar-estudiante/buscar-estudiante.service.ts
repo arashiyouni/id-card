@@ -7,7 +7,7 @@ import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
 export class BuscarEstudianteService {
     constructor(
         private readonly estudianteRepository: BuscarEstudiante,
-        private readonly fotoCarnetRepository: FotoCarnet
+        private readonly fotoCarnetRepository: FotoCarnet,
     ) { }
 
     async Pregrado(carnet: string) {
@@ -130,5 +130,13 @@ export class BuscarEstudianteService {
             ciclo_carnet: fotoMongo.CicloCarnetizacion
         }
         return carnetizacion
+    }
+
+    async BuscarToken(token: string){
+        const estudianteToken = await this.fotoCarnetRepository.buscarToken(token)
+
+        if(!estudianteToken) return false
+
+        return estudianteToken
     }
 }

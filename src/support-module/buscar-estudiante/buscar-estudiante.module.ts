@@ -22,7 +22,7 @@ import { ProcesosProvider } from '../repositories/mongosee.provider';
     ...UFGRegistroProvider,
     ...ProcesosProvider,
     Procedure,
-    FotoCarnet
+    FotoCarnet,
   ],
   exports: [BuscarEstudianteService, BuscarEstudiante, Procedure]
 })

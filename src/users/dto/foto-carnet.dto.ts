@@ -29,3 +29,13 @@ export class StudentReingresoDTO {
     @IsString()
     ciclo: string
 }
+
+export class StudentTokenDTO {
+    @IsString()
+    token: string
+
+    @IsBase64()
+    @IsString()
+    @IsNotEmpty({message: 'La foto no debe de estar vacía'})
+    foto: string
+}

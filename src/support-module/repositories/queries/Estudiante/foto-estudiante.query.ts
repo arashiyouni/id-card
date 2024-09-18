@@ -16,7 +16,7 @@ export class FotoEstudiante {
     ) { }
 
     async insertarFotoSql(data: FotoHexa) {
-        const fotoSql = this.fotoEstudianteRepository
+        const fotoSql = await this.fotoEstudianteRepository
             .createQueryBuilder()
             .insert()
             .into(Pictures)
@@ -28,7 +28,7 @@ export class FotoEstudiante {
         return !!fotoSql
     }
     async eliminarFotoSql(carnet: string ){
-        const eliminar = this.fotoEstudianteRepository
+        const eliminar = await this.fotoEstudianteRepository
         .createQueryBuilder()
         .delete()
         .from(Pictures)
@@ -67,5 +67,18 @@ export class FotoEstudiante {
 
         return fotoSql
 
+    }
+
+    async actualizarFotoSql(carnet: string, foto: Buffer){
+        const update = await this.fotoEstudianteRepository
+        .createQueryBuilder()
+        .update(Pictures)
+        .set({
+            picture: foto
+        })
+        .where('id = :id', {id: carnet})
+        .execute()
+
+        return !!update
     }
 }

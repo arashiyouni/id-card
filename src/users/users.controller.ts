@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CarnetDTO } from './dto/carnet.dto';
-import {  StudentDTO, StudentReingresoDTO } from './dto/foto-carnet.dto';
+import {  StudentDTO, StudentReingresoDTO, StudentTokenDTO } from './dto/foto-carnet.dto';
 //import { RolesGuard } from 'src/auth/roles.guard';
 // import { Role } from 'src/common/interface/role.enum';
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -69,5 +69,11 @@ export class UsersController {
         estudiante
       }
     
+    }
+
+    @Post('actualizar-fotografia')
+    @HttpCode(200)
+    async actualizarFotoCarnet(@Body() estudiante: StudentTokenDTO) {
+     return await this.userService.actualizarFoto(estudiante.token, estudiante.foto)
     }
 }

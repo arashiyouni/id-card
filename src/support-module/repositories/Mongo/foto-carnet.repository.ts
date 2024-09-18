@@ -91,4 +91,26 @@ export class FotoCarnet {
         const imagen = await this.fotoCarnetRepository.findOne({Carnet: carnet})
         return imagen 
     }
+
+    async buscarToken(token: string){
+        const estudiante = await this.fotoCarnetRepository.findOne({Token: token})
+        return estudiante
+    }
+
+    async actualizarFotoMongo(Carnet: string, Foto: string){
+        const update = await this.fotoCarnetRepository.findOneAndUpdate(
+            { Carnet }, // filtro de búsqueda
+            { $set: { Foto: Foto, updatedAt:new Date() } }, // actualización
+            { new: true } // devuelve el documento actualizado
+          );
+          
+          if (!update) {
+            console.log('No se actualizó la foto, el documento no fue encontrado');
+            return null;
+          }
+          
+          console.log('Documento actualizado:', update);
+          return update;
+          
+    }
 }

@@ -25,7 +25,7 @@ export class UsersService {
     private readonly getEstrategia: ProcesarEstudiante,
     private readonly imagen: ImageService,
     private readonly sqlFoto: FotoEstudiante,
-    private carnetQrRepository: FotoCarnet,
+    private carnetMongoRepository: FotoCarnet,
     private readonly http: FetchHttpService
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
@@ -70,13 +70,12 @@ export class UsersService {
     const carnetValido = await this.buscarCarnetEstudiante(carnet, TipoCarnet)
 
     if (!carnetValido) {
-      //return {estado: false, msg:'No se ha encontrado el estudiante'}
       throw new NotFoundException(`No se ha encontrado el carnet ${carnet} segun su tipo de carnet: ${TipoCarnet}`)
     }
 
     const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
-    const isImageSaveMongo = await this.carnetQrRepository.buscarFotoMongo(carnet)
-//!isImageSaveSql && 
+    const isImageSaveMongo = await this.carnetMongoRepository.buscarFotoMongo(carnet)
+
     if (!isImageSaveSql && !!isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
 
 
@@ -159,5 +158,34 @@ export class UsersService {
       plantilla: plantilla.Path
 
     }
+  }
+
+  async actualizarFoto(token: string, foto: string){
+
+    if(!foto) throw new BadRequestException('La fotografía no debe de estar vacía')
+
+    if(!token && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
+
+    const estudiante = await this.buscarEstudiante.BuscarToken(token)
+
+    if(!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
+  
+    
+    const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante.Carnet, foto)
+
+    const convertFotoHex = this.imagen.convertirImagenHex(foto)
+
+
+    const actualizarEstudianteSql = await this.sqlFoto.actualizarFotoSql(estudiante.Carnet, convertFotoHex)
+
+
+    if(!actualizarEstudianteMongo && actualizarEstudianteSql) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
+
+
+      return {
+        msg: 'La fotografía se actualizó con éxito, a continuación, se aplicará el proceso de validación',
+        estudiante: `${estudiante.Nombres} ${estudiante.Apellidos}`,
+        token
+      }
   }
 }
