@@ -10,6 +10,7 @@ import { FormatoDatos } from 'src/utils/utils-format';
 import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
+import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
 // import { Role } from 'src/common/interface/role.enum';
@@ -19,25 +20,25 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
 export class UsersService {
 
   constructor(
-    private readonly buscarEstudianteService: BuscarEstudianteService,
+    private readonly buscarEstudiante: BuscarEstudianteService,
     private carnetEquivalenteRepository: CarnetEstudiante,
     private readonly getEstrategia: ProcesarEstudiante,
     private readonly imagen: ImageService,
     private readonly sqlFoto: FotoEstudiante,
-    private carnetQrRepository: FotoCarnet
+    private carnetQrRepository: FotoCarnet,
+    private readonly http: FetchHttpService
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
 
   async obtenerEstudiante(request: CarnetDTO) {
-    // return await this.buscarEstudianteService.Pregrado(request.carnet)
     switch (request.tipo) {
       case "PREGRADO":
-        return await this.buscarEstudianteService.Pregrado(request.carnet)
+        return await this.buscarEstudiante.Pregrado(request.carnet)
       case "POSTGRADO":
-        return await this.buscarEstudianteService.Postgrado(request.carnet)
+        return await this.buscarEstudiante.Postgrado(request.carnet)
       case "EGRESADO":
-        return await this.buscarEstudianteService.Egresado(request.carnet)
+        return await this.buscarEstudiante.Egresado(request.carnet)
       default:
         throw new BadRequestException('No existe el tipo de carnet ingresado')
     }
@@ -48,11 +49,11 @@ export class UsersService {
   async buscarCarnetEstudiante(carnet: string, tipoCarnet: string) {
     switch (tipoCarnet) {
       case "PREGRADO":
-        return await this.buscarEstudianteService.Pregrado(carnet)
+        return await this.buscarEstudiante.Pregrado(carnet)
       case "POSTGRADO":
-        return await this.buscarEstudianteService.Postgrado(carnet)
+        return await this.buscarEstudiante.Postgrado(carnet)
       case "EGRESADO":
-        return await this.buscarEstudianteService.Egresado(carnet)
+        return await this.buscarEstudiante.Egresado(carnet)
       default:
         throw new BadRequestException('No existe el tipo de carnet ingresado')
     }
@@ -75,8 +76,8 @@ export class UsersService {
 
     const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
     const isImageSaveMongo = await this.carnetQrRepository.buscarFotoMongo(carnet)
-
-    if (!isImageSaveSql && !isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
+//!isImageSaveSql && 
+    if (!isImageSaveSql && !!isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
 
 
     const fotoValida = this.imagen.CalcularImagenBase64(Foto)
@@ -126,10 +127,37 @@ export class UsersService {
 
   
   async estudianteReingreso(student: string, ciclo: string) {
-    const estudiante = await this.buscarEstudianteService.Reingreso(student, ciclo)
+    const estudiante = await this.buscarEstudiante.Reingreso(student, ciclo)
 
     if (!estudiante) throw new NotFoundException('El estudiante no es reingreso o no aplica para este ciclo')
 
     return estudiante
+  }
+
+  async mostrarCarnet(carnet: string, tipoCarnet: string){
+    const estudiante = await this.buscarEstudiante.PlantillaEstudiante(carnet)
+
+    if(!estudiante) throw new NotFoundException(`No se ha encontrado fotografia registrada`)
+
+    const {nombres, apellidos, foto, idFacultad, qr, ciclo_carnet} = estudiante
+
+    const plantilla = await this.http.FetchTemplate(tipoCarnet, idFacultad.toString())
+
+    if(!plantilla) {
+      console.error('🔴 | Error al obtener plantilla')
+      throw new NotFoundException(`No se ha encontrado la informacion ${plantilla}`)
+    }
+
+
+    return {
+      nombres: nombres,
+      apellidos: apellidos,
+      facultad: plantilla.Facultad,
+      ciclo: ciclo_carnet,
+      foto: foto,
+      qr: qr,
+      plantilla: plantilla.Path
+
+    }
   }
 }

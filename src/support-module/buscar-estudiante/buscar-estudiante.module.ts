@@ -6,6 +6,8 @@ import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
 import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.query';
+import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
+import { ProcesosProvider } from '../repositories/mongosee.provider';
 
 
 @Module({
@@ -18,7 +20,9 @@ import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.que
     BuscarEstudiante,
     ...RegistrAcademicoProvider,
     ...UFGRegistroProvider,
-    Procedure
+    ...ProcesosProvider,
+    Procedure,
+    FotoCarnet
   ],
   exports: [BuscarEstudianteService, BuscarEstudiante, Procedure]
 })

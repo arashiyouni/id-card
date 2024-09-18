@@ -18,7 +18,7 @@ import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
         DatabaseSQLModule,
         MongoDatabaseModule,
         QrModule,
-        BuscarEstudianteModule
+        BuscarEstudianteModule,
     ],
     controllers: [SupportModuleController],
     providers: [

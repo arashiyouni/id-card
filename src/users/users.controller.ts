@@ -58,4 +58,16 @@ export class UsersController {
       }
     
     }
+
+    @Post('foto-carnet-virtual/estudiante')
+    @HttpCode(200)
+    async carnetizacion(@Body() carnetizacion: CarnetDTO){
+      const estudiante = await this.userService.mostrarCarnet(carnetizacion.carnet, carnetizacion.tipo)
+
+      return {
+        msg: 'Estudiante Reingreso',
+        estudiante
+      }
+    
+    }
 }

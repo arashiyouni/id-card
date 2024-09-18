@@ -29,3 +29,12 @@ export interface ResponseReingreso {
     fecha_movimiento: string
     id_movimiento: number
 }
+
+export interface ResponseFotoCarnet {
+    nombres: string
+    apellidos: string
+    foto: string
+    idFacultad: number | string
+    qr: string
+    ciclo_carnet: string
+}

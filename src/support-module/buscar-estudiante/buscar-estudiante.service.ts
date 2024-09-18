@@ -1,11 +1,13 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BuscarEstudiante } from '../repositories/queries/Estudiante/buscar-estudiante.query';
-import { ResponseDataStudent, ResponseReingreso } from 'src/common/interface/buscar-estudiante.interface';
+import { ResponseDataStudent, ResponseFotoCarnet, ResponseReingreso } from 'src/common/interface/buscar-estudiante.interface';
 import { formatDate } from 'src/utils/utils-format';
+import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
 @Injectable()
 export class BuscarEstudianteService {
     constructor(
-        private readonly estudianteRepository: BuscarEstudiante
+        private readonly estudianteRepository: BuscarEstudiante,
+        private readonly fotoCarnetRepository: FotoCarnet
     ) { }
 
     async Pregrado(carnet: string) {
@@ -78,7 +80,7 @@ export class BuscarEstudianteService {
 
             if (!estudianteEgresado.length) return false
 
-            const egresado: ResponseDataStudent ={
+            const egresado: ResponseDataStudent = {
                 carnet: estudianteEgresado[0].IdAlumno,
                 nombres: estudianteEgresado[0].Nombres,
                 apellidos: estudianteEgresado[0].Apellido3 ? `${estudianteEgresado[0].Apellido1} ${estudianteEgresado[0].Apellido2} ${estudianteEgresado[0].Apellido3}` : `${estudianteEgresado[0].Apellido1} ${estudianteEgresado[0].Apellido2}`,
@@ -99,20 +101,34 @@ export class BuscarEstudianteService {
         }
     }
 
-    async Reingreso(carnet: string, ciclo: string){
-       const estudiante = await this.estudianteRepository.buscarReingreso(carnet, ciclo)
+    async Reingreso(carnet: string, ciclo: string) {
+        const estudiante = await this.estudianteRepository.buscarReingreso(carnet, ciclo)
 
-        if(!estudiante) return false
+        if (!estudiante) return false
 
-       const reingreso: ResponseReingreso = {
-        carnet: estudiante.mov_idalumno,
-        ciclo_actual: estudiante.mov_cicloa,
-        ciclo_reingreso: estudiante.mov_ciclor,
-        accion: estudiante.idaccion === 7 ? 'REINGRESO': estudiante.idaccion,
-        fecha_movimiento: formatDate(estudiante.mov_fechamov),
-        id_movimiento: estudiante.IdMovimientoa
-       }
+        const reingreso: ResponseReingreso = {
+            carnet: estudiante.mov_idalumno,
+            ciclo_actual: estudiante.mov_cicloa,
+            ciclo_reingreso: estudiante.mov_ciclor,
+            accion: estudiante.idaccion === 7 ? 'REINGRESO' : estudiante.idaccion,
+            fecha_movimiento: formatDate(estudiante.mov_fechamov),
+            id_movimiento: estudiante.IdMovimientoa
+        }
 
-       return reingreso
+        return reingreso
+    }
+
+    async PlantillaEstudiante(carnet: string) {
+        const fotoMongo = await this.fotoCarnetRepository.buscarFotoMongo(carnet)
+
+        const carnetizacion: ResponseFotoCarnet = {
+            nombres: fotoMongo.Nombres,
+            apellidos: fotoMongo.Apellidos,
+            foto: fotoMongo.Foto,
+            idFacultad: fotoMongo.IdFacultad,
+            qr: fotoMongo.Qr,
+            ciclo_carnet: fotoMongo.CicloCarnetizacion
+        }
+        return carnetizacion
     }
 }

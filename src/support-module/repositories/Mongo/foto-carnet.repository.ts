@@ -89,6 +89,6 @@ export class FotoCarnet {
 
     async buscarFotoMongo(carnet: string){
         const imagen = await this.fotoCarnetRepository.findOne({Carnet: carnet})
-        return !imagen
+        return imagen 
     }
 }

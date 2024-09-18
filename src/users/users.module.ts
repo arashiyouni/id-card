@@ -22,6 +22,9 @@ import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro
 import { FinancieraProvider } from 'src/support-module/repositories/MSSQL/financiera.provider';
 import { ProcesosProvider } from 'src/support-module/repositories/mongosee.provider';
 import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudiante/carnet-estudiante.query';
+import { HttpModule } from '@nestjs/axios';
+import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
+
 
 @Module({
   imports: [
@@ -36,7 +39,10 @@ import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudi
     BuscarEstudianteModule,
     DatabaseSQLModule,
     MongoDatabaseModule,
-    QrModule
+    QrModule,
+    HttpModule.register({
+      timeout: 5000,
+    })
   ],
   providers: [
     UsersService,
@@ -52,7 +58,8 @@ import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudi
     FotoEstudiante,
     FotoCarnet,
     ImageService,
-    CarnetEstudiante
+    CarnetEstudiante,
+    FetchHttpService
   ],
   exports: [UsersService],
   controllers: [UsersController]
