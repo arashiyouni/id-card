@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CarnetDTO } from './dto/carnet.dto';
 import {  StudentDTO, StudentReingresoDTO, StudentTokenDTO } from './dto/foto-carnet.dto';
@@ -79,7 +79,7 @@ export class UsersController {
 
     @Get('consultar-proceso')
     @HttpCode(200)
-    async consultarProcesoCarnetizacion(@Query('token') carnet: string) {
-     return  'estoy en token'
+    async consultarProcesoCarnetizacion(@Query('token') token: string) {
+     return  await this.userService.consultarProcesoCarnet(token)
     }
 }

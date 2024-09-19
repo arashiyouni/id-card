@@ -139,4 +139,13 @@ export class BuscarEstudianteService {
 
         return estudianteToken
     }
+
+    async BuscarExepcionCarnet(carnet: string){
+        const estudiante = await this.fotoCarnetRepository.BuscarCarnetExepciones(carnet)
+
+        if(!estudiante) return false
+
+        
+        return estudiante
+    }
 }

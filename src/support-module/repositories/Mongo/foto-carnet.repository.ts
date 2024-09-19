@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
-import { Foto } from "src/common/interface/mongo/documents/Foto";
+import { Foto, FotoExepcion } from "src/common/interface/mongo/documents/Foto";
 import { QRSchema } from "src/common/interface/mongo/documents/qr-code";
 import { IQrParametros } from "src/common/interface/mongo/parameters/foto-qr.interface";
 import { IEnviarFotoCarnet } from "src/common/interface/mongo/parameters/guardar-foto.interface";
@@ -10,7 +10,9 @@ export class FotoCarnet {
         @Inject('FOTO_CARNET_MODEL')
         private readonly fotoCarnetRepository: Model<Foto>,
         @Inject('QR_CODE_DOCUMENT')
-        private readonly qrCodeRepository: Model<QRSchema>
+        private readonly qrCodeRepository: Model<QRSchema>,
+        @Inject('FOTO_EXEPCION_DOCUMENT')
+        private readonly fotoExepcionesRepository: Model<FotoExepcion>
     ) { }
 
     async guardarFoto(studentData: IEnviarFotoCarnet) {
@@ -112,5 +114,10 @@ export class FotoCarnet {
           console.log('Documento actualizado:', update);
           return update;
           
+    }
+
+    async BuscarCarnetExepciones(carnet: string){
+        const estudiante = await this.fotoExepcionesRepository.findOne({Carnet: carnet})
+        return estudiante
     }
 }

@@ -61,12 +61,12 @@ export class UsersService {
     }
   }
 
-  //TODO: VER COMO COMPLETAR LOS FILES Y AGREGARLE EL SEGUIMIETNO
   async fotoCarnet(student: StudentDTO) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
     const maxSizeImage = 10 * 1024 * 1024
+    const CicloActual = this.cicloUFG.CicloActual()
 
-    if (CicloCarnetizacion != '02-2024') throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
+    if (CicloCarnetizacion !== CicloActual) throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
 
     //busca carnet
     const carnetValido = await this.buscarCarnetEstudiante(carnet, TipoCarnet)
@@ -82,7 +82,6 @@ export class UsersService {
 
 
     const fotoValida = this.imagen.CalcularImagenBase64(Foto)
-    // const formatoDeImagen = this.imagen.VerificaFormatoDeImagen(Foto)
 
     if (!Foto || fotoValida > maxSizeImage) {
       throw new BadRequestException('La fotografía está vacía o ha superado los 10MB o tiene un formato no válido');
@@ -101,7 +100,7 @@ export class UsersService {
     //aca ejecuta la estrategia segun carnet
     const estudiante: IEstudianteInformacion = {
       token: token,
-      activo: data.activo,
+      activo: 0,
       apellidos: data.apellidos,
       carnet_equivalente: carnetEquivalente,
       carnet: data.idalumno,
@@ -126,7 +125,6 @@ export class UsersService {
 
   }
 
-  
   async estudianteReingreso(student: string, ciclo: string) {
     const estudiante = await this.buscarEstudiante.Reingreso(student, ciclo)
 
@@ -197,10 +195,20 @@ export class UsersService {
 
   async consultarProcesoCarnet(token: string){
     const consultarToken = await this.carnetMongoRepository.buscarToken(token)
+    const consultarExepcion = await this.buscarEstudiante.BuscarExepcionCarnet(consultarToken.Carnet)
 
-    if(!consultarToken) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
+    if(!consultarToken && !consultarExepcion) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
+    
+    
+    if(consultarToken?.Activo === 0|| consultarExepcion[0]?.Activo === 0){
+      return {
+        msg: 'La fotografía se encuentra en proceso de validación, un agente de servicio te contactará por medio del correo electrónico',
+        token: token
+      }
+    }
 
-    //if(consultarToken.Activo != 0)
-    //TODO: AQUI VA CONSULTAR PAGOS
+    return {
+      msg: 'Has finalizado el Proceso de Carnetización Virtual, Ahora ya puedes visualizar tu carné digital '
+    }
   }
 }

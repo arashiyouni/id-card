@@ -31,3 +31,15 @@ export interface Seguimiento extends Document {
     Usuario: string
     FechaRegistro: Date
 }
+
+export interface FotoExepcion extends Document {
+    CicloCarnetizacion: string
+    TipoCarnet: string
+    Carnet: string
+    Observacion: string
+    Descripcion: string
+    Usuario: string
+    Activo: number
+    FechaRegistro: Date
+    FechaModificacion: Date
+}

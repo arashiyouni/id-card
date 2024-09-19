@@ -3,7 +3,7 @@ export class CicloUFG {
 
     CicloActual(){
         //'May 20, 24 00:20:18'
-        const today = new Date('May 20, 24 00:20:18')
+        const today = new Date()
         const month = today.getMonth() + 1 //inicia desde 0
         const year = today.getFullYear()
 
