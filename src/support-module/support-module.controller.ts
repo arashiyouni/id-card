@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { SupportModuleService } from './support-module.service';
-
+import { CarnetDTO } from 'src/users/dto/carnet.dto';
 @Controller('support-module')
 export class SupportModuleController {
   constructor(
@@ -16,5 +16,18 @@ export class SupportModuleController {
   async generateQrCode(@Query('carnet') carnet: string){
    const qrCodeURL = await this.supportService.obtenerQr(carnet)
    return  `<img src="${qrCodeURL}" alt="QR Code" />`
+  }
+
+  @Post('pagos-estudiante')
+  @HttpCode(200)
+  async pagosEstudiante(@Body()estudiante: CarnetDTO){
+   const verificarPagos = await this.supportService.obtenerPagoEstudianteCicloActual(estudiante.carnet, estudiante.tipo)
+
+    if(!verificarPagos) throw new NotFoundException('Ha ocurrido un error al solicitar pago estudiante, ponte en contacto con call center')
+
+   return {
+    msg: 'Pago de estudiante',
+    estado_pago: verificarPagos
+   }
   }
 }

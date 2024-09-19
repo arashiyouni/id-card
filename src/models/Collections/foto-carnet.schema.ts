@@ -91,7 +91,7 @@ export const FotoCarnetSchema = new mongoose.Schema<Foto>({
         required: false    
         
     },
-    //Seguimiento: [SeguimientoSchema],
+    Seguimiento: [SeguimientoSchema],
     NombreCarrera: {
         type: String,
         required: true

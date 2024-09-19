@@ -8,7 +8,6 @@ import { Tacciones } from "src/models/RegAcademico-Entities/Tacciones.entity"
 import { VPerfilEstudiante } from "src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante"
 import { Repository } from "typeorm"
 import { Procedure } from "../Procedure/buscar-egresado.query"
-import { formatDate } from "src/utils/utils-format"
 
 @Injectable()
 export class BuscarEstudiante {

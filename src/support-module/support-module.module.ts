@@ -12,6 +12,8 @@ import { RegistroProvider } from './repositories/MSSQL/registro.provider';
 import { RegistrAcademicoProvider } from './repositories/MSSQL/regacademico.provider';
 import { BuscarEstudianteModule } from './buscar-estudiante/buscar-estudiante.module';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
+import { PagoEstudianteService } from './repositories/queries/Estudiante/verificar-pago.query';
+import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 
 @Module({
     imports: [
@@ -29,7 +31,9 @@ import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
         ...ProcesosProvider,
         ...RegistrAcademicoProvider,
         GestionFechas,
-        FotoCarnet
+        FotoCarnet,
+        PagoEstudianteService,
+        CicloUFG
        
     ],
     exports: [SupportModuleModule, SupportModuleService],

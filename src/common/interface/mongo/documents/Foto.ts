@@ -17,7 +17,7 @@ export interface Foto extends Document {
     Nombres: string
     CicloCarnetizacion: string
     IdFacultad: string
-    // Seguimiento?: [Seguimiento],
+    Seguimiento?: [Seguimiento],
     InscripcionFile?: string
     InscripcionFileName?: string
     CalificacionesFileName?: string

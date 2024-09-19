@@ -10,6 +10,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
 import { SupportModuleModule } from './support-module/support-module.module';
 import { DatabaseSQLModule } from './database/sql-server/database.module';
 import { MongoDatabaseModule } from './database/mongo-server/mongo-database.module';
+import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [EnvConfig] }),
@@ -24,6 +25,7 @@ import { MongoDatabaseModule } from './database/mongo-server/mongo-database.modu
     UsersModule,
     DatabaseSQLModule,
     SupportModuleModule,
+    AdminModule,
   ],
   providers: [JwtStrategy],
   exports: [JwtModule, PassportModule]

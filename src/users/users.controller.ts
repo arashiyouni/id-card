@@ -76,4 +76,10 @@ export class UsersController {
     async actualizarFotoCarnet(@Body() estudiante: StudentTokenDTO) {
      return await this.userService.actualizarFoto(estudiante.token, estudiante.foto)
     }
+
+    @Get('consultar-proceso')
+    @HttpCode(200)
+    async consultarProcesoCarnetizacion(@Query('token') carnet: string) {
+     return  'estoy en token'
+    }
 }

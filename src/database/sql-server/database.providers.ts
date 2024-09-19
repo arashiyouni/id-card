@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { PagoEstudiante } from 'src/models/Financiera-Entities/PagoEstudiante';
 import { CarneEquivalente } from 'src/models/UFGRegistroAcademico-Entities/CarneEquivalente';
 import { VPerfilEstudiante } from 'src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante';
 import { DataSource } from 'typeorm';
@@ -77,8 +78,8 @@ export const AppDataSource = [
                 type: 'mssql',
                 ...defaultOptions,
                 database: process.env.FINANCIERA_DB,
-                // entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
-            });
+                 entities: [PagoEstudiante],
+            })
 
             try {
                 await dataSource.initialize();

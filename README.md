@@ -228,7 +228,7 @@ TODO PARA MAÑANA 09/10/2024
 - Ver como mejorar el codigo de guardar para mongo y sql   ✅
 - Mejorar como se muestra el codigo del token   ✅
 - Hacer las validacion de egresado y pregrado ✅
-- Iniciar el endpoint de updateFoto (creo que es de admin) o insertNewPhoto
+- Iniciar el endpoint de updateFoto (creo que es de admin) o insertNewPhoto ✅
 ---
 
 ### Aspectos a mejorar después de la Review
@@ -241,15 +241,19 @@ TODO:
 - MEJORAR LAS EXPECIONES  ✅
 
 **!TODO PRIORITARIOA - 9/17/24:**
-- HACER ENDPOINT DE MOSTRAR PLANTILLA CON CARNET CON SUS NOMBRES
-- HACER ENPOINT PARA ACTUALIZAR IMAGEN
+- HACER ENDPOINT DE MOSTRAR PLANTILLA CON CARNET CON SUS NOMBRES ✅
+- HACER ENPOINT PARA ACTUALIZAR IMAGEN ✅
+**!TODO PRIORITARIOA - 9/18/24:**
 - CREAR ENPOINT PARA SABER SI HAY EXEPCION
 - CREAR ENPOINT PARA REGISTRAR EXEPCION
+- ACTUALIZAR FOTO CON SEGUIMIENTO
+
+TIENE QUE HABER UNA EXPECION QUE CREE LA EXEPCION Y OTRA QUE VERIFIQUE LA EXEPCION
 
 
 
 **!TODO DE ULTIMO:**
-- MATRICULA Y CUOTA 1 CANCELADO CON QUE ESTE ESTADO DIFERENTE DE A (EN FRONT, EL DE consultarPagosRealizados)
+- MATRICULA Y CUOTA 1 CANCELADO CON QUE ESTE ESTADO DIFERENTE DE A (EN FRONT, EL DE consultarPagosRealizados) (me dijieron que crera un endpoint) ✅
 
 Convertidor de imagen=
 https://base64.guru/converter/encode/image

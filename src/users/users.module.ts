@@ -25,6 +25,7 @@ import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudi
 import { HttpModule } from '@nestjs/axios';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { SupportModuleService } from 'src/support-module/support-module.service';
 
 
 @Module({
