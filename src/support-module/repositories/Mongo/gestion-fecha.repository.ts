@@ -6,7 +6,7 @@ import { Modulos } from "src/common/interface/mongo/documents/modulos";
 @Injectable()
 export class GestionFechas{
     constructor(
-        @Inject('PROCESOS_MODEL')
+        @Inject('PROCESOS_DOCUMENT')
         private readonly gestionProcesoModulos: Model<Modulos>
     ){}
 

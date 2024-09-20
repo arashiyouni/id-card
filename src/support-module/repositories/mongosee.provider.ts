@@ -4,20 +4,20 @@ import { FotoCarnetExepcionSchema } from "src/models/Collections/foto-excepcione
 import { GestionFechasSchema } from "src/models/Collections/gestion-fecha.schema";
 import { FotoQrsSchema } from "src/models/Collections/qr-code.schema";
 
-export const ProcesosProvider = [
-    //TODO: EN VEZ DE MODEL DEBE DE SER DOCUMENT
+export const MongoOperaProvider = [
+    
     {
-        provide: 'PROCESOS_MODEL',
+        provide: 'PROCESOS_DOCUMENT',
         useFactory: (connection: Connection) => connection.model('GestionFechas', GestionFechasSchema),
         inject: ['MONGO_OPERA']
     },
     {
-        provide: 'SEGUIMIENTO_CARNET_MODEL',
+        provide: 'SEGUIMIENTO_CARNET_DOCUMENT',
         useFactory: (connection: Connection) => connection.model('SeguimientoCarnet', SeguimientoSchema),
         inject: ['MONGO_OPERA']
     },
     {
-        provide: 'FOTO_CARNET_MODEL',
+        provide: 'FOTO_CARNET_DOCUMENT',
         useFactory: (connection: Connection) => connection.model('FotoCarnet', FotoCarnetSchema),
         inject: ['MONGO_OPERA']
     },

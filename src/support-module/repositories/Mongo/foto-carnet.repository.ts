@@ -7,7 +7,7 @@ import { IEnviarFotoCarnet } from "src/common/interface/mongo/parameters/guardar
 @Injectable()
 export class FotoCarnet {
     constructor(
-        @Inject('FOTO_CARNET_MODEL')
+        @Inject('FOTO_CARNET_DOCUMENT')
         private readonly fotoCarnetRepository: Model<Foto>,
         @Inject('QR_CODE_DOCUMENT')
         private readonly qrCodeRepository: Model<QRSchema>,
