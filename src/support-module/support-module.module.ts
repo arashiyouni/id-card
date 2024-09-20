@@ -14,6 +14,7 @@ import { BuscarEstudianteModule } from './buscar-estudiante/buscar-estudiante.mo
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { PagoEstudianteService } from './repositories/queries/Estudiante/verificar-pago.query';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { InformacionEstudianteModule } from './strategy/informacion-estudiante/informacion-estudiante.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
         MongoDatabaseModule,
         QrModule,
         BuscarEstudianteModule,
+        InformacionEstudianteModule,
     ],
     controllers: [SupportModuleController],
     providers: [
@@ -33,7 +35,7 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
         GestionFechas,
         FotoCarnet,
         PagoEstudianteService,
-        CicloUFG
+        CicloUFG,
        
     ],
     exports: [SupportModuleModule, SupportModuleService],

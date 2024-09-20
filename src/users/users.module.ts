@@ -18,14 +18,12 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
 import { QrModule } from 'src/support-module/qr/qr-code.module';
 import { ImageService } from 'src/common/service/image.service';
 import { FotosProvider } from 'src/support-module/repositories/MSSQL/foto.provider';
-import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro.provider';
-import { FinancieraProvider } from 'src/support-module/repositories/MSSQL/financiera.provider';
 import { MongoOperaProvider } from 'src/support-module/repositories/mongosee.provider';
 import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudiante/carnet-estudiante.query';
 import { HttpModule } from '@nestjs/axios';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
-import { SupportModuleService } from 'src/support-module/support-module.service';
+
 
 
 @Module({

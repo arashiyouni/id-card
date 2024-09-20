@@ -13,6 +13,7 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 
+
 // import { Roles } from 'src/common/decorator/decorator.decorator';
 // import { Role } from 'src/common/interface/role.enum';
 // import { RolesGuard } from 'src/auth/roles.guard';
@@ -44,7 +45,6 @@ export class UsersService {
       default:
         throw new BadRequestException('No existe el tipo de carnet ingresado')
     }
-
   }
 
   //este solo busca, no se usa en controlador
@@ -130,23 +130,23 @@ export class UsersService {
 
     const consultarCicloActual = this.cicloUFG.CicloActual()
     //01-2024   02-2024
-    if(ciclo != consultarCicloActual) throw new BadRequestException(`El ciclo ingresado no aplica para el ciclo actual ${consultarCicloActual}`)
+    if (ciclo != consultarCicloActual) throw new BadRequestException(`El ciclo ingresado no aplica para el ciclo actual ${consultarCicloActual}`)
 
     if (!estudiante) throw new NotFoundException('El estudiante no es reingreso ')
 
     return estudiante
   }
 
-  async mostrarCarnet(carnet: string, tipoCarnet: string){
+  async mostrarCarnet(carnet: string, tipoCarnet: string) {
     const estudiante = await this.buscarEstudiante.PlantillaEstudiante(carnet)
 
-    if(!estudiante) throw new NotFoundException(`No se ha encontrado fotografia registrada`)
+    if (!estudiante) throw new NotFoundException(`No se ha encontrado fotografia registrada`)
 
-    const {nombres, apellidos, foto, idFacultad, qr, ciclo_carnet} = estudiante
+    const { nombres, apellidos, foto, idFacultad, qr, ciclo_carnet } = estudiante
 
     const plantilla = await this.http.FetchTemplate(tipoCarnet, idFacultad.toString())
 
-    if(!plantilla) {
+    if (!plantilla) {
       console.error('🔴 | Error al obtener plantilla')
       throw new NotFoundException(`No se ha encontrado la informacion ${plantilla}`)
     }
@@ -164,17 +164,17 @@ export class UsersService {
     }
   }
 
-  async actualizarFoto(token: string, foto: string){
+  async actualizarFoto(token: string, foto: string) {
 
-    if(!foto) throw new BadRequestException('La fotografía no debe de estar vacía')
+    if (!foto) throw new BadRequestException('La fotografía no debe de estar vacía')
 
-    if(!token && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
+    if (!token && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
 
     const estudiante = await this.buscarEstudiante.BuscarToken(token)
 
-    if(!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
-  
-    
+    if (!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
+
+
     const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante.Carnet, foto)
 
     const convertFotoHex = this.imagen.convertirImagenHex(foto)
@@ -183,24 +183,24 @@ export class UsersService {
     const actualizarEstudianteSql = await this.sqlFoto.actualizarFotoSql(estudiante.Carnet, convertFotoHex)
 
 
-    if(!actualizarEstudianteMongo && actualizarEstudianteSql) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
+    if (!actualizarEstudianteMongo && actualizarEstudianteSql) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
 
 
-      return {
-        msg: 'La fotografía se actualizó con éxito, a continuación, se aplicará el proceso de validación',
-        estudiante: `${estudiante.Nombres} ${estudiante.Apellidos}`,
-        token
-      }
+    return {
+      msg: 'La fotografía se actualizó con éxito, a continuación, se aplicará el proceso de validación',
+      estudiante: `${estudiante.Nombres} ${estudiante.Apellidos}`,
+      token
+    }
   }
 
-  async consultarProcesoCarnet(token: string){
+  async consultarProcesoCarnet(token: string) {
     const consultarToken = await this.carnetMongoRepository.buscarToken(token)
     const consultarExepcion = await this.buscarEstudiante.BuscarExepcionCarnet(consultarToken.Carnet)
 
-    if(!consultarToken && !consultarExepcion) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
-    
-    
-    if(consultarToken?.Activo === 0|| consultarExepcion[0]?.Activo === 0){
+    if (!consultarToken && !consultarExepcion) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
+
+
+    if (consultarToken?.Activo === 0 || consultarExepcion[0]?.Activo === 0) {
       return {
         msg: 'La fotografía se encuentra en proceso de validación, un agente de servicio te contactará por medio del correo electrónico',
         token: token

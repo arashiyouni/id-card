@@ -1,4 +1,3 @@
-
 export interface BuscarEstudianteStrategy {
     buscarEstudiante(carnet: string)
 }

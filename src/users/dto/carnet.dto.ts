@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, MinLength } from "class-validator";
+import { TipoEstudiante } from "src/common/enums/global.enum";
 
 export class CarnetDTO {
 
@@ -10,10 +11,4 @@ export class CarnetDTO {
     @IsString()
     @IsNotEmpty({message: 'Este campo no puede estar vacío'})
     tipo: TipoEstudiante
-}
-
-export enum TipoEstudiante {
-    PREGRADO = "PREGRADO",
-    POSTGRADO = "POSTGRADO",
-    EGRESADO = "EGRESADO"
 }
