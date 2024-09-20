@@ -7,3 +7,9 @@ export enum coloresQr {
     '08' = '#00a6b5', // FACULTAD DE FACULTAD DE ARTE Y DISEÑO
     'EGRESADO' = '#64656a' //EEGRESADO
 }
+
+export enum TipoEstudiante {
+    PREGRADO = "PREGRADO",
+    POSTGRADO = "POSTGRADO",
+    EGRESADO = "EGRESADO"
+}
