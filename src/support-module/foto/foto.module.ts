@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
-import { ProcesosProvider } from '../repositories/mongosee.provider';
+import { MongoOperaProvider } from '../repositories/mongosee.provider';
 import { PregradoService } from './estrategia/pregrado/pregrado.service';
 import { PostgradoService } from './estrategia/postgrado/postgrado.service';
 import { ProcesarEstudiante } from './foto.service';
@@ -18,7 +18,7 @@ import { ImageService } from 'src/common/service/image.service';
   ],
   providers: [
     ...UFGRegistroProvider,
-    ...ProcesosProvider,
+    ...MongoOperaProvider,
     PregradoService,
     PostgradoService,
     ProcesarEstudiante,

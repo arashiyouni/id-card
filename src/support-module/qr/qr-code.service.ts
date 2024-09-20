@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as qrcode from 'qrcode';
-import { coloresQr } from 'src/common/enums/qr-code.color';
+import { coloresQr } from 'src/common/enums/global.enum';
 
 @Injectable()
 export class QrService {

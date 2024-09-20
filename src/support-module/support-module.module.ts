@@ -5,7 +5,7 @@ import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { UFGRegistroProvider } from './repositories/MSSQL/ufgregistro.provider';
 import { FinancieraProvider } from './repositories/MSSQL/financiera.provider';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
-import { ProcesosProvider } from './repositories/mongosee.provider';
+import { MongoOperaProvider } from './repositories/mongosee.provider';
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { QrModule } from './qr/qr-code.module';
 import { RegistroProvider } from './repositories/MSSQL/registro.provider';
@@ -28,7 +28,7 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
         ...RegistroProvider,
         ...UFGRegistroProvider,
         ...FinancieraProvider,
-        ...ProcesosProvider,
+        ...MongoOperaProvider,
         ...RegistrAcademicoProvider,
         GestionFechas,
         FotoCarnet,

@@ -7,7 +7,7 @@ import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.mo
 import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
 import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.query';
 import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
-import { ProcesosProvider } from '../repositories/mongosee.provider';
+import { MongoOperaProvider } from '../repositories/mongosee.provider';
 
 
 @Module({
@@ -20,7 +20,7 @@ import { ProcesosProvider } from '../repositories/mongosee.provider';
     BuscarEstudiante,
     ...RegistrAcademicoProvider,
     ...UFGRegistroProvider,
-    ...ProcesosProvider,
+    ...MongoOperaProvider,
     Procedure,
     FotoCarnet,
   ],
