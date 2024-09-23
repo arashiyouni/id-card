@@ -10,9 +10,6 @@ import { RegistrAcademicoProvider } from 'src/support-module/repositories/MSSQL/
 import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
-import { ProcesarEstudiante } from 'src/support-module/foto/foto.service';
-import { PregradoService } from 'src/support-module/foto/estrategia/pregrado/pregrado.service';
-import { PostgradoService } from 'src/support-module/foto/estrategia/postgrado/postgrado.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { QrModule } from 'src/support-module/qr/qr-code.module';
@@ -28,6 +25,9 @@ import { InformacionEstudianteService } from 'src/support-module/strategy/inform
 import { PregradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/pregrado/pregrado.service';
 import { PostgradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/postgrado/postgrado.service';
 import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/egresado/egresado.service';
+import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
+import { PostgradoService } from 'src/support-module/strategy/foto/estrategia/postgrado/postgrado.service';
+import { PregradoService } from 'src/support-module/strategy/foto/estrategia/pregrado/pregrado.service';
 
 
 

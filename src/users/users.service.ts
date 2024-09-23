@@ -4,7 +4,6 @@ import { StudentDTO } from './dto/foto-carnet.dto';
 import { BuscarEstudianteService } from 'src/support-module/buscar-estudiante/buscar-estudiante.service';
 import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudiante/carnet-estudiante.query';
 import { getToken } from 'src/utils/generate-random.token';
-import { ProcesarEstudiante } from 'src/support-module/foto/foto.service';
 import { IEstudianteInformacion } from 'src/common/interface/sql/parameters/insertar-foto';
 import { FormatoDatos } from 'src/utils/utils-format';
 import { ImageService } from 'src/common/service/image.service';
@@ -13,6 +12,7 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
+import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
 
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
