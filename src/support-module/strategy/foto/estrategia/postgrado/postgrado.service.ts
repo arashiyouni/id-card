@@ -13,9 +13,7 @@ export class PostgradoService implements ProcesarEstudianteStrategy{
     constructor(
         private readonly guardarFotoCarnetRepository: FotoCarnet,
         private readonly qr: QrService,
-        private readonly carnetQrRepository: FotoCarnet,
-        private readonly fotoHex: ImageService,
-        private readonly sqlFoto: FotoEstudiante,
+        private readonly carnetQrRepository: FotoCarnet
     ){}
     
     async procesar(estudiante: IEstudianteInformacion) {
@@ -62,28 +60,16 @@ export class PostgradoService implements ProcesarEstudianteStrategy{
             FechaModificacion: new Date()
 
         }
-        //conversion de foto a buffer
-        const converHex = this.fotoHex.convertirImagenHex(foto)
 
-        const FotoSql: FotoHexa = {
-            carnet: carnet,
-            length: converHex.length,
-            idSede: idsede,
-            foto: converHex,
-            date: new Date()
-          }
 
         //guarda la informacion de foto y qr
         const fotoMongo = await this.guardarFotoCarnetRepository.guardarFoto(dataPhoto)
         const saveQR = await this.carnetQrRepository.guardarQR(dataQr)
-        //guardar foto en sql 
-        const guardarFotoSql = await this.sqlFoto.insertarFotoSql(FotoSql)
 
 
-        if(!fotoMongo && !saveQR && !guardarFotoSql) {
+        if(!fotoMongo && !saveQR) {
             await this.carnetQrRepository.eliminarFotoCarnetMongo(carnet) 
             await this.carnetQrRepository.eliminarQrMongo(carnet)
-            await this.sqlFoto.eliminarFotoSql(carnet)
             return false 
         }
 
