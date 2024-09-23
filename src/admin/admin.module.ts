@@ -8,11 +8,18 @@ import { RegistrarExcepcion } from 'src/support-module/repositories/Mongo/foto-e
 import { BuscarEstudianteModule } from 'src/support-module/buscar-estudiante/buscar-estudiante.module';
 import { BuscarEstudianteService } from 'src/support-module/buscar-estudiante/buscar-estudiante.service';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
+import { InformacionEstudianteModule } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.module';
+import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
+import { PregradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/pregrado/pregrado.service';
+import { PostgradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/postgrado/postgrado.service';
+import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/egresado/egresado.service';
+import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 @Module({
   imports: [
     DatabaseSQLModule,
     MongoDatabaseModule,
-    BuscarEstudianteModule
+    BuscarEstudianteModule,
+    InformacionEstudianteModule
   ],
   controllers: [AdminController],
   providers: [
@@ -20,7 +27,12 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
     RegistrarExcepcion,
     AdminService,
     BuscarEstudianteService,
-    FotoCarnet
+    FotoCarnet,
+    InformacionEstudianteService,
+    PregradoServiceStrategy,
+    PostgradoServiceStrategy,
+    EgresadoServiceStrategy,
+    CicloUFG
   ],
 })
 export class AdminModule { }

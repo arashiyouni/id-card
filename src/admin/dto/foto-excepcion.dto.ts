@@ -5,13 +5,11 @@ export class FotoExepcionDTO {
 
     @MinLength(8)
     @IsString()
-   // @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
+    @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
     carnet: string
 
-    @Min(2)
     @IsString()
-    @IsOptional()
-   // @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
+    @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
     idSede: string
 
     @IsString()
@@ -20,15 +18,12 @@ export class FotoExepcionDTO {
 
     @MinLength(8)
     @IsString()
-    @IsOptional()
-    //@IsNotEmpty({ message: 'Este campo no puede estar vacío' })
+    @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
     usuario: string
 
     @IsString()
-    @IsOptional()
     observacion: string
 
     @IsString()
-    @IsOptional()
     descripcion: string
 }

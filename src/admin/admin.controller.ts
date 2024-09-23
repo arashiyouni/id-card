@@ -9,9 +9,9 @@ export class AdminController {
   @HttpCode(200)
   async CrearExcepcionCarnet(@Body() registrar: FotoExepcionDTO) {
     const estudiante = await this.adminService.registrarFotoExcepcion(registrar)
+    
     return {
-      msg: "Se ha encontrado Pregrado",
-      estudiante
+      msg: "El registro se realizó con éxito"
     }
   }
 }
