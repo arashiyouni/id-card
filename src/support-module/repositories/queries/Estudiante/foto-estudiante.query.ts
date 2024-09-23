@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { FotoHexa } from "src/common/interface/sql/parameters/insertar-foto";
 import { PicturesEgresado } from "src/models/Fotos-Entities/Pictures";
 import { Pictures } from "src/models/RegAcademico-Entities/Pictures.entity";
+import { PicturesHistorial } from "src/models/Registro-Entities/PicturesHistorial.entity";
 import { Repository } from "typeorm";
 
 
@@ -12,7 +13,10 @@ export class FotoEstudiante {
         @Inject('PICTURES_REPOSITORY')
         private fotoEstudianteRepository: Repository<Pictures>,
         @Inject('FOTOS_REPOSITORY')
-        private fotoEstudianteEgresadoRepository: Repository<PicturesEgresado>
+        private fotoEstudianteEgresadoRepository: Repository<PicturesEgresado>,
+        @Inject('PICTURE_HISTORIAL_REPOSITORY')
+        private fotoHistorial: Repository<PicturesHistorial>
+
     ) { }
 
     async insertarFotoSql(data: FotoHexa) {
@@ -80,5 +84,20 @@ export class FotoEstudiante {
         .execute()
 
         return !!update
+    }
+
+    async buscarFotoAnitgua(carnet: string){
+        const fotoAnitgua = await this.fotoHistorial
+        .find({
+            select: {
+                id: true,
+                picture: true
+            },
+            where: {
+                id: carnet
+            }
+        })
+
+        return fotoAnitgua
     }
 }

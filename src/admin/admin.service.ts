@@ -5,15 +5,21 @@ import { InformacionEstudianteService } from 'src/support-module/strategy/inform
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { IFotoExcepcion } from 'src/common/interface/mongo/parameters/foto-excepcion.interface';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
+import { ImageService } from 'src/common/service/image.service';
+import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
+import { FotoHexa } from 'src/common/interface/sql/parameters/insertar-foto';
 
 @Injectable()
 export class AdminService {
 
   constructor(
     private registrarExcepcion: RegistrarExcepcion,
-    private buscarExcepcion: FotoCarnet,
+    private fotoCarnet: FotoCarnet,
     private getEstrategia: InformacionEstudianteService,
-    private readonly cicloUFG: CicloUFG
+    private readonly cicloUFG: CicloUFG,
+    private readonly imagen: ImageService,
+    private readonly sqlFoto: FotoEstudiante,
   ) { }
 
   async registrarFotoExcepcion(registrar: FotoExepcionDTO) {
@@ -29,7 +35,7 @@ export class AdminService {
       throw new NotFoundException('No se ha encontrado estudiante')
     }
 
-    const buscarExcepcionEstudiante = await this.buscarExcepcion.BuscarCarnetExepciones(carnet)
+    const buscarExcepcionEstudiante = await this.fotoCarnet.BuscarCarnetExepciones(carnet)
 
     if (!!buscarExcepcionEstudiante) {
       throw new BadRequestException('El número de carné ya se encuentra registrado')
@@ -54,7 +60,61 @@ export class AdminService {
     }
 
   }
-  async insertarNuevaFoto() { }
-  async verFotoAntigua() { }
+
+  async carnetsVigentes() {
+
+    const fotoCarnet = await this.fotoCarnet.FotosCarnets()
+
+    if (!fotoCarnet) throw new NotFoundException(`No se ha encontrado la foto del carnet`)
+
+    return fotoCarnet
+
+  }
+
+  async carnetsVigentesPorCiclo(ciclo: string) {
+
+    const fotoCarnet = await this.fotoCarnet.buscarFotoMongoPorCiclo(ciclo)
+
+    if (!fotoCarnet) throw new NotFoundException(`No se ha encontrado la foto del carnet`)
+
+    return fotoCarnet
+
+  }
+
+  async insertarNuevaFoto(insertarFoto: InsertarFotoAdminDTO) {
+    const { carnet, idSede, tipoCarnet, Foto } = insertarFoto
+
+    const converHex = this.imagen.convertirImagenHex(Foto)
+    const FotoSql: FotoHexa = {
+      carnet: carnet,
+      length: converHex.length,
+      idSede: idSede,
+      foto: converHex,
+      date: new Date()
+    }
+
+    const guardarFotoSql = await this.sqlFoto.insertarFotoSql(FotoSql)
+
+    const activarCarnet = await this.fotoCarnet.actualizarActivoFotoMongo(carnet, "1")
+
+    if (!guardarFotoSql && !activarCarnet) throw new BadRequestException('Ha ocurrido un error al guardar la fotografia')
+  }
+
+  async verFotoAntigua(foto: VerFotoAntigua) { 
+    const {carnet, idSede, tipoCarnet} = foto
+
+    const fotoAntigua = await this.sqlFoto.buscarFotoAnitgua(carnet)
+   
+
+    if(!fotoAntigua) throw new NotFoundException('Hay un problema al retornar la fotografía')
+      
+   const fotoBase64 = this.imagen.convertirBufferABase64(fotoAntigua[0].picture)
+
+    return {
+      carnet: carnet,
+      foto: fotoBase64
+    }
+    
+  }
 
 }

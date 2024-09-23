@@ -82,42 +82,62 @@ export class FotoCarnet {
     }
 
     async eliminarFotoCarnetMongo(carnet: string) {
-        return await this.fotoCarnetRepository.findOneAndDelete({Carnet: carnet})
-    }    
-    
-    async eliminarQrMongo(carnet: string){
-        return await this.qrCodeRepository.findOneAndDelete({Carnet: carnet})
+        return await this.fotoCarnetRepository.findOneAndDelete({ Carnet: carnet })
     }
 
-    async buscarFotoMongo(carnet: string){
-        const imagen = await this.fotoCarnetRepository.findOne({Carnet: carnet})
-        return imagen 
+    async eliminarQrMongo(carnet: string) {
+        return await this.qrCodeRepository.findOneAndDelete({ Carnet: carnet })
     }
 
-    async buscarToken(token: string){
-        const estudiante = await this.fotoCarnetRepository.findOne({Token: token})
+    async buscarFotoMongo(carnet: string) {
+        const imagen = await this.fotoCarnetRepository.findOne({ Carnet: carnet })
+        return imagen
+    }
+
+    async buscarFotoMongoPorCiclo(ciclo: string) {
+        const imagen = await this.fotoCarnetRepository.find({CicloCarnetizacion: ciclo }).skip(0).limit(5)
+        return imagen
+    }
+
+    async FotosCarnets(){
+        const imagen = await this.fotoCarnetRepository.find().limit(8)
+        return imagen
+    }
+
+    async buscarToken(token: string) {
+        const estudiante = await this.fotoCarnetRepository.findOne({ Token: token })
         return estudiante
     }
 
-    async actualizarFotoMongo(Carnet: string, Foto: string){
+    async actualizarFotoMongo(Carnet: string, Foto: string) {
         const update = await this.fotoCarnetRepository.findOneAndUpdate(
             { Carnet }, // filtro de búsqueda
-            { $set: { Foto: Foto, updatedAt:new Date() } }, // actualización
+            { $set: { Foto: Foto, updatedAt: new Date() } }, // actualización
             { new: true } // devuelve el documento actualizado
-          );
-          
-          if (!update) {
+        );
+
+        if (!update) {
             console.log('No se actualizó la foto, el documento no fue encontrado');
             return null;
-          }
-          
-          console.log('Documento actualizado:', update);
-          return update;
-          
+        }
+
+        return update;
+
     }
 
-    async BuscarCarnetExepciones(carnet: string){
-        const estudiante = await this.fotoExepcionesRepository.findOne({Carnet: carnet})
+    
+    async actualizarActivoFotoMongo(Carnet: string, Activo: string) {
+        const update = await this.fotoCarnetRepository.findOneAndUpdate(
+            { Carnet }, // filtro de búsqueda
+            { $set: { Activo: Activo, updatedAt: new Date() } }, // actualización
+            { new: true } // devuelve el documento actualizado
+        );
+
+        return update;
+    }
+
+    async BuscarCarnetExepciones(carnet: string) {
+        const estudiante = await this.fotoExepcionesRepository.findOne({ Carnet: carnet })
         return estudiante
     }
 }

@@ -14,6 +14,12 @@ import { PregradoServiceStrategy } from 'src/support-module/strategy/informacion
 import { PostgradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/postgrado/postgrado.service';
 import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/egresado/egresado.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { ImageService } from 'src/common/service/image.service';
+import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
+import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
+import { RegistrAcademicoProvider } from 'src/support-module/repositories/MSSQL/regacademico.provider';
+import { FotosProvider } from 'src/support-module/repositories/MSSQL/foto.provider';
+import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro.provider';
 @Module({
   imports: [
     DatabaseSQLModule,
@@ -24,6 +30,10 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
   controllers: [AdminController],
   providers: [
     ...MongoOperaProvider,
+    ...UFGRegistroProvider,
+    ...RegistrAcademicoProvider,
+    ...FotosProvider,
+    ...RegistroProvider,
     RegistrarExcepcion,
     AdminService,
     BuscarEstudianteService,
@@ -32,7 +42,9 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
     PregradoServiceStrategy,
     PostgradoServiceStrategy,
     EgresadoServiceStrategy,
-    CicloUFG
+    CicloUFG,
+    ImageService,
+    FotoEstudiante
   ],
 })
 export class AdminModule { }
