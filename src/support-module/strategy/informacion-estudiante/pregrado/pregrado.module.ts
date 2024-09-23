@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PregradoService } from './pregrado.service';
+import { PregradoServiceStrategy } from './pregrado.service';
 import { RegistrAcademicoProvider } from 'src/support-module/repositories/MSSQL/regacademico.provider';
 import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
 import { Procedure } from 'src/support-module/repositories/queries/Procedure/buscar-egresado.query';
@@ -13,12 +13,12 @@ import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudi
         MongoDatabaseModule,
     ],
     providers:[
-        PregradoService,
+        PregradoServiceStrategy,
         ...RegistrAcademicoProvider,
         ...UFGRegistroProvider,
         Procedure,
         BuscarEstudiante
     ],
-    exports:[PregradoService]
+    exports:[PregradoServiceStrategy]
 })
 export class PregradoModule {}

@@ -3,7 +3,7 @@ import { BuscarEstudianteStrategy, ResponseDataStudent } from 'src/common/interf
 import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudiante/buscar-estudiante.query';
 
 @Injectable()
-export class PostgradoService  implements BuscarEstudianteStrategy{
+export class PostgradoServiceStrategy  implements BuscarEstudianteStrategy{
     constructor(
         private readonly estudianteRepository: BuscarEstudiante,
     ){}

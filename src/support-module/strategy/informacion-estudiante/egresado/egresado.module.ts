@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
-import { EgresadoService } from './egresado.service';
+import { EgresadoServiceStrategy } from './egresado.service';
 import { RegistrAcademicoProvider } from 'src/support-module/repositories/MSSQL/regacademico.provider';
 import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
 import { Procedure } from 'src/support-module/repositories/queries/Procedure/buscar-egresado.query';
@@ -13,12 +13,12 @@ import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudi
         MongoDatabaseModule,
     ],
     providers:[
-        EgresadoService,
+        EgresadoServiceStrategy,
         ...RegistrAcademicoProvider,
         ...UFGRegistroProvider,
         Procedure,
         BuscarEstudiante
     ],
-    exports:[EgresadoService]
+    exports:[EgresadoServiceStrategy]
 })
 export class EgresadoModule {}

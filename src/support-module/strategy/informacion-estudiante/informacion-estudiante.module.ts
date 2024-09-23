@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { InformacionEstudianteService } from './informacion-estudiante.service';
-import { PregradoService } from './pregrado/pregrado.service';
-import { PostgradoService } from './postgrado/postgrado.service';
-import { EgresadoService } from './egresado/egresado.service';
+import { PregradoServiceStrategy } from './pregrado/pregrado.service';
 import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudiante/buscar-estudiante.query';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
@@ -20,17 +18,18 @@ import { EgresadoModule } from './egresado/egresado.module';
     MongoDatabaseModule,
     PregradoModule,
     PostgradoModule,
-    EgresadoModule
+    EgresadoModule,
   ],
   providers: [
     ...RegistrAcademicoProvider,
     ...UFGRegistroProvider,
     Procedure,
     InformacionEstudianteService, 
-     PregradoService, 
+    PregradoServiceStrategy, 
     // PostgradoService, 
     // EgresadoService,
     BuscarEstudiante
-  ]
+  ],
+  exports: [InformacionEstudianteService]
 })
 export class InformacionEstudianteModule { }

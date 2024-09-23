@@ -5,7 +5,7 @@ import { formatDate } from 'src/utils/utils-format';
 
 
 @Injectable()
-export class PregradoService implements BuscarEstudianteStrategy {
+export class PregradoServiceStrategy implements BuscarEstudianteStrategy {
 
     constructor(
         private readonly estudianteRepository: BuscarEstudiante,
