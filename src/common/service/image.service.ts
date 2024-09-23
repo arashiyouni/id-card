@@ -10,6 +10,11 @@ export class ImageService {
         return imageBuffer; // Devolver el buffer para guardar en la base de datos
     }
 
+    convertirBufferABase64(fotoHex: Buffer){
+        const imageBase64 = Buffer.from(fotoHex).toString('base64')
+        return imageBase64
+    }
+
     CalcularImagenBase64(base64String: string) {
         // Elimina el encabezado "data:image/png;base64,"
         const base64Data = base64String.split(',')[1] || base64String; // Remove the header if it exists
