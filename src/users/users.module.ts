@@ -28,6 +28,7 @@ import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion
 import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
 import { PostgradoService } from 'src/support-module/strategy/foto/estrategia/postgrado/postgrado.service';
 import { PregradoService } from 'src/support-module/strategy/foto/estrategia/pregrado/pregrado.service';
+import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro.provider';
 
 
 
@@ -47,7 +48,7 @@ import { PregradoService } from 'src/support-module/strategy/foto/estrategia/pre
     MongoDatabaseModule,
     QrModule,
     HttpModule.register({
-      timeout: 5000,
+      timeout: 10000,
     }),
     InformacionEstudianteModule
   ],
@@ -58,6 +59,7 @@ import { PregradoService } from 'src/support-module/strategy/foto/estrategia/pre
     ...MongoOperaProvider,
     ...RegistrAcademicoProvider,
     ...FotosProvider,
+    ...RegistroProvider,
     BuscarEstudiante,
     ProcesarEstudiante,
     PregradoService,

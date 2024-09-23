@@ -37,12 +37,12 @@ export class UsersService {
 
 
   async obtenerEstudiante(request: CarnetDTO) {
-    const {carnet, tipo} = request
-    
+    const { carnet, tipo } = request
+
     const getEstrategia = await this.getBuscarEstudiante.obtenerEstrategiaBuscarEstudiante(tipo)
     const estudiante = await getEstrategia.buscarEstudiante(carnet)
 
-    if(!estudiante) {
+    if (!estudiante) {
       throw new NotFoundException(`No se ha encontrado el estudiante ${carnet} de ${tipo}`)
     }
 
@@ -64,9 +64,10 @@ export class UsersService {
       throw new NotFoundException(`No se ha encontrado el carnet ${carnet} segun su tipo de carnet: ${TipoCarnet}`)
     }
 
+    //verifica que no este guardada una foto en SQL o Mongo
     const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
     const isImageSaveMongo = await this.carnetMongoRepository.buscarFotoMongo(carnet)
-
+    
     if (!isImageSaveSql && !!isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
 
 
