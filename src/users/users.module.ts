@@ -23,6 +23,12 @@ import { CarnetEstudiante } from 'src/support-module/repositories/queries/Estudi
 import { HttpModule } from '@nestjs/axios';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { InformacionEstudianteModule } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.module';
+import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
+import { PregradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/pregrado/pregrado.service';
+import { PostgradoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/postgrado/postgrado.service';
+import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion-estudiante/egresado/egresado.service';
+
 
 
 
@@ -42,7 +48,8 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
     QrModule,
     HttpModule.register({
       timeout: 5000,
-    })
+    }),
+    InformacionEstudianteModule
   ],
   providers: [
     UsersService,
@@ -60,7 +67,12 @@ import { CicloUFG } from 'src/common/service/ciclo-actual.service';
     ImageService,
     CarnetEstudiante,
     FetchHttpService,
-    CicloUFG
+    CicloUFG,
+    //estrategia
+    InformacionEstudianteService,
+    PregradoServiceStrategy,
+    PostgradoServiceStrategy,
+    EgresadoServiceStrategy
   ],
   exports: [UsersService],
   controllers: [UsersController]

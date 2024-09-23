@@ -12,6 +12,7 @@ import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudian
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
 
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -29,38 +30,26 @@ export class UsersService {
     private readonly sqlFoto: FotoEstudiante,
     private carnetMongoRepository: FotoCarnet,
     private readonly http: FetchHttpService,
-    private readonly cicloUFG: CicloUFG
+    private readonly cicloUFG: CicloUFG,
+    private getBuscarEstudiante: InformacionEstudianteService,
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
 
   async obtenerEstudiante(request: CarnetDTO) {
-    switch (request.tipo) {
-      case "PREGRADO":
-        return await this.buscarEstudiante.Pregrado(request.carnet)
-      case "POSTGRADO":
-        return await this.buscarEstudiante.Postgrado(request.carnet)
-      case "EGRESADO":
-        return await this.buscarEstudiante.Egresado(request.carnet)
-      default:
-        throw new BadRequestException('No existe el tipo de carnet ingresado')
+    const {carnet, tipo} = request
+    
+    const getEstrategia = await this.getBuscarEstudiante.obtenerEstrategiaBuscarEstudiante(tipo)
+    const estudiante = await getEstrategia.buscarEstudiante(carnet)
+
+    if(!estudiante) {
+      throw new NotFoundException(`No se ha encontrado el estudiante ${carnet} de ${tipo}`)
     }
+
+    return estudiante
   }
 
-  //este solo busca, no se usa en controlador
-  async buscarCarnetEstudiante(carnet: string, tipoCarnet: string) {
-    switch (tipoCarnet) {
-      case "PREGRADO":
-        return await this.buscarEstudiante.Pregrado(carnet)
-      case "POSTGRADO":
-        return await this.buscarEstudiante.Postgrado(carnet)
-      case "EGRESADO":
-        return await this.buscarEstudiante.Egresado(carnet)
-      default:
-        throw new BadRequestException('No existe el tipo de carnet ingresado')
-    }
-  }
-
+  //TODO: MEJORAR EL CARNET CUANDO SE GUARDA EN SQL
   async fotoCarnet(student: StudentDTO) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
     const maxSizeImage = 10 * 1024 * 1024
@@ -68,8 +57,8 @@ export class UsersService {
 
     if (CicloCarnetizacion !== CicloActual) throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
 
-    //busca carnet
-    const carnetValido = await this.buscarCarnetEstudiante(carnet, TipoCarnet)
+    const getEstrategia = await this.getBuscarEstudiante.obtenerEstrategiaBuscarEstudiante(TipoCarnet)
+    const carnetValido = await getEstrategia.buscarEstudiante(carnet)
 
     if (!carnetValido) {
       throw new NotFoundException(`No se ha encontrado el carnet ${carnet} segun su tipo de carnet: ${TipoCarnet}`)

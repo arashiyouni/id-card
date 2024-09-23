@@ -18,20 +18,8 @@ export class UsersController {
 
     const estudiante = await this.userService.obtenerEstudiante(carnet)
 
-    if (!estudiante && carnet.tipo === "PREGRADO") {
-      throw new NotFoundException(`No se ha encontrado estudiante pregrado o el estudiante esta inactivo`);
-    }
-
-    if (!estudiante && carnet.tipo === "POSTGRADO") {
-      throw new NotFoundException(`El carnet ingresado no es correcto o no es postgrado`);
-    }
-
-    if (!estudiante && carnet.tipo === "EGRESADO") {
-      throw new NotFoundException(`El carnet ingresado no es correcto o no es egresado`);
-    }
-
     return {
-      msg: "Se ha encontrado Pregrado",
+      msg: `Se ha encontrado estudiante ${carnet.tipo}`,
       estudiante
     }
   }
