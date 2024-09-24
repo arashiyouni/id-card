@@ -15,7 +15,6 @@ export class ValidacionInscripcion {
     ){}
 
     async validacionMatricula(carnet: string){
-        //validar ciclo actual
         const estudianteInscrito = await this.matinsRepository
         .createQueryBuilder('inscripcion')
         .select(['inscripcion.idalumno', 'inscripcion.vali'])

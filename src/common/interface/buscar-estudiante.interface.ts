@@ -23,7 +23,6 @@ export interface ResponseDataStudent {
 export interface ResponseReingreso {
     carnet: string
     ciclo_actual: string
-    ciclo_reingreso: string
     accion: number
     fecha_movimiento: string
     id_movimiento: number

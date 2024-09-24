@@ -4,8 +4,7 @@ import { FotoExepcionDTO } from './dto/foto-excepcion.dto';
 import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { IFotoExcepcion } from 'src/common/interface/mongo/parameters/foto-excepcion.interface';
-import { CicloUFG } from 'src/common/service/ciclo-actual.service';
-import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
+import { InsertarFotoAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
 import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoHexa } from 'src/common/interface/sql/parameters/insertar-foto';
@@ -17,15 +16,12 @@ export class AdminService {
     private registrarExcepcion: RegistrarExcepcion,
     private fotoCarnet: FotoCarnet,
     private getEstrategia: InformacionEstudianteService,
-    private readonly cicloUFG: CicloUFG,
     private readonly imagen: ImageService,
     private readonly sqlFoto: FotoEstudiante,
   ) { }
 
   async registrarFotoExcepcion(registrar: FotoExepcionDTO) {
-    //registrar: FotoExepcionDTO
     const { carnet, idSede, tipoCarnet, usuario, observacion, descripcion } = registrar
-    const cicloActual = this.cicloUFG.CicloActual()
 
     const estrategiaABuscar = await this.getEstrategia.obtenerEstrategiaBuscarEstudiante(tipoCarnet)
 
@@ -44,7 +40,7 @@ export class AdminService {
     const excepcion: IFotoExcepcion = {
       Activo: 1,
       Carnet: carnet,
-      CicloCarnetizacion: cicloActual,
+      CicloCarnetizacion: process.env.CICLO_ACTUAL,
       Descripcion: descripcion,
       FechaModificacion: new Date(),
       FechaRegistro: new Date(),

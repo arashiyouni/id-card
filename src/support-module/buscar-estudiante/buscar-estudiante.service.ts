@@ -109,7 +109,6 @@ export class BuscarEstudianteService {
         const reingreso: ResponseReingreso = {
             carnet: estudiante.mov_idalumno,
             ciclo_actual: estudiante.mov_cicloa,
-            ciclo_reingreso: estudiante.mov_ciclor,
             accion: estudiante.idaccion === 7 ? 'REINGRESO' : estudiante.idaccion,
             fecha_movimiento: formatDate(estudiante.mov_fechamov),
             id_movimiento: estudiante.IdMovimientoa

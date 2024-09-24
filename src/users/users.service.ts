@@ -10,7 +10,6 @@ import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
 import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.repository';
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
-import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
 import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
 
@@ -30,7 +29,6 @@ export class UsersService {
     private readonly sqlFoto: FotoEstudiante,
     private carnetMongoRepository: FotoCarnet,
     private readonly http: FetchHttpService,
-    private readonly cicloUFG: CicloUFG,
     private getBuscarEstudiante: InformacionEstudianteService,
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
@@ -49,11 +47,10 @@ export class UsersService {
     return estudiante
   }
 
-  //TODO: MEJORAR EL CARNET CUANDO SE GUARDA EN SQL
   async fotoCarnet(student: StudentDTO) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
     const maxSizeImage = 10 * 1024 * 1024
-    const CicloActual = this.cicloUFG.CicloActual()
+    const CicloActual = process.env.CICLO_ACTUAL
 
     if (CicloCarnetizacion !== CicloActual) throw new BadRequestException('El ciclo de carnetizacion no coincide con el ciclo actual');
 
@@ -118,7 +115,7 @@ export class UsersService {
   async estudianteReingreso(student: string, ciclo: string) {
     const estudiante = await this.buscarEstudiante.Reingreso(student, ciclo)
 
-    const consultarCicloActual = this.cicloUFG.CicloActual()
+    const consultarCicloActual = process.env.CICLO_ACTUAL
     //01-2024   02-2024
     if (ciclo != consultarCicloActual) throw new BadRequestException(`El ciclo ingresado no aplica para el ciclo actual ${consultarCicloActual}`)
 

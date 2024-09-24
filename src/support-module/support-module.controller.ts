@@ -12,8 +12,8 @@ export class SupportModuleController {
     return await this.supportService.modulosActivosCarnetizacion(request)
   }
 
-  @Get('generate-qr/qr-code')
-  async generateQrCode(@Query('carnet') carnet: string){
+  @Get('generate-qr/qr-code/:carnet')
+  async generateQrCode(@Param('carnet') carnet: string){
    const qrCodeURL = await this.supportService.obtenerQr(carnet)
    return  `<img src="${qrCodeURL}" alt="QR Code" />`
   }

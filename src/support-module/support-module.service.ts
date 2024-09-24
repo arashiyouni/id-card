@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { PagoEstudianteService } from './repositories/queries/Estudiante/verificar-pago.query';
-import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 import { obtenerDescripcionMatricula } from 'src/utils/utils-format';
 
 
@@ -11,10 +10,8 @@ export class SupportModuleService {
   constructor(
     private repoGestionFechasProcesos: GestionFechas,
     private carnetRepository: FotoCarnet,
-    private pagoEstudianteService: PagoEstudianteService,
-    private cicloUFG: CicloUFG
+    private pagoEstudianteService: PagoEstudianteService
   ) { }
-  private ciclo = this.cicloUFG.CicloActual()
 
 
   async modulosActivosCarnetizacion(request: string) {
@@ -48,18 +45,6 @@ export class SupportModuleService {
       console.error('🔴 | Error al obtener QR ', err)
       throw new InternalServerErrorException(`Ocurrió un error al obtener el QR del estudainte`);
     }
-  }
-
-  async fotosExcepciones() {
-    /**
-     * Tengo que pedir:
-     * - el ciclo vigenete
-     * - Tipo
-     * - Carnet
-     * - Observacion
-     * - Descripcion
-     * - Usuario
-     */
   }
 
   async obtenerPagoEstudianteCicloActual(carnet: string, tipoCarnet: string) {

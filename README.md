@@ -253,14 +253,29 @@ TIENE QUE HABER UNA EXPECION QUE CREE LA EXEPCION Y OTRA QUE VERIFIQUE LA EXEPCI
 ## TODO PARA ADMIN 🎫
 
 ¿Con qué endpoint inicio?
-- Mirar Foto antigua
-- Insertar Nueva Foto
-- Registrar Excepcion
-- Carnet Vigente
+- Mirar Foto antigua ✅
+- Insertar Nueva Foto ✅
+- Registrar Excepcion ✅
+- Carnet Vigente ✅
 
 
 **!TODO DE ULTIMO:**
 - MATRICULA Y CUOTA 1 CANCELADO CON QUE ESTE ESTADO DIFERENTE DE A (EN FRONT, EL DE consultarPagosRealizados) (me dijieron que crera un endpoint) ✅
 
+
+**TODO**
+- Crear AUTH
+- Documentar endpoint
+- Documentar proyetco
+- Ver como crear un mini entorno de desarrollo y que se persista la infor que tengo actualmente
+- Pasarlo todo a produccion
+
+**REVISION**
+cambiar la vista del QR por PARAM ✅
+CODIGO DE ERROR EN OBTENER ESTUDIANTE  ✅
+CICLO ACTUAL QUE SEA ENV  ✅
+QUITAR EL REINGRESO (CAMPO)  ✅
+
+Agregar el mimetype a la hora de guardar la foto
 Convertidor de imagen=
 https://base64.guru/converter/encode/image

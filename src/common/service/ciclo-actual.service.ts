@@ -1,6 +1,6 @@
 
 export class CicloUFG {
-
+    //Esto calcula el ciclo de manera automatica
     CicloActual(){
         //'May 20, 24 00:20:18'
         const today = new Date()
