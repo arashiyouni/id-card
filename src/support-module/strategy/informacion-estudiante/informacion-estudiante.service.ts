@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PregradoServiceStrategy } from './pregrado/pregrado.service';
 import { PostgradoServiceStrategy } from './postgrado/postgrado.service';
 import { EgresadoServiceStrategy } from './egresado/egresado.service';
@@ -23,7 +23,7 @@ export class InformacionEstudianteService {
         return await this.egresado
       }
       default:
-          throw new Error('Tipo de carnet no soportado')
+          throw new BadRequestException('El carnet esta mal escrito o es incorrecto')
   }
   }
 }
