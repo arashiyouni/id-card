@@ -13,3 +13,15 @@ export enum TipoEstudiante {
     POSTGRADO = "POSTGRADO",
     EGRESADO = "EGRESADO"
 }
+
+export enum QueryTipoEstudiante {
+    PREGRADO = "pregrado",
+    POSTGRADO = "postgrado",
+    EGRESADO = "egresado"
+}
+
+export enum ModuloCarnetizacion {
+    pregrado = "carnetizacion-pre-grado",
+    postgrado = "carnetizacion-post-grado",
+    egresado = "carnetizacion-egresados"
+}

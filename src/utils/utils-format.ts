@@ -1,9 +1,12 @@
+import { ModuloCarnetizacion, QueryTipoEstudiante } from "src/common/enums/global.enum";
+
 export function formatDate(date: Date): string {
+  const allMonth = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
   const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JS empiezan desde 0
+  const month = String(date.getMonth()); // Los meses en JS empiezan desde 0
   const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  return `${day} de ${allMonth[month]}, ${year}`;
 }
 
 
@@ -40,4 +43,10 @@ export function obtenerDescripcionMatricula(tipoCarnet: string): string {
   if (tipoCarnet === 'PREGRADO') return 'MATRICULA';
   if (tipoCarnet === 'POSTGRADO') return 'MATRICULA POSTGRADO 1/4';
   return '';
+}
+
+export const tipoModulo: {[Key in QueryTipoEstudiante]: ModuloCarnetizacion} = {
+  pregrado: ModuloCarnetizacion.pregrado,
+  postgrado: ModuloCarnetizacion.postgrado,
+  egresado: ModuloCarnetizacion.egresado
 }

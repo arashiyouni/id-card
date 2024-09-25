@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   //app.useGlobalGuards(new RolesGuard())
   //Pa validar mis datos, pipes y el class-validator
+  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, //para omitir aquellas propiedades que no pertenecan al body o lo establecido 

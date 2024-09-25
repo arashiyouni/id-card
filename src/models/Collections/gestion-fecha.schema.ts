@@ -6,38 +6,38 @@ export const GestionFechasSchema = new mongoose.Schema<Modulos>({
 
     activo: {
         type: Boolean,
+        default: true,
+      },
+      idCicloRegistro: {
+        type: Number,
         required: true,
-    },
-    ciclo: {
+      },
+      idCicloUFG: {
+        type: Number,
+        required: true,
+      },
+      ciclo: {
         type: String,
-        trim: true,
-        uppercase: true,
         required: true,
-        unique: true
-    },
-    fechaFin: {
+        trim: true,
+      },
+      idModulo: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      fechaInicio: {
         type: Date,
         required: true,
-    },
-    fechaInicio: {
+      },
+      fechaFin: {
         type: Date,
         required: true,
-    },
-    idCicloRegistro: {
-        type: Number,
-        required: true
-    },
-    iCicloUFG: {
-        type: Number,
-        required: true
-    },
-    idModulo: {
-        type: String,
-        trim: true,
-        uppercase: true,
-        required: true,
-        unique: true
-    }
+      },
+      datosAdicionales: {
+        type: Object,
+        required: false,
+      },
 },
     { timestamps: false, versionKey: false }
 )

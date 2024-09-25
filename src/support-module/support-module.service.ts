@@ -2,7 +2,10 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { GestionFechas } from './repositories/Mongo/gestion-fecha.repository';
 import { FotoCarnet } from './repositories/Mongo/foto-carnet.repository';
 import { PagoEstudianteService } from './repositories/queries/Estudiante/verificar-pago.query';
-import { obtenerDescripcionMatricula } from 'src/utils/utils-format';
+import { formatDate, obtenerDescripcionMatricula, tipoModulo } from 'src/utils/utils-format';
+import { ModuloCarnetizacion, QueryTipoEstudiante } from 'src/common/enums/global.enum';
+import { CicloUFG } from 'src/common/service/ciclo-actual.service';
+
 
 
 @Injectable()
@@ -10,26 +13,40 @@ export class SupportModuleService {
   constructor(
     private repoGestionFechasProcesos: GestionFechas,
     private carnetRepository: FotoCarnet,
-    private pagoEstudianteService: PagoEstudianteService
+    private pagoEstudianteService: PagoEstudianteService,
+    private cicloUFG: CicloUFG
   ) { }
 
 
-  async modulosActivosCarnetizacion(request: string) {
-    try {
-      const getProcesos = await this.repoGestionFechasProcesos.procesosActivosCarnetizacion(request)
+  async modulosActivosCarnetizacion(tipo: QueryTipoEstudiante, ciclo: string) {
+    const nextYear = this.cicloUFG.CalculateYear()
+    const [numberPeriod, year] = ciclo.split('-')
+
+    if(!ciclo) ciclo = `${process.env.CICLO_ACTUAL}`
+
+    if (!Object.values(QueryTipoEstudiante).includes(tipo)) throw new BadRequestException('El tipo es incorrecto')
+
+    if (year >= nextYear) throw new BadRequestException(`El ciclo aún no tiene modulos disponibles ${nextYear}`)
+
+    const modulo = tipoModulo[tipo]
+
+    const getProcesos = await this.repoGestionFechasProcesos.procesosActivosCarnetizacion(ciclo, modulo)
+
+    if (!getProcesos.length) throw new NotFoundException('No se han encontrado procesos')
+
+    const messageCarnetizacion = !getProcesos[0].activo ? `El periodo ordinario para realizar carnetización es ${formatDate(getProcesos[0].fechaInicio)}` : ''
 
 
-      if (!getProcesos || !getProcesos.moduloCarnetizacion.length) {
-        console.error('No hay procesos activos', getProcesos);
-        throw new NotFoundException('No se encontraron procesos activos para el ciclo especificado');
-      }
+    return {
+      modulo: getProcesos[0].idModulo,
+      activo: getProcesos[0].activo,
+      ciclo: getProcesos[0].ciclo,
+      inicio: formatDate(getProcesos[0].fechaInicio),
+      fin: formatDate(getProcesos[0].fechaFin),
+      message: messageCarnetizacion
 
-      return getProcesos
-
-    } catch (err) {
-      console.error('😭 | Something happend...', err)
-      throw new NotFoundException()
     }
+
   }
 
   async obtenerQr(carnet: string) {

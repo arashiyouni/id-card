@@ -1,9 +1,10 @@
 export interface Modulos extends Document { 
     activo: boolean
     ciclo: string
-    fechaFin: Date
     fechaInicio: Date
+    fechaFin: Date
     idCicloRegistro: number
-    iCicloUFG: number
-    idModulo: string
+    idCicloUFG: number
+    idModulo: string,
+    datosAdicionales: {}
 }

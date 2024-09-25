@@ -14,4 +14,10 @@ export class CicloUFG {
             return `02-${year}`
         }
     }
+
+    CalculateYear(){
+        const today = new Date()
+        const nextYear = today.getFullYear() + 1
+        return nextYear.toString()
+    }
 }

@@ -1,15 +1,19 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { SupportModuleService } from './support-module.service';
 import { CarnetDTO } from 'src/users/dto/carnet.dto';
+import { QueryTipoEstudiante } from 'src/common/enums/global.enum';
 @Controller('support-module')
 export class SupportModuleController {
   constructor(
     private readonly supportService: SupportModuleService
   ) {}
 
-  @Get('modulos-activos/:ciclo')
-  async findAll(@Param('ciclo') request: string) {
-    return await this.supportService.modulosActivosCarnetizacion(request)
+  @Get('modulos-activos/:tipo')
+  async modulosCarnetizacion(
+    @Param('tipo') tipo: QueryTipoEstudiante,
+    @Query('ciclo') ciclo: string
+  ) {
+    return await this.supportService.modulosActivosCarnetizacion(tipo, ciclo)
   }
 
   @Get('generate-qr/qr-code/:carnet')
