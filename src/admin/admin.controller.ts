@@ -2,6 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, NotFoundEx
 import { AdminService } from './admin.service';
 import { FotoExepcionDTO } from './dto/foto-excepcion.dto';
 import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Admin')
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }

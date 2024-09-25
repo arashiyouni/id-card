@@ -2,6 +2,8 @@ import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query 
 import { SupportModuleService } from './support-module.service';
 import { CarnetDTO } from 'src/users/dto/carnet.dto';
 import { QueryTipoEstudiante } from 'src/common/enums/global.enum';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Endpoint de soporte para API de carnetización')
 @Controller('support-module')
 export class SupportModuleController {
   constructor(
