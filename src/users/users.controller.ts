@@ -21,8 +21,8 @@ export class UsersController {
     const estudiante = await this.userService.obtenerEstudiante(carnet)
 
     return {
-      msg: `Se ha encontrado estudiante ${carnet.tipo}`,
       estudiante
+
     }
   }
 
@@ -55,7 +55,6 @@ export class UsersController {
     const estudiante = await this.userService.mostrarCarnet(carnetizacion.carnet, carnetizacion.tipo)
 
     return {
-      msg: 'Estudiante Reingreso',
       estudiante
     }
 

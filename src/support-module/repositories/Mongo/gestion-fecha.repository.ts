@@ -18,6 +18,6 @@ export class GestionFechas {
             estudiante.idModulo === tipoCarnet && estudiante.ciclo === ciclo
         )
 
-        return modulo
+        return modulo.length > 0 ? modulo : []
     }
 }

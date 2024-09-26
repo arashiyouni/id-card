@@ -22,7 +22,7 @@ export class SupportModuleService {
     const nextYear = this.cicloUFG.CalculateYear()
     const [numberPeriod, year] = ciclo.split('-')
 
-    if(!ciclo) ciclo = `${process.env.CICLO_ACTUAL}`
+    if (!ciclo) ciclo = `${process.env.CICLO_ACTUAL}`
 
     if (!Object.values(QueryTipoEstudiante).includes(tipo)) throw new BadRequestException('El tipo es incorrecto')
 
@@ -30,23 +30,20 @@ export class SupportModuleService {
 
     const modulo = tipoModulo[tipo]
 
-    const getProcesos = await this.repoGestionFechasProcesos.procesosActivosCarnetizacion(ciclo, modulo)
+    const obtenerProcesos = await this.repoGestionFechasProcesos.procesosActivosCarnetizacion(ciclo, modulo)
 
-    if (!getProcesos.length) throw new NotFoundException('No se han encontrado procesos')
+    if (!obtenerProcesos || obtenerProcesos.length === 0) throw new NotFoundException('No se han encontrado procesos')
 
-    const messageCarnetizacion = !getProcesos[0].activo ? `El periodo ordinario para realizar carnetización es ${formatDate(getProcesos[0].fechaInicio)}` : ''
-
+    if (!obtenerProcesos[0].activo) return { data: null, message: 'El periodo ordinario para realizar carnetización NO está disponible en este momento.' }
 
     return {
-      modulo: getProcesos[0].idModulo,
-      activo: getProcesos[0].activo,
-      ciclo: getProcesos[0].ciclo,
-      inicio: formatDate(getProcesos[0].fechaInicio),
-      fin: formatDate(getProcesos[0].fechaFin),
-      message: messageCarnetizacion
-
+      modulo: obtenerProcesos[0].idModulo,
+      activo: obtenerProcesos[0].activo,
+      ciclo: obtenerProcesos[0].ciclo,
+      inicio: obtenerProcesos[0].fechaInicio,
+      fin: obtenerProcesos[0].fechaFin,
+      msg: `El periodo ordinario para realizar carnetización es del ${formatDate(obtenerProcesos[0].fechaInicio)} al ${formatDate(obtenerProcesos[0].fechaFin)}`
     }
-
   }
 
   async obtenerQr(carnet: string) {

@@ -15,7 +15,10 @@ export class SupportModuleController {
     @Param('tipo') tipo: QueryTipoEstudiante,
     @Query('ciclo') ciclo: string
   ) {
-    return await this.supportService.modulosActivosCarnetizacion(tipo, ciclo)
+    const data = await this.supportService.modulosActivosCarnetizacion(tipo, ciclo)
+    return {
+      data
+    }
   }
 
   @Get('generate-qr/qr-code/:carnet')

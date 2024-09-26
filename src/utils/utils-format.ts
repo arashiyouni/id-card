@@ -6,7 +6,7 @@ export function formatDate(date: Date): string {
   const month = String(date.getMonth()); // Los meses en JS empiezan desde 0
   const year = date.getFullYear();
 
-  return `${day} de ${allMonth[month]}, ${year}`;
+  return `${day} de ${allMonth[month]} del ${year}`;
 }
 
 
