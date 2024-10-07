@@ -104,15 +104,19 @@ export class FotoCarnet {
         return imagen
     }
 
-    async buscarToken(token: string) {
-        const estudiante = await this.fotoCarnetRepository.findOne({ Token: token })
+    async buscarCarnet(carnet: string) {
+        const estudiante = await this.fotoCarnetRepository.find({ Carnet: carnet })
         return estudiante
     }
 
     async actualizarFotoMongo(Carnet: string, Foto: string) {
         const update = await this.fotoCarnetRepository.findOneAndUpdate(
             { Carnet }, // filtro de búsqueda
-            { $set: { Foto: Foto, updatedAt: new Date() } }, // actualización
+            { $set: { 
+                Foto: Foto, 
+                updatedAt: new Date() ,
+                Activo: 1
+            } }, // actualización
             { new: true } // devuelve el documento actualizado
         );
 

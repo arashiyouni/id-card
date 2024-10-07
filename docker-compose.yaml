@@ -24,6 +24,5 @@ services:
       MSSQL_SA_PASSWORD: "5dZ8psbVg7mp6M"
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
-      HOSTNAME: 192.168.98.20
     volumes:
        - ./db/mssql:/var/opt/mssql

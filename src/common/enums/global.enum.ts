@@ -25,3 +25,9 @@ export enum ModuloCarnetizacion {
     postgrado = "carnetizacion-post-grado",
     egresado = "carnetizacion-egresados"
 }
+
+export enum EstadoCarnet {
+    notStart = 'Iniciado',
+    inProgress = 'En progreso',
+    Finish = 'Completado'
+}

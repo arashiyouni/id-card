@@ -3,9 +3,14 @@ import { FotoCarnetSchema, SeguimientoSchema } from "src/models/Collections/foto
 import { FotoCarnetExepcionSchema } from "src/models/Collections/foto-excepciones.schema";
 import { GestionFechasSchema } from "src/models/Collections/gestion-fecha.schema";
 import { FotoQrsSchema } from "src/models/Collections/qr-code.schema";
+import { UsuarioSchema } from "src/models/Collections/user.schema";
 
 export const MongoOperaProvider = [
-    
+    {
+        provide: 'USER_DOCUMENT',
+        useFactory: (connection: Connection) => connection.model('user', UsuarioSchema),
+        inject: ['MONGO_OPERA']
+    },
     {
         provide: 'PROCESOS_DOCUMENT',
         useFactory: (connection: Connection) => connection.model('GestionFechas', GestionFechasSchema),

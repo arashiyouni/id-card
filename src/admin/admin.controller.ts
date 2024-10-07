@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, NotFoundException, Query, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { FotoExepcionDTO } from './dto/foto-excepcion.dto';
 import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthguardGuard } from 'src/auth/authguard.guard';
 
+//TODO: COLOCAR ROLES
+@UseGuards(AuthguardGuard)
 @ApiTags('Admin')
 @Controller('admin')
 export class AdminController {

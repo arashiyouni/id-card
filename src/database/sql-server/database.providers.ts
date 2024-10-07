@@ -1,5 +1,6 @@
 import { join } from 'path';
 import { PagoEstudiante } from 'src/models/Financiera-Entities/PagoEstudiante';
+import { PicturesHistorial } from 'src/models/Registro-Entities/PicturesHistorial.entity';
 import { CarneEquivalente } from 'src/models/UFGRegistroAcademico-Entities/CarneEquivalente';
 import { VPerfilEstudiante } from 'src/models/UFGRegistroAcademico-Entities/VPerfilEstudiante';
 import { DataSource } from 'typeorm';
@@ -58,7 +59,7 @@ export const AppDataSource = [
                 ...defaultOptions,
                 logging: ['query'],
                 database: process.env.UFGREGAC_DB,
-                entities: [VPerfilEstudiante,CarneEquivalente ],
+                entities: [VPerfilEstudiante,CarneEquivalente],
             });
 
             try {
@@ -98,7 +99,7 @@ export const AppDataSource = [
                 type: 'mssql',
                 ...defaultOptions,
                 database: process.env.REGISTRO_DB,
-                entities: [join(__dirname, '../../**/*.entity.{js,ts}')],
+                entities: [PicturesHistorial],
             });
 
             try {

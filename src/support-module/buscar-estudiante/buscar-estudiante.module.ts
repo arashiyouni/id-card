@@ -4,10 +4,10 @@ import { BuscarEstudiante } from '../repositories/queries/Estudiante/buscar-estu
 import { RegistrAcademicoProvider } from '../repositories/MSSQL/regacademico.provider';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
 import { MongoDatabaseModule } from 'src/database/mongo-server/mongo-database.module';
-import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
 import { Procedure } from '../repositories/queries/Procedure/buscar-egresado.query';
 import { FotoCarnet } from '../repositories/Mongo/foto-carnet.repository';
 import { MongoOperaProvider } from '../repositories/mongosee.provider';
+import { UFGRegistroProvider } from '../repositories/MSSQL/ufgregistro.provider';
 
 
 @Module({
@@ -19,8 +19,8 @@ import { MongoOperaProvider } from '../repositories/mongosee.provider';
     BuscarEstudianteService,
     BuscarEstudiante,
     ...RegistrAcademicoProvider,
-    ...UFGRegistroProvider,
     ...MongoOperaProvider,
+    ...UFGRegistroProvider,
     Procedure,
     FotoCarnet,
   ],

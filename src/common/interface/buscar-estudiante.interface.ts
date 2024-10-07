@@ -29,9 +29,11 @@ export interface ResponseReingreso {
 }
 
 export interface ResponseFotoCarnet {
+    carnet: string
     nombres: string
     apellidos: string
     foto: string
+    carrera: string
     idFacultad: number | string
     qr: string
     ciclo_carnet: string

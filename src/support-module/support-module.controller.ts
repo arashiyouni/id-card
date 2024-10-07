@@ -1,8 +1,10 @@
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { SupportModuleService } from './support-module.service';
 import { CarnetDTO } from 'src/users/dto/carnet.dto';
 import { QueryTipoEstudiante } from 'src/common/enums/global.enum';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthguardGuard } from 'src/auth/authguard.guard';
+@UseGuards(AuthguardGuard)
 @ApiTags('Endpoint de soporte para API de carnetización')
 @Controller('support-module')
 export class SupportModuleController {

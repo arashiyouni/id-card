@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
 import { DatabaseSQLModule } from 'src/database/sql-server/database.module';
@@ -16,12 +16,15 @@ import { EgresadoServiceStrategy } from 'src/support-module/strategy/informacion
 import { CicloUFG } from 'src/common/service/ciclo-actual.service';
 import { ImageService } from 'src/common/service/image.service';
 import { FotoEstudiante } from 'src/support-module/repositories/queries/Estudiante/foto-estudiante.query';
-import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
 import { RegistrAcademicoProvider } from 'src/support-module/repositories/MSSQL/regacademico.provider';
-import { FotosProvider } from 'src/support-module/repositories/MSSQL/foto.provider';
 import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro.provider';
+import { UFGRegistroProvider } from 'src/support-module/repositories/MSSQL/ufgregistro.provider';
+import { FotosProvider } from 'src/support-module/repositories/MSSQL/foto.provider';
+import { AuthModule } from 'src/auth/auth.module';
+
 @Module({
   imports: [
+    forwardRef(() => AuthModule),
     DatabaseSQLModule,
     MongoDatabaseModule,
     BuscarEstudianteModule,
@@ -30,10 +33,10 @@ import { RegistroProvider } from 'src/support-module/repositories/MSSQL/registro
   controllers: [AdminController],
   providers: [
     ...MongoOperaProvider,
-    ...UFGRegistroProvider,
     ...RegistrAcademicoProvider,
-    ...FotosProvider,
     ...RegistroProvider,
+    ...UFGRegistroProvider,
+    ...FotosProvider,
     RegistrarExcepcion,
     AdminService,
     BuscarEstudianteService,

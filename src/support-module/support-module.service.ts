@@ -34,7 +34,7 @@ export class SupportModuleService {
 
     if (!obtenerProcesos || obtenerProcesos.length === 0) throw new NotFoundException('No se han encontrado procesos')
 
-    if (!obtenerProcesos[0].activo) return { data: null, message: 'El periodo ordinario para realizar carnetización NO está disponible en este momento.' }
+    if (!obtenerProcesos[0].activo) return { data: null, message: 'El periodo ordinario para realizar carnetización NO está disponible en este momento.', cumple: false }
 
     return {
       modulo: obtenerProcesos[0].idModulo,
@@ -42,7 +42,8 @@ export class SupportModuleService {
       ciclo: obtenerProcesos[0].ciclo,
       inicio: obtenerProcesos[0].fechaInicio,
       fin: obtenerProcesos[0].fechaFin,
-      msg: `El periodo ordinario para realizar carnetización es del ${formatDate(obtenerProcesos[0].fechaInicio)} al ${formatDate(obtenerProcesos[0].fechaFin)}`
+      msg: `El periodo ordinario para realizar carnetización es del ${formatDate(obtenerProcesos[0].fechaInicio)} al ${formatDate(obtenerProcesos[0].fechaFin)}`,
+      cumple: true
     }
   }
 
