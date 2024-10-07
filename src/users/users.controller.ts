@@ -1,28 +1,27 @@
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CarnetDTO } from './dto/carnet.dto';
 import { StudentDTO, StudentReingresoDTO, StudentTokenDTO } from './dto/foto-carnet.dto';
 import { ApiTags } from '@nestjs/swagger';
-//import { RolesGuard } from 'src/auth/roles.guard';
-// import { Role } from 'src/common/interface/role.enum';
-// import { Roles } from 'src/common/decorator/decorator.decorator';
+import { TipoEstudiante } from 'src/common/enums/global.enum';
+import { AuthguardGuard } from 'src/auth/authguard.guard';
 
+@UseGuards(AuthguardGuard)
 @ApiTags('Estudiante')
 @Controller('estudiante')
-//@UseGuards(RolesGuard)
 export class UsersController {
 
   constructor(private readonly userService: UsersService) { }
 
+
   @Post()
   @HttpCode(200)
-  async informacionCarnet(@Body() carnet: CarnetDTO) {
-
+  async informacionCarnet(@Req() req, @Body() carnet: CarnetDTO) {
+    const usuario = req.user
     const estudiante = await this.userService.obtenerEstudiante(carnet)
 
     return {
       estudiante
-
     }
   }
 
@@ -31,7 +30,7 @@ export class UsersController {
   async guardarFotoCarnet(@Body() student: StudentDTO) {
     const carnetizacion = await this.userService.fotoCarnet(student)
     return {
-      msg: 'Todo salio bien al parecer',
+      msg: 'Solicitud de foto enviada',
       token: carnetizacion
     }
 
@@ -49,10 +48,13 @@ export class UsersController {
 
   }
 
-  @Post('foto-carnet-virtual/estudiante')
+  @Get('foto-carnet-virtual/:carnet/:tipo')
   @HttpCode(200)
-  async carnetizacion(@Body() carnetizacion: CarnetDTO) {
-    const estudiante = await this.userService.mostrarCarnet(carnetizacion.carnet, carnetizacion.tipo)
+  async carnetizacion(
+    @Param('carnet') carnet: string,
+    @Param('tipo') tipo: TipoEstudiante
+    ) {
+    const estudiante = await this.userService.mostrarCarnet(carnet, tipo)
 
     return {
       estudiante
@@ -60,15 +62,24 @@ export class UsersController {
 
   }
 
-  @Post('actualizar-fotografia')
+  @Post('actualizar-fotografia/foto-carnet')
   @HttpCode(200)
   async actualizarFotoCarnet(@Body() estudiante: StudentTokenDTO) {
-    return await this.userService.actualizarFoto(estudiante.token, estudiante.foto)
+    return await this.userService.actualizarFoto(estudiante.carnet, estudiante.foto)
   }
 
   @Get('consultar-proceso')
   @HttpCode(200)
-  async consultarProcesoCarnetizacion(@Query('token') token: string) {
-    return await this.userService.consultarProcesoCarnet(token)
+  async consultarProcesoCarnetizacion(@Query('carnet') carnet: string, @Req() req: Request) {
+    const customData = req['customData'];
+    const proceso = await this.userService.consultarProcesoCarnet(carnet)
+    
+    return {
+      proceso,
+      customData: {
+        requestTime: customData.requestTime,
+        trustedIp: customData.trustedIp
+      }
+    }
   }
 }

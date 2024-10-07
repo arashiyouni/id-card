@@ -13,6 +13,10 @@ import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.servi
 import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
 import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
 import { EstadoCarnet } from 'src/common/enums/global.enum';
+import { User } from 'src/support-module/repositories/Mongo/usuario.repository';
+import { SignUpDto } from './dto/signup-auth.dto';
+import { LoginDTO } from './dto/login-auth.dto';
+import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudiante/buscar-estudiante.query';
 
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -23,17 +27,44 @@ import { EstadoCarnet } from 'src/common/enums/global.enum';
 export class UsersService {
 
   constructor(
-    private  buscarEstudiante: BuscarEstudianteService,
+    private  buscarEstudianteStrategy: BuscarEstudianteService,
+    private buscarEmail: BuscarEstudiante,
     private carnetEquivalenteRepository: CarnetEstudiante,
     private readonly getEstrategia: ProcesarEstudiante,
     private readonly imagen: ImageService,
-    private readonly sqlFoto: FotoEstudiante,
     private carnetMongoRepository: FotoCarnet,
     private readonly http: FetchHttpService,
     private getBuscarEstudiante: InformacionEstudianteService,
+    private usuario: User
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
+  async confirmarEmail(email: string){
+    const getEmail = await this.buscarEmail.buscarEmail(email)
+
+    if(!getEmail)throw new NotFoundException('No se ha encontrado email')
+
+    return {
+      carnet: getEmail.alumno_idalumno,
+      nombres: getEmail.nombres,
+      apellidos: getEmail.apellido3 ? `${getEmail.alumno_apellido1} ${getEmail.alumno_apellido2} ${getEmail.alumno_apellido3}` : `${getEmail.alumno_apellido1} ${getEmail.alumno_apellido2}`,
+      carrera: getEmail.carrera_nombre
+    }
+  }
+
+  async create(user: SignUpDto){
+    
+    const newUser = await this.usuario.crearUsuario(user)
+
+    if(!newUser) throw new BadRequestException('Ha ocurrido un error al crear usuario')
+
+    return {
+      msg: 'Usuario creado con éxito 🎈✨'
+    }
+  }
+  async findByEmail(email: string){
+    return await this.usuario.searchUser(email)
+  }
 
   async obtenerEstudiante(request: CarnetDTO) {
     const { carnet, tipo } = request
@@ -58,7 +89,7 @@ export class UsersService {
     const getEstrategia = await this.getBuscarEstudiante.obtenerEstrategiaBuscarEstudiante(TipoCarnet)
     const carnetValido = await getEstrategia.buscarEstudiante(carnet)
     //Busca Excepcion del carnet
-    const carnerExcepcion = await this.buscarEstudiante.BuscarExepcionCarnet(carnetValido.carnet)
+    const carnerExcepcion = await this.buscarEstudianteStrategy.BuscarExepcionCarnet(carnetValido.carnet)
 
     if (!carnetValido) {
       throw new NotFoundException(`No se ha encontrado el carnet ${carnet} segun su tipo de carnet: ${TipoCarnet}`)
@@ -69,7 +100,7 @@ export class UsersService {
    // const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
     const isImageSaveMongo = await this.carnetMongoRepository.buscarFotoMongo(carnetValido.carnet)
     
-    if (!!isImageSaveMongo && isImageSaveMongo.Activo === 0) throw new BadRequestException('Tu carnet esta en proceso de validar fotografia')
+    if (!!isImageSaveMongo && !isImageSaveMongo.Seguimiento.length) throw new BadRequestException('Tu carnet esta en proceso de validar fotografia')
 
 
     const fotoValida = this.imagen.CalcularImagenBase64(Foto)
@@ -117,7 +148,7 @@ export class UsersService {
   }
 
   async estudianteReingreso(student: string, ciclo: string) {
-    const estudiante = await this.buscarEstudiante.Reingreso(student, ciclo)
+    const estudiante = await this.buscarEstudianteStrategy.Reingreso(student, ciclo)
 
     const consultarCicloActual = process.env.CICLO_ACTUAL
     //01-2024   02-2024
@@ -128,12 +159,12 @@ export class UsersService {
     return estudiante
   }
 
-  async mostrarCarnet(carnet: string, tipoCarnet: string) {
-    const estudiante = await this.buscarEstudiante.PlantillaEstudiante(carnet)
+  async mostrarCarnet(carnetEstudiante: string, tipoCarnet: string) {
+    const estudiante = await this.buscarEstudianteStrategy.PlantillaEstudiante(carnetEstudiante)
 
     if (!estudiante) throw new NotFoundException(`No se ha encontrado fotografia registrada`)
 
-    const { nombres, apellidos, foto, idFacultad, qr, ciclo_carnet } = estudiante
+    const { nombres, apellidos, foto, idFacultad, qr, ciclo_carnet, carnet, carrera } = estudiante
 
     const plantilla = await this.http.FetchTemplate(tipoCarnet, idFacultad.toString())
 
@@ -144,9 +175,11 @@ export class UsersService {
 
 
     return {
+      carnet: carnet,
       nombres: nombres,
       apellidos: apellidos,
       facultad: plantilla.Facultad,
+      carrera: carrera,
       ciclo: ciclo_carnet,
       foto: foto,
       qr: qr,
@@ -161,11 +194,11 @@ export class UsersService {
 
     if (!carnet && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
 
-    const estudiante = await this.buscarEstudiante.buscarCarnet(carnet)
+    const estudiante = await this.buscarEstudianteStrategy.buscarCarnet(carnet)
 
     if (!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
     //TODO: VALIDAR QUE SE ENVIE SOLO UNA FOTO
-    if(estudiante[0].Activo === 1) throw new BadRequestException('Su fotografia esta en proceso de validación')
+    if(estudiante[0].Activo >= 1) throw new BadRequestException('Su fotografia esta en proceso de validación')
     //TODO: CAMBIARLO YA QUE MODIFIQUE EL BUSCARTOKEN
     const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante[0].Carnet, foto)
 
@@ -187,60 +220,42 @@ export class UsersService {
 
   //TODO: Poner una mini bandera para confirmar en el seguimiento y si en alguna descripcion esta: confirmado o algo asi
   async consultarProcesoCarnet(carnet: string) {
-    const consultarToken = await this.carnetMongoRepository.buscarCarnet(carnet)
+    const consultarCarnet = await this.carnetMongoRepository.buscarCarnet(carnet)
 
-    if (!consultarToken) throw new NotFoundException('No existe gestión de carnetización según carnet ingresado')
-
-     let resultado = {
-      msg: 'Inicia Proceso de carnetización',
-      proceso_activo: true,
-      estado: EstadoCarnet.notStart, // Cambia según tu definición de estado
-      observaciones: null,
-  };
-
-    const seguimiento = consultarToken[0].Seguimiento;
-
+    let resultado = {
+     msg: 'Inicia Proceso de carnetización',
+     proceso_activo: true,
+     estado: EstadoCarnet.notStart, // Cambia según tu definición de estado
+     observaciones: null,
+ };
+    if (!consultarCarnet.length) return resultado
+    
+    const seguimiento = consultarCarnet[0].Seguimiento;
+    
+    
     for (const obtenerSeguimiento of seguimiento) {
-        if (obtenerSeguimiento.Activo === 1) {
-            resultado.msg = 'La fotografía se encuentra en proceso de validación, un agente de servicio te contactará por medio del correo electrónico';
-            resultado.proceso_activo = true;
-            resultado.estado = EstadoCarnet.inProgress;
-            resultado.observaciones = obtenerSeguimiento;
-            break; // Salimos del bucle ya que encontramos el estado activo
-        }
-
-        if (obtenerSeguimiento.Descripcion === "Foto asignada") {
-            resultado.msg = 'Has finalizado el Proceso de Carnetización Virtual, Ahora ya puedes visualizar tu carné digital ';
-            resultado.proceso_activo = false;
-            resultado.estado = EstadoCarnet.Finish;
-            resultado.observaciones = obtenerSeguimiento;
-            break; 
-        }
-
-        if (obtenerSeguimiento.Activo === 0 && !seguimiento.length) {
-          resultado.msg = 'Inicia Proceso de carnetización';
-          resultado.proceso_activo = true;
-          resultado.estado = EstadoCarnet.notStart;
-          resultado.observaciones = obtenerSeguimiento;
-          break; 
+      if (obtenerSeguimiento.Activo === 1) {
+        resultado.msg = 'Tienes cambios pendiente, lee las observaciones y recomendaciones';
+        resultado.proceso_activo = true;
+        resultado.estado = EstadoCarnet.inProgress;
+        resultado.observaciones = obtenerSeguimiento;
+        break; // Salimos del bucle ya que encontramos el estado activo
+      }
+      
+      if (obtenerSeguimiento.Descripcion === "Foto asignada") {
+        resultado.msg = 'Has finalizado el Proceso de Carnetización Virtual, Ahora ya puedes visualizar tu carné digital ';
+        resultado.proceso_activo = false;
+        resultado.estado = EstadoCarnet.Finish;
+        resultado.observaciones = obtenerSeguimiento;
+        break; 
       }
     }
-
-    return {
-        token: consultarToken[0].Token,
-        Observacion: resultado
+    
+    if(consultarCarnet && !consultarCarnet[0].Seguimiento.length) return { msg: 'Un agente esta procesando tu carnet, pendiente al correo'}
+ 
+      return {
+      token: consultarCarnet[0].Token,
+      Observacion: resultado
     };
   }
-}
-
-function obtenerDescripciones(response) {
-  // Asegúrate de que 'Descripcion' exista en la respuesta
-  if (!response.Descripcion || !Array.isArray(response.Descripcion)) {
-      return []; // Retorna un arreglo vacío si no hay descripciones
-  }
-
-  // Iterar sobre el arreglo de 'Descripcion' y extraer el texto
-  return response.Descripcion.map(item => {
-      return Object.values(item).join(' '); // Convierte el objeto a una cadena legible
-  });
 }

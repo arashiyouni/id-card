@@ -21,3 +21,10 @@ export class CarnetDTO {
     @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
     tipo: TipoEstudiante
 }
+
+export class Carnet {
+    @MinLength(8)
+    @IsString()
+    @IsNotEmpty({ message: 'Este campo no puede estar vacío' })
+    carnet: string
+}
