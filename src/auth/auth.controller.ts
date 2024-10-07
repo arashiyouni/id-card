@@ -1,32 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UnauthorizedException, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UsersService } from 'src/users/users.service';
-import { JwtStrategy } from './jwt.strategy';
+import { SignUpDto } from 'src/users/dto/signup-auth.dto';
+import { LoginDTO } from 'src/users/dto/login-auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService
   ) {}
 
   //Signup
-  // @Post('signup')
-  // async signUp(@Body() signUpAuthDTO: SignUpDto){
-  //   return this.userService.createUser(signUpAuthDTO)
-  // }
+  @Post('signup')
+  async signUp(@Body() signUpAuthDTO: SignUpDto){
+    return this.authService.sigunp(signUpAuthDTO)
+  }
 
-  // //Login
-  // @HttpCode(HttpStatus.OK)
-  // @Post('login')
-  // async login(@Body() req: LoginDTO){
-  //   const user = await this.authService.validateUser(req.email, req.password);
-  //   if (!user) {
-  //     throw new UnauthorizedException('Invalid credentials');
-  //   }
-
-  //   return this.authService.login(user)
-  // }
+  //Login
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  async login(@Body() req: LoginDTO){
+    return this.authService.login(req)
+  }
 
 
   //Refresh token

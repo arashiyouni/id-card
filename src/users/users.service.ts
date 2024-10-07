@@ -12,6 +12,7 @@ import { FotoCarnet } from 'src/support-module/repositories/Mongo/foto-carnet.re
 import { FetchHttpService } from 'src/support-module/fetch-http/fetch-http.service';
 import { InformacionEstudianteService } from 'src/support-module/strategy/informacion-estudiante/informacion-estudiante.service';
 import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.service';
+import { EstadoCarnet } from 'src/common/enums/global.enum';
 
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -22,7 +23,7 @@ import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.servic
 export class UsersService {
 
   constructor(
-    private readonly buscarEstudiante: BuscarEstudianteService,
+    private  buscarEstudiante: BuscarEstudianteService,
     private carnetEquivalenteRepository: CarnetEstudiante,
     private readonly getEstrategia: ProcesarEstudiante,
     private readonly imagen: ImageService,
@@ -46,7 +47,7 @@ export class UsersService {
 
     return estudiante
   }
-
+//TODO: VER LOS CARNET CON EXCEPCIONES
   async fotoCarnet(student: StudentDTO) {
     const { carnet, email, Foto, TipoCarnet, CicloCarnetizacion } = student
     const maxSizeImage = 10 * 1024 * 1024
@@ -56,16 +57,19 @@ export class UsersService {
 
     const getEstrategia = await this.getBuscarEstudiante.obtenerEstrategiaBuscarEstudiante(TipoCarnet)
     const carnetValido = await getEstrategia.buscarEstudiante(carnet)
+    //Busca Excepcion del carnet
+    const carnerExcepcion = await this.buscarEstudiante.BuscarExepcionCarnet(carnetValido.carnet)
 
     if (!carnetValido) {
       throw new NotFoundException(`No se ha encontrado el carnet ${carnet} segun su tipo de carnet: ${TipoCarnet}`)
     }
 
+
     //verifica que no este guardada una foto en SQL o Mongo
-    const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
-    const isImageSaveMongo = await this.carnetMongoRepository.buscarFotoMongo(carnet)
+   // const isImageSaveSql = await this.sqlFoto.buscarFotoCarnetSql(carnet)
+    const isImageSaveMongo = await this.carnetMongoRepository.buscarFotoMongo(carnetValido.carnet)
     
-    if (!isImageSaveSql && !!isImageSaveMongo) throw new BadRequestException('Ha finalizado carnetizacion o esta en proceso de validar fotografia')
+    if (!!isImageSaveMongo && isImageSaveMongo.Activo === 0) throw new BadRequestException('Tu carnet esta en proceso de validar fotografia')
 
 
     const fotoValida = this.imagen.CalcularImagenBase64(Foto)
@@ -151,51 +155,92 @@ export class UsersService {
     }
   }
 
-  async actualizarFoto(token: string, foto: string) {
+  async actualizarFoto(carnet: string, foto: string) {
 
     if (!foto) throw new BadRequestException('La fotografía no debe de estar vacía')
 
-    if (!token && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
+    if (!carnet && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
 
-    const estudiante = await this.buscarEstudiante.BuscarToken(token)
+    const estudiante = await this.buscarEstudiante.buscarCarnet(carnet)
 
     if (!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
+    //TODO: VALIDAR QUE SE ENVIE SOLO UNA FOTO
+    if(estudiante[0].Activo === 1) throw new BadRequestException('Su fotografia esta en proceso de validación')
+    //TODO: CAMBIARLO YA QUE MODIFIQUE EL BUSCARTOKEN
+    const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante[0].Carnet, foto)
+
+    // )const convertFotoHex = this.imagen.convertirImagenHex(foto)
 
 
-    const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante.Carnet, foto)
-
-    const convertFotoHex = this.imagen.convertirImagenHex(foto)
+    // const actualizarEstudianteSql = await this.sqlFoto.actualizarFotoSql(estudiante[0].Carnet, convertFotoHex
 
 
-    const actualizarEstudianteSql = await this.sqlFoto.actualizarFotoSql(estudiante.Carnet, convertFotoHex)
-
-
-    if (!actualizarEstudianteMongo && actualizarEstudianteSql) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
+    if (!actualizarEstudianteMongo) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
 
 
     return {
       msg: 'La fotografía se actualizó con éxito, a continuación, se aplicará el proceso de validación',
-      estudiante: `${estudiante.Nombres} ${estudiante.Apellidos}`,
-      token
+      estudiante: `${estudiante[0].Nombres} ${estudiante[0].Apellidos}`,
+      token: estudiante[0].Token
     }
   }
 
-  async consultarProcesoCarnet(token: string) {
-    const consultarToken = await this.carnetMongoRepository.buscarToken(token)
-    const consultarExepcion = await this.buscarEstudiante.BuscarExepcionCarnet(consultarToken.Carnet)
+  //TODO: Poner una mini bandera para confirmar en el seguimiento y si en alguna descripcion esta: confirmado o algo asi
+  async consultarProcesoCarnet(carnet: string) {
+    const consultarToken = await this.carnetMongoRepository.buscarCarnet(carnet)
 
-    if (!consultarToken && !consultarExepcion) throw new BadRequestException('No existe gestión de carnetización con el Token ingresado')
+    if (!consultarToken) throw new NotFoundException('No existe gestión de carnetización según carnet ingresado')
 
+     let resultado = {
+      msg: 'Inicia Proceso de carnetización',
+      proceso_activo: true,
+      estado: EstadoCarnet.notStart, // Cambia según tu definición de estado
+      observaciones: null,
+  };
 
-    if (consultarToken?.Activo === 0 || consultarExepcion[0]?.Activo === 0) {
-      return {
-        msg: 'La fotografía se encuentra en proceso de validación, un agente de servicio te contactará por medio del correo electrónico',
-        token: token
+    const seguimiento = consultarToken[0].Seguimiento;
+
+    for (const obtenerSeguimiento of seguimiento) {
+        if (obtenerSeguimiento.Activo === 1) {
+            resultado.msg = 'La fotografía se encuentra en proceso de validación, un agente de servicio te contactará por medio del correo electrónico';
+            resultado.proceso_activo = true;
+            resultado.estado = EstadoCarnet.inProgress;
+            resultado.observaciones = obtenerSeguimiento;
+            break; // Salimos del bucle ya que encontramos el estado activo
+        }
+
+        if (obtenerSeguimiento.Descripcion === "Foto asignada") {
+            resultado.msg = 'Has finalizado el Proceso de Carnetización Virtual, Ahora ya puedes visualizar tu carné digital ';
+            resultado.proceso_activo = false;
+            resultado.estado = EstadoCarnet.Finish;
+            resultado.observaciones = obtenerSeguimiento;
+            break; 
+        }
+
+        if (obtenerSeguimiento.Activo === 0 && !seguimiento.length) {
+          resultado.msg = 'Inicia Proceso de carnetización';
+          resultado.proceso_activo = true;
+          resultado.estado = EstadoCarnet.notStart;
+          resultado.observaciones = obtenerSeguimiento;
+          break; 
       }
     }
 
     return {
-      msg: 'Has finalizado el Proceso de Carnetización Virtual, Ahora ya puedes visualizar tu carné digital '
-    }
+        token: consultarToken[0].Token,
+        Observacion: resultado
+    };
   }
+}
+
+function obtenerDescripciones(response) {
+  // Asegúrate de que 'Descripcion' exista en la respuesta
+  if (!response.Descripcion || !Array.isArray(response.Descripcion)) {
+      return []; // Retorna un arreglo vacío si no hay descripciones
+  }
+
+  // Iterar sobre el arreglo de 'Descripcion' y extraer el texto
+  return response.Descripcion.map(item => {
+      return Object.values(item).join(' '); // Convierte el objeto a una cadena legible
+  });
 }
