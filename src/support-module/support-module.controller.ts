@@ -4,7 +4,9 @@ import { CarnetDTO } from 'src/users/dto/carnet.dto';
 import { QueryTipoEstudiante } from 'src/common/enums/global.enum';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthguardGuard } from 'src/auth/authguard.guard';
-@UseGuards(AuthguardGuard)
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/common/decorator/decorator.decorator';
+@UseGuards(AuthguardGuard, RolesGuard)
 @ApiTags('Endpoint de soporte para API de carnetización')
 @Controller('support-module')
 export class SupportModuleController {
@@ -12,6 +14,7 @@ export class SupportModuleController {
     private readonly supportService: SupportModuleService
   ) {}
 
+  @Roles('user')
   @Get('modulos-activos/:tipo')
   async modulosCarnetizacion(
     @Param('tipo') tipo: QueryTipoEstudiante,
@@ -29,6 +32,7 @@ export class SupportModuleController {
    return  `<img src="${qrCodeURL}" alt="QR Code" />`
   }
 
+  @Roles('user')
   @Post('pagos-estudiante')
   @HttpCode(200)
   async pagosEstudiante(@Body()estudiante: CarnetDTO){

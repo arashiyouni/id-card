@@ -4,14 +4,17 @@ import { FotoExepcionDTO } from './dto/foto-excepcion.dto';
 import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from './dto/insertar-foto.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthguardGuard } from 'src/auth/authguard.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/common/decorator/decorator.decorator';
 
-//TODO: COLOCAR ROLES
-@UseGuards(AuthguardGuard)
+
+@UseGuards(AuthguardGuard, RolesGuard)
 @ApiTags('Admin')
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
+  @Roles('admin')
   @Post('registrarexcepcion')
   @HttpCode(200)
   async CrearExcepcionCarnet(@Body() registrar: FotoExepcionDTO) {
@@ -22,6 +25,7 @@ export class AdminController {
     }
   }
 
+  @Roles('admin')
   @Get('carnets-vigentes')
   @HttpCode(200)
   async CarnetsVigentes() {
@@ -33,6 +37,7 @@ export class AdminController {
     }
   }
 
+  @Roles('admin')
   @Get('carnet-vigente/:ciclo')
   @HttpCode(200)
   async CarnetsVigentesPorCiclo(@Param('ciclo') ciclo: string) {
@@ -44,6 +49,7 @@ export class AdminController {
     }
   }
 
+  @Roles('admin')
   @Post('viewOldPhoto')
   @HttpCode(200)
   async FotoAntigua(@Body() foto: VerFotoAntigua) {
@@ -55,6 +61,7 @@ export class AdminController {
     }
   }
 
+  @Roles('admin')
   @Post('insertNewPhoto')
   @HttpCode(200)
   async InsertFoto(@Body() foto: InsertarFotoAdminDTO) {

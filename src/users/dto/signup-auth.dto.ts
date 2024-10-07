@@ -14,6 +14,6 @@ export class SignUpDto {
     tipo: TipoEstudiante
 
     @IsString()
-    @MinLength(8)
+    @MinLength(7)
     carnet: TipoEstudiante
 }

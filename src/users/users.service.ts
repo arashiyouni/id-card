@@ -42,7 +42,7 @@ export class UsersService {
   async confirmarEmail(email: string){
     const getEmail = await this.buscarEmail.buscarEmail(email)
 
-    if(!getEmail)throw new NotFoundException('No se ha encontrado email')
+    if(!getEmail) return false
 
     return {
       carnet: getEmail.alumno_idalumno,

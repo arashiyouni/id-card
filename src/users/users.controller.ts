@@ -5,15 +5,17 @@ import { StudentDTO, StudentReingresoDTO, StudentTokenDTO } from './dto/foto-car
 import { ApiTags } from '@nestjs/swagger';
 import { TipoEstudiante } from 'src/common/enums/global.enum';
 import { AuthguardGuard } from 'src/auth/authguard.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/common/decorator/decorator.decorator';
 
-@UseGuards(AuthguardGuard)
+@UseGuards(AuthguardGuard, RolesGuard)
 @ApiTags('Estudiante')
 @Controller('estudiante')
 export class UsersController {
 
   constructor(private readonly userService: UsersService) { }
 
-
+  @Roles('user')
   @Post()
   @HttpCode(200)
   async informacionCarnet(@Req() req, @Body() carnet: CarnetDTO) {
@@ -25,6 +27,7 @@ export class UsersController {
     }
   }
 
+  @Roles('user')
   @Post('enviar-foto')
   @HttpCode(200)
   async guardarFotoCarnet(@Body() student: StudentDTO) {
@@ -36,6 +39,7 @@ export class UsersController {
 
   }
 
+  @Roles('user')
   @Post('reingreso')
   @HttpCode(200)
   async reingreso(@Body() reingreso: StudentReingresoDTO) {
@@ -48,6 +52,7 @@ export class UsersController {
 
   }
 
+  @Roles('user')
   @Get('foto-carnet-virtual/:carnet/:tipo')
   @HttpCode(200)
   async carnetizacion(
@@ -62,12 +67,14 @@ export class UsersController {
 
   }
 
+  @Roles('user')
   @Post('actualizar-fotografia/foto-carnet')
   @HttpCode(200)
   async actualizarFotoCarnet(@Body() estudiante: StudentTokenDTO) {
     return await this.userService.actualizarFoto(estudiante.carnet, estudiante.foto)
   }
 
+  @Roles('user')
   @Get('consultar-proceso')
   @HttpCode(200)
   async consultarProcesoCarnetizacion(@Query('carnet') carnet: string, @Req() req: Request) {

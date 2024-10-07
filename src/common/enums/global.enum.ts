@@ -11,7 +11,8 @@ export enum coloresQr {
 export enum TipoEstudiante {
     PREGRADO = "PREGRADO",
     POSTGRADO = "POSTGRADO",
-    EGRESADO = "EGRESADO"
+    EGRESADO = "EGRESADO",
+    ADMIN = "ADMIN"
 }
 
 export enum QueryTipoEstudiante {
