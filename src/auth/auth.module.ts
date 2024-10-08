@@ -13,8 +13,8 @@ import { AuthguardGuard } from './authguard.guard';
     forwardRef(() => UsersModule),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'SECRET_KEY',
-      signOptions: { expiresIn: '1h' }
+      secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7',
+      signOptions: { expiresIn: '1m' }
     }),
   ],
   controllers: [AuthController],

@@ -5,7 +5,7 @@ import { InsertarFotoAdminDTO, VerCarnetVigentesAdminDTO, VerFotoAntigua } from 
 import { ApiTags } from '@nestjs/swagger';
 import { AuthguardGuard } from 'src/auth/authguard.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/common/decorator/decorator.decorator';
+import { GetUser, Roles } from 'src/common/decorator/decorator.decorator';
 
 
 @UseGuards(AuthguardGuard, RolesGuard)
@@ -17,7 +17,7 @@ export class AdminController {
   @Roles('admin')
   @Post('registrarexcepcion')
   @HttpCode(200)
-  async CrearExcepcionCarnet(@Body() registrar: FotoExepcionDTO) {
+  async CrearExcepcionCarnet(@GetUser() user,@Body() registrar: FotoExepcionDTO) {
     const estudiante = await this.adminService.registrarFotoExcepcion(registrar)
 
     return {
@@ -28,7 +28,7 @@ export class AdminController {
   @Roles('admin')
   @Get('carnets-vigentes')
   @HttpCode(200)
-  async CarnetsVigentes() {
+  async CarnetsVigentes(@GetUser() user) {
     const fotoCarnet = await this.adminService.carnetsVigentes()
 
     return {
@@ -40,7 +40,7 @@ export class AdminController {
   @Roles('admin')
   @Get('carnet-vigente/:ciclo')
   @HttpCode(200)
-  async CarnetsVigentesPorCiclo(@Param('ciclo') ciclo: string) {
+  async CarnetsVigentesPorCiclo(@GetUser() user,@Param('ciclo') ciclo: string) {
     const fotoCarnet = await this.adminService.carnetsVigentesPorCiclo(ciclo)
 
     return {
@@ -52,7 +52,7 @@ export class AdminController {
   @Roles('admin')
   @Post('viewOldPhoto')
   @HttpCode(200)
-  async FotoAntigua(@Body() foto: VerFotoAntigua) {
+  async FotoAntigua(@GetUser() user,@Body() foto: VerFotoAntigua) {
     const fotoCarnet = await this.adminService.verFotoAntigua(foto)
 
     return {
@@ -64,7 +64,7 @@ export class AdminController {
   @Roles('admin')
   @Post('insertNewPhoto')
   @HttpCode(200)
-  async InsertFoto(@Body() foto: InsertarFotoAdminDTO) {
+  async InsertFoto(@GetUser() user, @Body() foto: InsertarFotoAdminDTO) {
     const estudiante = await this.adminService.insertarNuevaFoto(foto)
 
     return {

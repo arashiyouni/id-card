@@ -111,13 +111,15 @@ export class FotoCarnet {
 
     async actualizarFotoMongo(Carnet: string, Foto: string) {
         const update = await this.fotoCarnetRepository.findOneAndUpdate(
-            { Carnet }, // filtro de búsqueda
-            { $set: { 
-                Foto: Foto, 
-                updatedAt: new Date() ,
-                Activo: 1
-            } }, // actualización
-            { new: true } // devuelve el documento actualizado
+            { Carnet }, 
+            { 
+                $set: { 
+                    Foto: Foto, 
+                    updatedAt: new Date()
+                },
+                $inc: { Activo: 1 } // Incrementar el campo Activo en 1
+            }, 
+            { new: true } // Devolver el documento actualizado
         );
 
         if (!update) {

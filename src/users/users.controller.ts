@@ -6,20 +6,19 @@ import { ApiTags } from '@nestjs/swagger';
 import { TipoEstudiante } from 'src/common/enums/global.enum';
 import { AuthguardGuard } from 'src/auth/authguard.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/common/decorator/decorator.decorator';
+import { GetUser, Roles } from 'src/common/decorator/decorator.decorator';
 
-@UseGuards(AuthguardGuard, RolesGuard)
 @ApiTags('Estudiante')
+@UseGuards(AuthguardGuard, RolesGuard)
 @Controller('estudiante')
 export class UsersController {
 
   constructor(private readonly userService: UsersService) { }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Post()
   @HttpCode(200)
-  async informacionCarnet(@Req() req, @Body() carnet: CarnetDTO) {
-    const usuario = req.user
+  async informacionCarnet(@GetUser() user, @Body() carnet: CarnetDTO) {
     const estudiante = await this.userService.obtenerEstudiante(carnet)
 
     return {
@@ -27,10 +26,10 @@ export class UsersController {
     }
   }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Post('enviar-foto')
   @HttpCode(200)
-  async guardarFotoCarnet(@Body() student: StudentDTO) {
+  async guardarFotoCarnet(@GetUser() user,@Body() student: StudentDTO) {
     const carnetizacion = await this.userService.fotoCarnet(student)
     return {
       msg: 'Solicitud de foto enviada',
@@ -39,10 +38,10 @@ export class UsersController {
 
   }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Post('reingreso')
   @HttpCode(200)
-  async reingreso(@Body() reingreso: StudentReingresoDTO) {
+  async reingreso(@GetUser() user,@Body() reingreso: StudentReingresoDTO) {
     const estudiante = await this.userService.estudianteReingreso(reingreso.carnet, reingreso.ciclo)
 
     return {
@@ -52,10 +51,11 @@ export class UsersController {
 
   }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Get('foto-carnet-virtual/:carnet/:tipo')
   @HttpCode(200)
   async carnetizacion(
+    @GetUser() user,
     @Param('carnet') carnet: string,
     @Param('tipo') tipo: TipoEstudiante
     ) {
@@ -67,26 +67,17 @@ export class UsersController {
 
   }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Post('actualizar-fotografia/foto-carnet')
   @HttpCode(200)
-  async actualizarFotoCarnet(@Body() estudiante: StudentTokenDTO) {
+  async actualizarFotoCarnet(@GetUser() user,@Body() estudiante: StudentTokenDTO) {
     return await this.userService.actualizarFoto(estudiante.carnet, estudiante.foto)
   }
 
-  @Roles('user')
+  @Roles('estudiante-pregrado')
   @Get('consultar-proceso')
   @HttpCode(200)
-  async consultarProcesoCarnetizacion(@Query('carnet') carnet: string, @Req() req: Request) {
-    const customData = req['customData'];
-    const proceso = await this.userService.consultarProcesoCarnet(carnet)
-    
-    return {
-      proceso,
-      customData: {
-        requestTime: customData.requestTime,
-        trustedIp: customData.trustedIp
-      }
-    }
+  async consultarProcesoCarnetizacion(@GetUser() user,@Query('carnet') carnet: string, @Req() req: Request) {
+   return await this.userService.consultarProcesoCarnet(carnet)
   }
 }

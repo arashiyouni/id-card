@@ -17,6 +17,7 @@ import { User } from 'src/support-module/repositories/Mongo/usuario.repository';
 import { SignUpDto } from './dto/signup-auth.dto';
 import { LoginDTO } from './dto/login-auth.dto';
 import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudiante/buscar-estudiante.query';
+import { threadId } from 'worker_threads';
 
 
 // import { Roles } from 'src/common/decorator/decorator.decorator';
@@ -192,21 +193,15 @@ export class UsersService {
 
     if (!foto) throw new BadRequestException('La fotografía no debe de estar vacía')
 
-    if (!carnet && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y token')
+    if (!carnet && !foto) throw new BadRequestException('Recuerda que debes adjuntar una fotografía y carnet')
 
     const estudiante = await this.buscarEstudianteStrategy.buscarCarnet(carnet)
 
-    if (!estudiante) throw new NotFoundException('No existe gestión de carnetización con el Token ingresado')
-    //TODO: VALIDAR QUE SE ENVIE SOLO UNA FOTO
-    if(estudiante[0].Activo >= 1) throw new BadRequestException('Su fotografia esta en proceso de validación')
-    //TODO: CAMBIARLO YA QUE MODIFIQUE EL BUSCARTOKEN
+    if (!estudiante) throw new NotFoundException('No existe gestión de carnetización con el carnet ingresado')
+   
+    if (estudiante[0].Activo !== 1) throw new BadRequestException('No se puede actualizar la foto, está en proceso de validación o ya ha sido validada');
+    
     const actualizarEstudianteMongo = await this.carnetMongoRepository.actualizarFotoMongo(estudiante[0].Carnet, foto)
-
-    // )const convertFotoHex = this.imagen.convertirImagenHex(foto)
-
-
-    // const actualizarEstudianteSql = await this.sqlFoto.actualizarFotoSql(estudiante[0].Carnet, convertFotoHex
-
 
     if (!actualizarEstudianteMongo) throw new InternalServerErrorException('La actualización de la fotografía ha fallado, repórtalo con Contact Center UFG - 2209-2834')
 
@@ -218,14 +213,13 @@ export class UsersService {
     }
   }
 
-  //TODO: Poner una mini bandera para confirmar en el seguimiento y si en alguna descripcion esta: confirmado o algo asi
   async consultarProcesoCarnet(carnet: string) {
     const consultarCarnet = await this.carnetMongoRepository.buscarCarnet(carnet)
 
     let resultado = {
      msg: 'Inicia Proceso de carnetización',
      proceso_activo: true,
-     estado: EstadoCarnet.notStart, // Cambia según tu definición de estado
+     estado: EstadoCarnet.notStart,
      observaciones: null,
  };
     if (!consultarCarnet.length) return resultado
@@ -255,7 +249,7 @@ export class UsersService {
  
       return {
       token: consultarCarnet[0].Token,
-      Observacion: resultado
+      observaciones: resultado
     };
   }
 }
