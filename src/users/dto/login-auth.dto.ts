@@ -1,11 +1,25 @@
-import { IsEmail, MinLength} from "class-validator"
+import { IsString, MinLength} from "class-validator"
 
 //Aqui le estoy diciendo que estructura quiero que mi obj viaje entre repuestas
 export class LoginDTO {
 
-    @IsEmail()
-    email: string
+    @IsString()
+    username: string
 
-    @MinLength(4)
+    @IsString()
     password: string
+
+    @IsString()
+    @MinLength(4)
+    carnet: string
+}
+
+export class LoginPortalDTO {
+
+    @IsString()
+    username: string
+
+    @IsString()
+    password: string
+
 }

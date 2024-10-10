@@ -1,15 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { SignUpDto } from 'src/users/dto/signup-auth.dto';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDTO } from 'src/users/dto/login-auth.dto';
+import { LoginDTO, LoginPortalDTO } from 'src/users/dto/login-auth.dto';
 @Injectable()
 export class AuthService {
 
   constructor(
     private userService: UsersService,
-    private jwtService: JwtService  // Servicio para manejar JWT
+    private jwtService: JwtService
   ) { }
 
   //creacion de usuario
@@ -21,44 +21,73 @@ export class AuthService {
   }
 
   async login(getUser: LoginDTO) {
-    const { email, password } = getUser;
-    let roles = [];  // Inicializar los roles vacíos
+    const { carnet, username, password } = getUser;
 
-    // Buscar usuario por correo
-    const user = await this.userService.findByEmail(email);
+    // Buscar usuario por username
+    const user = await this.userService.findByUsername(username);
 
     // Verificar si el usuario existe y la contraseña es correcta
-    if (!user || !(await bcrypt.compare(password, user[0].password))) {
-      throw new UnauthorizedException('Credenciales inválidas');
+    //if (!user || !(await bcrypt.compare(password, user[0].password))) throw new UnauthorizedException('Credenciales inválidas')
+    // buscar carnet student
+    const searchCarnet = await this.userService.buscarCarnetPregrado(carnet)
+
+    if (!searchCarnet) throw new BadRequestException(`Carnet ${carnet} no encontrado`)
+
+    const getRoles = await this.userService.findRoles(user[0]._id.toString())
+
+    let payload = {
+      username: getRoles.username,
+      carnet,
+      nombre: getRoles.name,
+      isAdmin: getRoles.isAdmin,
+      roles: getRoles.roles.length > 0 ? [] : getRoles.roles.map((role) => {
+        return {
+          name: role.name,
+          permissions: role.permissions.map((name)=> {return { name: name.name}})
+        }
+      }) 
     }
 
-    // Confirmar si el correo tiene un carnet asociado
-    const carnet = await this.userService.confirmarEmail(email);
-
-    // Asignar roles dinámicamente
-    if (carnet && carnet.carnet) {
-      const rol = {name: 'estudiante-pregrado'}
-      roles.push(rol); // Si el carnet existe, asignar rol 'user'
-      
-    } else {
-      roles.push('admin'); // Si no existe el carnet, asignar rol 'admin'
-    }
-
-    // Generar el payload del JWT
-    const payload = {
-      email: user[0].email,
-      sub: user[0].id,
-      carnet: !carnet ? user[0].carnet : carnet,   // Puede ser null o undefined si no existe el carnet
-      roles: roles.length > 0 ? roles : ''  // Si roles está vacío, no incluirlo en el payload
+    return {
+      access_token: this.jwtService.sign(payload, { secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7' }) // Se firma el JWT
     };
+  }
 
-    // Retornar el token firmado
+  async loginStudent(getUser: LoginPortalDTO) {
+    const { username, password } = getUser;
+
+    // Buscar usuario por username
+    const user = await this.userService.confirmarCredencialesPortal(username);
+
+    // Verificar si el usuario existe y la contraseña es correcta en: portaluser
+    if (!user.length) throw new NotFoundException('Credenciales inválidas')
+
+    //aqui busca los roles del usuario, se pasa a roles => permissions
+    const allRoles = await this.userService.findRolesStudent(user[0].username)
+    const formattedRoles = allRoles.roles.map((role) => {
+      return {
+        name: role.name,
+        permissions: role.permissions.map((name)=> {return { name: name.name}})
+      }
+    })
+
+    let payload = {
+      username: user[0].username,
+      carnet: user[0].carnet,
+      nombre: user[0].nombre,
+      isAdmin: user[0].isAdmin,
+      roles: formattedRoles
+      
+    }
+
     return {
       access_token: this.jwtService.sign(payload, { secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7' }) // Se firma el JWT
     };
   }
 
 }
+
+
 
 //Tipo de JWT
 export enum JwtType {

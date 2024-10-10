@@ -30,5 +30,6 @@ export enum ModuloCarnetizacion {
 export enum EstadoCarnet {
     notStart = 'Iniciado',
     inProgress = 'En progreso',
-    Finish = 'Completado'
+    Finish = 'Completado',
+    Pendign = 'Pendiente'
 }

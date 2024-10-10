@@ -136,23 +136,4 @@ export class BuscarEstudiante {
         return estudiante
     }
 
-    async buscarEmail(email: string){
-        const student = await this.alumnnoRepository
-        .createQueryBuilder('alumno')
-        .distinct(true)
-        .select(['alumno.idalumno', 'nombres', 'alumno.apellido1', 'alumno.apellido2', 'alumno.apellido3', 'alumno.cicloingre', 'alumno.email', 'carrera.nombre', 'facultad.nombre', 'facultad.idfacultad', 'carrera.sede'])
-        .innerJoin(Matins, 'matins',
-            'alumno.idalumno = matins.idalumno'
-        )
-        .innerJoin(Carrera, 'carrera',
-            'alumno.idcarrera = carrera.idcarrera'
-        )
-        .innerJoin(Facultad, 'facultad',
-            'carrera.idfacultad = facultad.idfacultad'
-        )
-        .where('alumno.email = :email', { email: email })
-        .getRawOne()
-
-        return student
-    }
 }

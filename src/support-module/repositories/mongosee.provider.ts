@@ -3,12 +3,28 @@ import { FotoCarnetSchema, SeguimientoSchema } from "src/models/Collections/foto
 import { FotoCarnetExepcionSchema } from "src/models/Collections/foto-excepciones.schema";
 import { GestionFechasSchema } from "src/models/Collections/gestion-fecha.schema";
 import { FotoQrsSchema } from "src/models/Collections/qr-code.schema";
-import { UsuarioSchema } from "src/models/Collections/user.schema";
+import { userPortalSchema } from "src/models/Collections/user-portal.schema";
+import { permissionSchema, roleSchema, userSchema } from "src/models/Collections/user.schema";
 
 export const MongoOperaProvider = [
     {
         provide: 'USER_DOCUMENT',
-        useFactory: (connection: Connection) => connection.model('user', UsuarioSchema),
+        useFactory: (connection: Connection) => connection.model('users', userSchema),
+        inject: ['MONGO_OPERA']
+    },
+    {
+        provide: 'USER_PORTAL_DOCUMENT',
+        useFactory: (connection: Connection) => connection.model('portalusers', userPortalSchema),
+        inject: ['MONGO_OPERA']
+    },
+    {
+        provide: 'ROLE_DOCUMENT',
+        useFactory: (connection: Connection) => connection.model('roles', roleSchema),
+        inject: ['MONGO_OPERA']
+    },
+    {
+        provide: 'PERMISSION_DOCUMENT',
+        useFactory: (connection: Connection) => connection.model('permissions', permissionSchema),
         inject: ['MONGO_OPERA']
     },
     {

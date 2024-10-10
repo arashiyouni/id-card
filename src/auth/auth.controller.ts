@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from 'src/users/dto/signup-auth.dto';
-import { LoginDTO } from 'src/users/dto/login-auth.dto';
+import { LoginDTO, LoginPortalDTO } from 'src/users/dto/login-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,13 +15,19 @@ export class AuthController {
     return this.authService.sigunp(signUpAuthDTO)
   }
 
-  //Login
+  //Login ADMIN
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post('admin-login')
   async login(@Body() req: LoginDTO){
     return this.authService.login(req)
   }
 
+  //Login STUDENT
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  async loginStudent(@Body() req: LoginPortalDTO){
+    return this.authService.loginStudent(req)
+  }
 
   //Refresh token
   //@Post('refresh')

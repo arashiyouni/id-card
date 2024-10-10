@@ -15,7 +15,7 @@ export class UsersController {
 
   constructor(private readonly userService: UsersService) { }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Post()
   @HttpCode(200)
   async informacionCarnet(@GetUser() user, @Body() carnet: CarnetDTO) {
@@ -26,7 +26,7 @@ export class UsersController {
     }
   }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Post('enviar-foto')
   @HttpCode(200)
   async guardarFotoCarnet(@GetUser() user,@Body() student: StudentDTO) {
@@ -38,7 +38,7 @@ export class UsersController {
 
   }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Post('reingreso')
   @HttpCode(200)
   async reingreso(@GetUser() user,@Body() reingreso: StudentReingresoDTO) {
@@ -51,7 +51,7 @@ export class UsersController {
 
   }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Get('foto-carnet-virtual/:carnet/:tipo')
   @HttpCode(200)
   async carnetizacion(
@@ -67,14 +67,14 @@ export class UsersController {
 
   }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Post('actualizar-fotografia/foto-carnet')
   @HttpCode(200)
   async actualizarFotoCarnet(@GetUser() user,@Body() estudiante: StudentTokenDTO) {
     return await this.userService.actualizarFoto(estudiante.carnet, estudiante.foto)
   }
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado', 'admin')
   @Get('consultar-proceso')
   @HttpCode(200)
   async consultarProcesoCarnetizacion(@GetUser() user,@Query('carnet') carnet: string, @Req() req: Request) {

@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express'; // Importa el tipo correcto de express
 
+//VERIFICA VALIDEZ DEL TOKEN
 @Injectable()
 export class AuthguardGuard implements CanActivate {
   constructor(

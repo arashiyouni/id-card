@@ -15,7 +15,7 @@ export class SupportModuleController {
     private readonly supportService: SupportModuleService
   ) {}
 
-  @Roles('estudiante-pregrado')
+  @Roles('estudiante-pregrado','admin')
   @Get('modulos-activos/:tipo')
   async modulosCarnetizacion(
     @GetUser() user,

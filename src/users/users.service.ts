@@ -15,14 +15,7 @@ import { ProcesarEstudiante } from 'src/support-module/strategy/foto/foto.servic
 import { EstadoCarnet } from 'src/common/enums/global.enum';
 import { User } from 'src/support-module/repositories/Mongo/usuario.repository';
 import { SignUpDto } from './dto/signup-auth.dto';
-import { LoginDTO } from './dto/login-auth.dto';
 import { BuscarEstudiante } from 'src/support-module/repositories/queries/Estudiante/buscar-estudiante.query';
-import { threadId } from 'worker_threads';
-
-
-// import { Roles } from 'src/common/decorator/decorator.decorator';
-// import { Role } from 'src/common/interface/role.enum';
-// import { RolesGuard } from 'src/auth/roles.guard';
 
 @Injectable()
 export class UsersService {
@@ -40,17 +33,21 @@ export class UsersService {
     // @Inject(()=> RolesGuard) private authGuard: RolesGuard
   ) { }
 
-  async confirmarEmail(email: string){
-    const getEmail = await this.buscarEmail.buscarEmail(email)
+  async buscarCarnetPregrado(carnet: string){
+   return await this.buscarEmail.buscarCarnet(carnet)
+  }
 
-    if(!getEmail) return false
+  async findRoles(userId: string){
+    return await this.usuario.findUserWithRoles(userId)
+  }
 
-    return {
-      carnet: getEmail.alumno_idalumno,
-      nombres: getEmail.nombres,
-      apellidos: getEmail.apellido3 ? `${getEmail.alumno_apellido1} ${getEmail.alumno_apellido2} ${getEmail.alumno_apellido3}` : `${getEmail.alumno_apellido1} ${getEmail.alumno_apellido2}`,
-      carrera: getEmail.carrera_nombre
-    }
+  async findRolesStudent(username: string){
+    return await this.usuario.findUserPortalRoles(username)
+  }
+
+  async confirmarCredencialesPortal(username: string){
+    const credenciales = await this.usuario.getCredentialPortal(username)
+    return credenciales
   }
 
   async create(user: SignUpDto){
@@ -63,8 +60,9 @@ export class UsersService {
       msg: 'Usuario creado con éxito 🎈✨'
     }
   }
-  async findByEmail(email: string){
-    return await this.usuario.searchUser(email)
+
+  async findByUsername(username: string){
+    return await this.usuario.searchUser(username)
   }
 
   async obtenerEstudiante(request: CarnetDTO) {
@@ -245,7 +243,7 @@ export class UsersService {
       }
     }
     
-    if(consultarCarnet && !consultarCarnet[0].Seguimiento.length) return { msg: 'Un agente esta procesando tu carnet, pendiente al correo'}
+    if(consultarCarnet && !consultarCarnet[0].Seguimiento.length) return { msg: 'Un agente esta procesando tu carnet, pendiente al correo', estado:EstadoCarnet.Pendign }
  
       return {
       token: consultarCarnet[0].Token,

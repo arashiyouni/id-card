@@ -14,7 +14,7 @@ import { GetUser, Roles } from 'src/common/decorator/decorator.decorator';
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
-  @Roles('admin')
+
   @Post('registrarexcepcion')
   @HttpCode(200)
   async CrearExcepcionCarnet(@GetUser() user,@Body() registrar: FotoExepcionDTO) {
@@ -25,7 +25,7 @@ export class AdminController {
     }
   }
 
-  @Roles('admin')
+  
   @Get('carnets-vigentes')
   @HttpCode(200)
   async CarnetsVigentes(@GetUser() user) {
@@ -37,7 +37,7 @@ export class AdminController {
     }
   }
 
-  @Roles('admin')
+
   @Get('carnet-vigente/:ciclo')
   @HttpCode(200)
   async CarnetsVigentesPorCiclo(@GetUser() user,@Param('ciclo') ciclo: string) {
@@ -49,7 +49,6 @@ export class AdminController {
     }
   }
 
-  @Roles('admin')
   @Post('viewOldPhoto')
   @HttpCode(200)
   async FotoAntigua(@GetUser() user,@Body() foto: VerFotoAntigua) {
@@ -61,7 +60,6 @@ export class AdminController {
     }
   }
 
-  @Roles('admin')
   @Post('insertNewPhoto')
   @HttpCode(200)
   async InsertFoto(@GetUser() user, @Body() foto: InsertarFotoAdminDTO) {

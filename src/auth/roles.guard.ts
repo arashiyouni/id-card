@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { ROLES_KEY } from 'src/common/decorator/decorator.decorator';
 
+//VERIFICA VALIDEZ DEL TOKEN CON SU ROL
 @Injectable()
 export class RolesGuard implements CanActivate {
 
@@ -45,22 +46,31 @@ export class RolesGuard implements CanActivate {
       const user = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
       console.log('Usuario decodificado:', {estudiante: user, rol: user.roles.map(name => name.name)});
 
-      // Verificar si el token contiene roles
+      // Verificar si el token contiene roles como: estudiante-pregrado
       if (!user.roles || !Array.isArray(user.roles)) {
         console.error('Roles no encontrados en el token');
         throw new BadRequestException('El token no contiene roles válidos');
+      }
+
+      if(!user.isAdmin) {
+        console.error('El usuario no es admin')
+        throw new UnauthorizedException('No tienes permiso de administrador')
       }
 
       // Extraer los roles del usuario y validar contra los roles requeridos
       const userRoles = user.roles.map(name => name.name);
       console.log('🎄 | Roles del usuario:', userRoles);
 
-      const hasRole = requiredRoles.some(role => userRoles.includes(role));
-      console.log('has role?: ',hasRole)
-      if (!hasRole) {
-        console.error('Acceso denegado. Roles insuficientes.');
-        throw new UnauthorizedException('No tienes permisos para acceder a este recurso');
+      if(!userRoles.length && !user.isAdmin) {
+
+        const hasRole = requiredRoles.some(role => userRoles.includes(role));
+        console.log('has role?: ',hasRole)
+        if (!hasRole) {
+          console.error('Acceso denegado. Roles insuficientes.');
+          throw new UnauthorizedException('No tienes permisos para acceder a este recurso');
+        }
       }
+
 
       return true;
     } catch (err) {
