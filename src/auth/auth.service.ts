@@ -49,7 +49,7 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwtService.sign(payload, { secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7' }) // Se firma el JWT
+      access_token: this.jwtService.sign(payload, { secret: process.env.SECRET }) // Se firma el JWT
     };
   }
 
@@ -81,7 +81,7 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwtService.sign(payload, { secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7' }) // Se firma el JWT
+      access_token: this.jwtService.sign(payload, { secret: process.env.SECRET }) // Se firma el JWT
     };
   }
 

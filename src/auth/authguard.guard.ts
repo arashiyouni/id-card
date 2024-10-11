@@ -24,7 +24,7 @@ export class AuthguardGuard implements CanActivate {
 
     try {
       // Verifica el token JWT usando el servicio de JWT
-      const payload = this.jwtService.verify(token, { secret: 'jggjredqHLLrx2247bKwpBPdsZTGanGGGEYA6ucXVXSyVCWA7KjQ8DJnD98wabc7' });
+      const payload = this.jwtService.verify(token, { secret: process.env.SECRET });
       request['user'] = payload; // Asigna el payload al request.user para acceder después
       return true;
     } catch (err) {
